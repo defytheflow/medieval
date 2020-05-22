@@ -50,8 +50,8 @@ settings_btn.pack(fill=tk.BOTH)
 main_canvas = tk.Canvas(middle_frame, width=960, height=600, bg='#000', relief=tk.FLAT)
 main_canvas.pack(fill=tk.BOTH, side=tk.LEFT)
 
-main_bg_image = ImageTk.PhotoImage(Image.open(os.path.join('assets', 'bazaar.jpg')))
-main_bg_id = main_canvas.create_image(0, 0, image=main_bg_image, anchor=tk.NW)
+main_canvas_image = ImageTk.PhotoImage(Image.open(os.path.join('assets', 'bazaar.jpg')))
+main_canvas_image_id = main_canvas.create_image(0, 0, image=main_canvas_image, anchor=tk.NW)
 
 # middle right frame.
 middle_right_frame = tk.Frame(middle_frame, height=600, width=120)
@@ -81,14 +81,24 @@ inventory_btn.pack(fill=tk.BOTH)
 # Create bottom frame.
 # --------------------------------------------------------------------------------
 bottom_frame = tk.Frame(window, height=150)
-bottom_frame.pack(fill=tk.BOTH)
+bottom_frame.pack(fill=tk.BOTH, expand=True)
 
-bottom_left_frame = tk.Frame(bottom_frame, height=150, width=950)
+# bottom left frame
+bottom_left_frame = tk.Frame(
+    bottom_frame, width=950, height=150, bg='#c9b662'
+)
 bottom_left_frame.pack(fill=tk.BOTH, side=tk.LEFT)
 
-bottom_right_frame = tk.Frame(bottom_frame, height=150, width=250)
-bottom_right_frame.pack(fill=tk.BOTH, side=tk.LEFT)
+# bottom canvas.
+bottom_canvas = tk.Canvas(
+    bottom_frame, width=250, height=150, bg='#c9b662', relief=tk.FLAT, highlightbackground='#000'
+)
+bottom_canvas.pack(fill=tk.BOTH, side=tk.LEFT)
 
+bottom_canvas_image = ImageTk.PhotoImage(
+    Image.open(os.path.join('assets', 'wizard.png')).resize((250, 250))
+)
+bottom_canvas_image_id = bottom_canvas.create_image(0, 0, image=bottom_canvas_image, anchor=tk.NW)
 
 if __name__ == '__main__':
     window.mainloop()
