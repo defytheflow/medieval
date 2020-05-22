@@ -4,8 +4,8 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 
-BTN_HEIGHT = 110
 BTN_WIDTH = 110
+BTN_HEIGHT = 110
 
 
 # Create a main window.
