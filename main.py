@@ -95,7 +95,7 @@ bottom_canvas = tk.Canvas(
 bottom_canvas.pack(fill=tk.BOTH, side=tk.LEFT)
 
 bottom_canvas_image = ImageTk.PhotoImage(
-    Image.open(os.path.join('assets', 'wizard.png')).resize((200, 200))
+    Image.open(os.path.join('assets', 'witch.png')).resize((200, 200))
 )
 bottom_canvas_image_id = bottom_canvas.create_image(0, 0, image=bottom_canvas_image, anchor=tk.NW)
 
