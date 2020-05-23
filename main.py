@@ -1,11 +1,15 @@
+#!/home/defytheflow/.envs/medieval/bin/python3
+
 import os
 import tkinter as tk
 
 from PIL import Image, ImageTk
 
+from widgets import ToolTip
+
 
 def create_photo_image(path: str, size: tuple=None) -> tk.PhotoImage:
-    ''' Creates a new PhotoImage object. '''
+    """ Creates a new PhotoImage object. """
     image = Image.open(path)
     if size:
         image = image.resize(size)
@@ -125,11 +129,23 @@ inventory_btn_image = create_photo_image(
 settings_btn = tk.Button(middle_right_frame, image=settings_btn_image, **btn_attrs)
 settings_btn.pack(fill=tk.BOTH)
 
+settings_tooltip = ToolTip('Settings')
+settings_btn.bind('<Enter>', settings_tooltip.show)
+settings_btn.bind('<Leave>', settings_tooltip.hide)
+
 map_btn = tk.Button(middle_right_frame, image=map_btn_image, **btn_attrs)
 map_btn.pack(fill=tk.BOTH)
 
+map_tooltip = ToolTip('Map')
+map_btn.bind('<Enter>', map_tooltip.show)
+map_btn.bind('<Leave>', map_tooltip.hide)
+
 inventory_btn = tk.Button(middle_right_frame, image=inventory_btn_image, **btn_attrs)
 inventory_btn.pack(fill=tk.BOTH)
+
+inventory_tooltip = ToolTip('Inventory')
+inventory_btn.bind('<Enter>', inventory_tooltip.show)
+inventory_btn.bind('<Leave>', inventory_tooltip.hide)
 
 btn4 = tk.Button(middle_right_frame, text='4', **btn_attrs)
 btn4.pack(fill=tk.BOTH, expand=True)
