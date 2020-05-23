@@ -3,17 +3,8 @@
 import os
 import tkinter as tk
 
-from PIL import Image, ImageTk
-
-from widgets import ToolTip
-
-
-def create_photo_image(path: str, size: tuple=None) -> tk.PhotoImage:
-    """ Creates a new PhotoImage object. """
-    image = Image.open(path)
-    if size:
-        image = image.resize(size)
-    return ImageTk.PhotoImage(image)
+from utils import create_photo_image
+from widgets import ToolTip, SettingsFrame
 
 # -----------------------------------------------------------------------------
 # CONSTANTS.
@@ -105,6 +96,15 @@ middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 # BUTTONS.
 # -----------------------------------------------------------------------------
 
+def create_settings_frame(master: tk.Tk):
+
+    for child in master.winfo_children():
+        child.forget()
+
+    frame = SettingsFrame(master, background=BG_COLOR)
+    frame.pack(fill=tk.BOTH, expand=True)
+
+
 btn_attrs = {
     'bg': BG_COLOR,
     'bd': BTN_BD,
@@ -132,6 +132,7 @@ settings_btn.pack(fill=tk.BOTH)
 settings_tooltip = ToolTip('Settings')
 settings_btn.bind('<Enter>', settings_tooltip.show)
 settings_btn.bind('<Leave>', settings_tooltip.hide)
+settings_btn.bind('<Button-1>', lambda _: create_settings_frame(window))
 
 map_btn = tk.Button(middle_right_frame, image=map_btn_image, **btn_attrs)
 map_btn.pack(fill=tk.BOTH)

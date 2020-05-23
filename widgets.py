@@ -1,4 +1,7 @@
+import os
 import tkinter as tk
+
+from utils import create_photo_image
 
 
 class ToolTip:
@@ -26,3 +29,32 @@ class ToolTip:
     def hide(self, event):
         if self.toplevel:
             self.toplevel.destroy()
+
+
+class SettingsFrame(tk.Frame):
+
+    BACK_BTN_IMAGE = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        top_frame = tk.Frame(self, background='#c9b662')
+        top_frame.pack(side=tk.TOP, fill=tk.BOTH)
+
+        self.BACK_BTN_IMAGE = create_photo_image(
+            os.path.join('assets', 'back-btn.png'),
+            (80, 60),
+        )
+
+        back_btn = tk.Button(top_frame,
+                             width=100,
+                             height=60,
+                             image=self.BACK_BTN_IMAGE,
+                             bd=5,
+                             background='#c9b662',
+                             highlightbackground='#000',
+                             activebackground='#7f6f28',
+                             relief=tk.RAISED,
+                             )
+        back_btn.pack(side=tk.LEFT)
+
