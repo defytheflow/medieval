@@ -6,9 +6,10 @@ import os
 import tkinter as tk
 
 from utils import create_photo_image
+from interfaces import Bilingual
 
 
-class Button(tk.Button):
+class Button(tk.Button, Bilingual):
     """
         Styled tk.Button.
     """
@@ -38,20 +39,29 @@ class Button(tk.Button):
                 self.tooltip.text = self.tooltip.dict['rus']
 
 
-class Label(tk.Label):
+class Label(tk.Label, Bilingual):
     """
         Styled tk.Label.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, text_dict, **kwargs):
+        self.dict = text_dict
         super().__init__(*args,
                          **kwargs,
+                         text=self.dict['eng'],
                          background='#c9b662',
                          foreground='#000',
                          borderwidth=5,
                          padx=10,
                          relief=tk.RAISED,
                          anchor=tk.NW)
+
+    def switch_lang(self, lang):
+        if lang == 'English':
+            self.configure(text=self.dict['eng'])
+        elif lang == 'Русский':
+            self.configure(text=self.dict['rus'])
+
 
 
 class Radiobutton(tk.Radiobutton):
@@ -71,7 +81,7 @@ class Radiobutton(tk.Radiobutton):
                          compound=tk.CENTER)
 
 
-class ToolTip:
+class ToolTip():
     """
         Info box shown over a widget.
     """
