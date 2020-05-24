@@ -92,15 +92,3 @@ class ToolTip:
     def hide(self, event):
         if self.toplevel:
             self.toplevel.destroy()
-
-
-class SettingsFrame(tk.Frame):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        top_frame = tk.Frame(self, background='#c9b662')
-        top_frame.pack(side=tk.TOP, fill=tk.BOTH)
-
-        back_btn = Button(top_frame, file=os.path.join('assets', 'back-icon.png'))
-        back_btn.pack(side=tk.LEFT)

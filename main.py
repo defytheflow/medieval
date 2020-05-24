@@ -4,7 +4,7 @@ import os
 import tkinter as tk
 
 from utils import create_photo_image
-from widgets import Button, Label, Radiobutton, ToolTip, SettingsFrame
+from widgets import Button, Label, Radiobutton, ToolTip
 
 
 WIN_WIDTH = 1200
@@ -52,22 +52,24 @@ middle_right_frame = tk.Frame(middle_frame)
 middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
 
-def create_settings_frame(master: tk.Tk):
-
-    for child in master.winfo_children():
+def show_settings_frame():
+    for child in window.winfo_children():
         child.forget()
+    settings_frame.pack(fill=tk.BOTH, expand=True)
 
-    frame = SettingsFrame(master, background=BG_COLOR)
-    frame.pack(fill=tk.BOTH, expand=True)
+def hide_settings_frame():
+    for child in window.winfo_children():
+        child.pack(fill=tk.BOTH)
+    settings_frame.forget()
 
 
 settings_btn = Button(
     middle_right_frame,
     file=os.path.join('assets', 'settings-icon.png'),
     tooltip='Settings',
+    command=show_settings_frame,
 )
 settings_btn.pack(fill=tk.BOTH)
-settings_btn.bind('<Button-1>', lambda e: create_settings_frame(window))
 
 map_btn = Button(
     middle_right_frame,
@@ -136,6 +138,17 @@ choice_btn1.pack(side=tk.LEFT, expand=True)
 
 choice_btn2 = Radiobutton(bottom_right_frame, text='No', value=2, variable=choice_var)
 choice_btn2.pack(side=tk.LEFT, expand=True)
+
+# Settings frame.
+
+settings_frame = tk.Frame(window, background='#c9b662')
+settings_top_frame = tk.Frame(settings_frame, background='#c9b662')
+settings_top_frame.pack(side=tk.TOP, fill=tk.BOTH)
+
+return_btn = Button(settings_top_frame,
+                    file=os.path.join('assets', 'return-icon.png'),
+                    command=hide_settings_frame)
+return_btn.pack(side=tk.LEFT)
 
 if __name__ == '__main__':
     window.mainloop()
