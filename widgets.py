@@ -27,6 +27,15 @@ class Button(tk.Button):
             self.tooltip = ToolTip(tooltip)
             self.bind('<Enter>', self.tooltip.show)
             self.bind('<Leave>', self.tooltip.hide)
+        else:
+            self.tooltip = None
+
+    def switch_lang(self, lang):
+        if self.tooltip:
+            if lang == 'English':
+                self.tooltip.text = self.tooltip.dict['eng']
+            elif lang == 'Русский':
+                self.tooltip.text = self.tooltip.dict['rus']
 
 
 class Label(tk.Label):
@@ -67,8 +76,9 @@ class ToolTip:
         Info box shown over a widget.
     """
 
-    def __init__(self, text):
-        self.text = text
+    def __init__(self, text_dict):
+        self.dict = text_dict
+        self.text = text_dict['eng']
         self.padx = 10
         self.toplevel = None
 

@@ -67,7 +67,8 @@ def hide_settings_frame():
 settings_btn = Button(
     middle_right_frame,
     file=os.path.join('assets', 'settings-icon.png'),
-    tooltip='Settings',
+    tooltip={'eng': 'Settings',
+             'rus': 'Настройки'},
     command=show_settings_frame,
 )
 settings_btn.pack(fill=tk.BOTH)
@@ -75,14 +76,16 @@ settings_btn.pack(fill=tk.BOTH)
 map_btn = Button(
     middle_right_frame,
     file=os.path.join('assets', 'map-icon.png'),
-    tooltip='Map'
+    tooltip={'eng': 'Map',
+             'rus': 'Карта'},
 )
 map_btn.pack(fill=tk.BOTH)
 
 inventory_btn = Button(
     middle_right_frame,
     file=os.path.join('assets', 'inventory-icon.png'),
-    tooltip='Inventory'
+    tooltip={'eng': 'Inventory',
+             'rus': 'Инвентарь'},
 )
 inventory_btn.pack(fill=tk.BOTH)
 
@@ -174,17 +177,42 @@ lang_lbl.pack(side=tk.LEFT)
 
 style = ttk.Style()
 
+
+def get_all_children(parent):
+    lst = []
+
+    def recurse(parent):
+        children = parent.winfo_children()
+        if not children:
+            return
+        lst.extend(children)
+        for child in children:
+            lst.extend(get_all_children(child))
+
+    recurse(parent)
+    return lst
+
+def switch_lang(var: tk.StringVar):
+    for child in get_all_children(window):
+        if isinstance(child, Button):
+            child.switch_lang(var.get())
+
 style.map('TCombobox', background=[('readonly', BG_COLOR)],
                        fieldbackground=[('readonly', BG_COLOR)],
                        selectbackground=[('readonly', BG_COLOR)],
                        selectforeground=[('readonly', '#000')],
                        borderwidth=[('readonly', '5')])
 
+lang_var = tk.StringVar()
+lang_var.set('English')
+
 lang_combobox = ttk.Combobox(lang_frame,
                              values=['Русский', 'English'],
                              state='readonly',
-                             font=('Timew New Roman', '20', ))
+                             font=('Timew New Roman', '20', ),
+                             textvariable=lang_var)
 lang_combobox.pack(side=tk.LEFT)
+lang_combobox.bind('<<ComboboxSelected>>', lambda e: switch_lang(lang_var))
 
 if __name__ == '__main__':
     window.mainloop()
