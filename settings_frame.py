@@ -10,6 +10,7 @@ from utils import get_all_children
 class SettingsFrame(tk.Frame):
 
     BG_COLOR = '#c9b662'
+    ACTIVE_BG_COLOR = '#7f6f28'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -66,6 +67,7 @@ class SettingsFrame(tk.Frame):
             selectforeground=[('readonly', '#000')],
             borderwidth=[('readonly', '5')],
             selectborderwidth=[('readonly', '0')],
+            arrowsize=[('readonly', '24')],
         )
 
         lang_var = tk.StringVar()
@@ -78,9 +80,20 @@ class SettingsFrame(tk.Frame):
                 'English',
             ],
             state='readonly',
-            font=('Timew New Roman', '20'),
+            font=('DejaVu Serif', '20'),
             textvariable=lang_var
         )
+
+        lang_combobox.master.option_add(
+            '*TCombobox*Listbox.background', self.BG_COLOR
+        )
+        lang_combobox.master.option_add(
+            '*TCombobox*Listbox.selectBackground', self.ACTIVE_BG_COLOR
+        )
+        lang_combobox.master.option_add(
+            '*TCombobox*Listbox.font', ('DejaVu Serif', '20')
+        )
+
         lang_combobox.pack(side=tk.LEFT)
         lang_combobox.bind('<<ComboboxSelected>>',
                            lambda e: self.switch_lang(lang_var))
