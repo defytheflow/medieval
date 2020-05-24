@@ -2,6 +2,7 @@
 
 import os
 import tkinter as tk
+from tkinter import ttk
 
 from utils import create_photo_image
 from widgets import Button, Label, Radiobutton, ToolTip
@@ -142,13 +143,48 @@ choice_btn2.pack(side=tk.LEFT, expand=True)
 # Settings frame.
 
 settings_frame = tk.Frame(window, background='#c9b662')
-settings_top_frame = tk.Frame(settings_frame, background='#c9b662')
-settings_top_frame.pack(side=tk.TOP, fill=tk.BOTH)
+
+settings_top_frame = tk.Frame(settings_frame, background='#0f0')
+settings_top_frame.pack(fill=tk.BOTH)
 
 return_btn = Button(settings_top_frame,
                     file=os.path.join('assets', 'return-icon.png'),
                     command=hide_settings_frame)
 return_btn.pack(side=tk.LEFT)
+
+settings_lbl = tk.Label(settings_top_frame,
+                        text='Settings Menu',
+                        background=BG_COLOR,
+                        font=('DejaVu Serif', '32', 'bold italic'))
+settings_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+settings_top_right_frame = tk.Frame(settings_top_frame, bg=BG_COLOR,
+                                    width=return_btn.winfo_reqwidth())
+settings_top_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+
+lang_frame = tk.Frame(settings_frame, background=BG_COLOR)
+lang_frame.pack()
+
+lang_lbl = tk.Label(lang_frame,
+                    text='Language',
+                    background=BG_COLOR,
+                    padx=20,
+                    font=('DejaVu Serif', '24', 'bold'))
+lang_lbl.pack(side=tk.LEFT)
+
+style = ttk.Style()
+
+style.map('TCombobox', background=[('readonly', BG_COLOR)],
+                       fieldbackground=[('readonly', BG_COLOR)],
+                       selectbackground=[('readonly', BG_COLOR)],
+                       selectforeground=[('readonly', '#000')],
+                       borderwidth=[('readonly', '5')])
+
+lang_combobox = ttk.Combobox(lang_frame,
+                             values=['Русский', 'English'],
+                             state='readonly',
+                             font=('Timew New Roman', '20', ))
+lang_combobox.pack(side=tk.LEFT)
 
 if __name__ == '__main__':
     window.mainloop()
