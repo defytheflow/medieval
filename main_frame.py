@@ -20,7 +20,13 @@ class MainFrame(tk.Frame):
             text_dict={
                 'eng': 'Hint:',
                 'rus': 'Подсказка:'
-            }
+            },
+            background='#c9b662',
+            foreground='#000',
+            borderwidth=5,
+            padx=10,
+            relief=tk.RAISED,
+            anchor=tk.NW
         )
         hint_lbl.pack(fill=tk.BOTH)
 
@@ -121,7 +127,13 @@ class MainFrame(tk.Frame):
             text_dict={
                 'eng': 'Question',
                 'rus': 'Вопрос'
-            }
+            },
+            background='#c9b662',
+            foreground='#000',
+            borderwidth=5,
+            padx=10,
+            relief=tk.RAISED,
+            anchor=tk.NW
         )
         dialogue_lbl.pack(fill=tk.BOTH)
 

@@ -58,24 +58,29 @@ class SettingsFrame(tk.Frame):
         lang_lbl.pack(side=tk.LEFT)
 
         style = ttk.Style()
-        style.map('TCombobox',
-                  background=[('readonly', self.BG_COLOR)],
-                  fieldbackground=[('readonly', self.BG_COLOR)],
-                  selectbackground=[('readonly', self.BG_COLOR)],
-                  selectforeground=[('readonly', '#000')],
-                  borderwidth=[('readonly', '5')])
+        style.map(
+            'TCombobox',
+            background=[('readonly', self.BG_COLOR)],
+            fieldbackground=[('readonly', self.BG_COLOR)],
+            selectbackground=[('readonly', self.BG_COLOR)],
+            selectforeground=[('readonly', '#000')],
+            borderwidth=[('readonly', '5')],
+            selectborderwidth=[('readonly', '0')],
+        )
 
         lang_var = tk.StringVar()
         lang_var.set('English')
 
-        lang_combobox = ttk.Combobox(lang_frame,
-                                     values=[
-                                         'Русский',
-                                         'English',
-                                     ],
-                                     state='readonly',
-                                     font=('Timew New Roman', '20'),
-                                     textvariable=lang_var)
+        lang_combobox = ttk.Combobox(
+            lang_frame,
+            values=[
+                'Русский',
+                'English',
+            ],
+            state='readonly',
+            font=('Timew New Roman', '20'),
+            textvariable=lang_var
+        )
         lang_combobox.pack(side=tk.LEFT)
         lang_combobox.bind('<<ComboboxSelected>>',
                            lambda e: self.switch_lang(lang_var))

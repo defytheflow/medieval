@@ -75,12 +75,6 @@ class BilingualLabel(tk.Label, Bilingual):
         super().__init__(*args,
                          **kwargs,
                          text=self.text_dict['eng'])
-                         # background='#c9b662',
-                         # foreground='#000',
-                         # borderwidth=5,
-                         # padx=10,
-                         # relief=tk.RAISED,
-                         # anchor=tk.NW)
 
     def switch_lang(self, lang):
         if lang == 'English':
