@@ -2,7 +2,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
-from widgets import Button, Label
+from widgets import Label, ToolTipButton
 from interfaces import Bilingual
 from utils import get_all_children
 
@@ -17,10 +17,16 @@ class SettingsFrame(tk.Frame):
         self.top_frame = tk.Frame(self, background='#0f0')
         self.top_frame.pack(fill=tk.BOTH)
 
-        return_btn = Button(self.top_frame,
-                            file=os.path.join('assets', 'return-icon.png'),
-                            command=self.hide)
+        return_btn = ToolTipButton(
+            self.top_frame,
+            file=os.path.join('assets', 'return-icon.png'),
+            text_dict={
+                'eng': 'Return',
+                'rus': 'Nazad',
+            },
+        )
         return_btn.pack(side=tk.LEFT)
+        return_btn.bind('<Button-1>', self.hide)
 
         settings_lbl = tk.Label(self.top_frame,
                                 text='Settings Menu',
@@ -77,7 +83,7 @@ class SettingsFrame(tk.Frame):
             child.forget()
         self.pack(fill=tk.BOTH, expand=True)
 
-    def hide(self):
+    def hide(self, event):
         for child in self.master.winfo_children():
             child.pack(fill=tk.BOTH)
         self.forget()

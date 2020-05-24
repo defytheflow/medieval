@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 
-from widgets import Button, Label, Radiobutton
+from widgets import ToolTipButton, Label, Radiobutton
 from utils import create_photo_image
 
 
@@ -43,38 +43,44 @@ class MainFrame(tk.Frame):
         self.middle_right_frame = tk.Frame(self.middle_frame)
         self.middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        self.settings_btn = Button(self.middle_right_frame,
-                                   file=os.path.join('assets', 'settings-icon.png'),
-                                   tooltip={
-                                       'eng': 'Settings',
-                                       'rus': 'Настройки'
-                                   })
+        self.settings_btn = ToolTipButton(
+            self.middle_right_frame,
+            file=os.path.join('assets', 'settings-icon.png'),
+            text_dict={
+                'eng': 'Settings',
+                'rus': 'Настройки'
+            }
+        )
         self.settings_btn.pack(fill=tk.BOTH)
 
-        self.map_btn = Button(self.middle_right_frame,
-                              file=os.path.join('assets', 'map-icon.png'),
-                              tooltip={
-                                  'eng': 'Map',
-                                  'rus': 'Карта'
-                              })
+        self.map_btn = ToolTipButton(
+            self.middle_right_frame,
+            file=os.path.join('assets', 'map-icon.png'),
+            text_dict={
+                'eng': 'Map',
+                'rus': 'Карта'
+            }
+        )
         self.map_btn.pack(fill=tk.BOTH)
 
-        self.inventory_btn = Button(self.middle_right_frame,
-                                    file=os.path.join('assets', 'inventory-icon.png'),
-                                    tooltip={
-                                        'eng': 'Inventory',
-                                        'rus': 'Инвентарь'
-                                    })
+        self.inventory_btn = ToolTipButton(
+            self.middle_right_frame,
+            file=os.path.join('assets', 'inventory-icon.png'),
+            text_dict={
+                'eng': 'Inventory',
+                'rus': 'Инвентарь'
+            }
+        )
         self.inventory_btn.pack(fill=tk.BOTH)
 
-        btn4 = Button(self.middle_right_frame)
-        btn4.pack(fill=tk.BOTH, expand=True)
+        # btn4 = ToolTipButton(self.middle_right_frame)
+        # btn4.pack(fill=tk.BOTH, expand=True)
 
-        btn5 = Button(self.middle_right_frame)
-        btn5.pack(fill=tk.BOTH, expand=True)
+        # btn5 = ToolTipButton(self.middle_right_frame)
+        # btn5.pack(fill=tk.BOTH, expand=True)
 
-        btn6 = Button(self.middle_right_frame)
-        btn6.pack(fill=tk.BOTH, expand=True)
+        # btn6 = ToolTipButton(self.middle_right_frame)
+        # btn6.pack(fill=tk.BOTH, expand=True)
 
         self.bottom_frame = tk.Frame(self)
         self.bottom_frame.pack(fill=tk.BOTH)
