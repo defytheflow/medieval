@@ -5,14 +5,11 @@
 import os
 import tkinter as tk
 
+from widget_behavior import Bilingual
 from utils import create_photo_image
-from interfaces import Bilingual
 
 
 class ToolTip:
-    """
-        Info box shown over a widget.
-    """
 
     def __init__(self, text):
         self.text = text
@@ -65,28 +62,25 @@ class ToolTipButton(tk.Button, Bilingual):
             self.tooltip.text = self.text_dict['rus']
 
 
-class Label(tk.Label, Bilingual):
-    """
-        Styled tk.Label.
-    """
+class BilingualLabel(tk.Label, Bilingual):
 
     def __init__(self, *args, text_dict, **kwargs):
-        self.dict = text_dict
+        self.text_dict = text_dict
         super().__init__(*args,
                          **kwargs,
-                         text=self.dict['eng'],
-                         background='#c9b662',
-                         foreground='#000',
-                         borderwidth=5,
-                         padx=10,
-                         relief=tk.RAISED,
-                         anchor=tk.NW)
+                         text=self.text_dict['eng'])
+                         # background='#c9b662',
+                         # foreground='#000',
+                         # borderwidth=5,
+                         # padx=10,
+                         # relief=tk.RAISED,
+                         # anchor=tk.NW)
 
     def switch_lang(self, lang):
         if lang == 'English':
-            self.configure(text=self.dict['eng'])
+            self.configure(text=self.text_dict['eng'])
         elif lang == 'Русский':
-            self.configure(text=self.dict['rus'])
+            self.configure(text=self.text_dict['rus'])
 
 
 class Radiobutton(tk.Radiobutton):

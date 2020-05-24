@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 
-from widgets import ToolTipButton, Label, Radiobutton
+from widgets import ToolTipButton, BilingualLabel, Radiobutton
 from utils import create_photo_image
 
 
@@ -15,21 +15,25 @@ class MainFrame(tk.Frame):
         self.top_frame = tk.Frame(self)
         self.top_frame.pack(fill=tk.BOTH)
 
-        hint_lbl = Label(self.top_frame,
-                         text_dict={
-                             'eng': 'Hint:',
-                             'rus': 'Подсказка:'
-                         })
+        hint_lbl = BilingualLabel(
+            self.top_frame,
+            text_dict={
+                'eng': 'Hint:',
+                'rus': 'Подсказка:'
+            }
+        )
         hint_lbl.pack(fill=tk.BOTH)
 
         self.middle_frame = tk.Frame(self, bg='red')
         self.middle_frame.pack(fill=tk.BOTH)
 
-        main_canvas = tk.Canvas(self.middle_frame,
-                                width=self.winfo_reqwidth() * 0.9,
-                                height=self.winfo_reqheight() * 7 / 9,
-                                highlightbackground='#000',
-                                relief=tk.FLAT)
+        main_canvas = tk.Canvas(
+            self.middle_frame,
+            width=self.winfo_reqwidth() * 0.9,
+            height=self.winfo_reqheight() * 7 / 9,
+            highlightbackground='#000',
+            relief=tk.FLAT
+        )
         main_canvas.pack(side=tk.LEFT, fill=tk.BOTH)
 
         self.main_canvas_image = create_photo_image(
@@ -85,12 +89,14 @@ class MainFrame(tk.Frame):
         self.bottom_frame = tk.Frame(self)
         self.bottom_frame.pack(fill=tk.BOTH)
 
-        bottom_canvas = tk.Canvas(self.bottom_frame,
-                                  width=180,
-                                  background=self.BG_COLOR,
-                                  borderwidth=5,
-                                  highlightbackground='#000',
-                                  relief=tk.RAISED)
+        bottom_canvas = tk.Canvas(
+            self.bottom_frame,
+            width=180,
+            background=self.BG_COLOR,
+            borderwidth=5,
+            highlightbackground='#000',
+            relief=tk.RAISED
+        )
         bottom_canvas.pack(side=tk.LEFT, fill=tk.BOTH)
 
         self.bottom_canvas_image = create_photo_image(
@@ -101,19 +107,22 @@ class MainFrame(tk.Frame):
             0, 0, image=self.bottom_canvas_image, anchor=tk.NW
         )
 
-        self.bottom_right_frame = tk.Frame(self.bottom_frame,
-                                           width=(self.winfo_reqwidth() -
-                                                  bottom_canvas.winfo_reqwidth()),
-                                           background=self.BG_COLOR,
-                                           borderwidth=5,
-                                           relief=tk.RAISED)
+        self.bottom_right_frame = tk.Frame(
+            self.bottom_frame,
+            width=(self.winfo_reqwidth() - bottom_canvas.winfo_reqwidth()),
+            background=self.BG_COLOR,
+            borderwidth=5,
+            relief=tk.RAISED
+        )
         self.bottom_right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        dialogue_lbl = Label(self.bottom_right_frame,
-                             text_dict={
-                                 'eng': 'Question',
-                                 'rus': 'Вопрос'
-                             })
+        dialogue_lbl = BilingualLabel(
+            self.bottom_right_frame,
+            text_dict={
+                'eng': 'Question',
+                'rus': 'Вопрос'
+            }
+        )
         dialogue_lbl.pack(fill=tk.BOTH)
 
         choice_var = tk.IntVar()

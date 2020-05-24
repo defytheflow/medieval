@@ -2,8 +2,8 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
-from widgets import Label, ToolTipButton
-from interfaces import Bilingual
+from widget_behavior import Bilingual
+from widgets import ToolTipButton, BilingualLabel
 from utils import get_all_children
 
 
@@ -28,26 +28,35 @@ class SettingsFrame(tk.Frame):
         return_btn.pack(side=tk.LEFT)
         return_btn.bind('<Button-1>', self.hide)
 
-        settings_lbl = tk.Label(self.top_frame,
-                                text='Settings Menu',
-                                background=self.BG_COLOR,
-                                font=('DejaVu Serif', '32', 'bold italic'))
+        settings_lbl = BilingualLabel(
+            self.top_frame,
+            text_dict={
+                'eng': 'Settings Menu',
+                'rus': 'Nastroiki menu',
+            },
+            background=self.BG_COLOR,
+            font=('DejaVu Serif', '32', 'bold italic')
+        )
         settings_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.top_right_frame = tk.Frame(self.top_frame,
-                                        width=return_btn.winfo_reqwidth(),
-                                        background=self.BG_COLOR)
+        self.top_right_frame = tk.Frame(
+            self.top_frame,
+            width=return_btn.winfo_reqwidth(),
+            background=self.BG_COLOR
+        )
         self.top_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
         lang_frame = tk.Frame(self, background=self.BG_COLOR)
         lang_frame.pack()
 
-        lang_lbl = Label(lang_frame,
-                         text_dict={
-                            'eng': 'Language',
-                            'rus': 'Язык',
-                         },
-                         font=('DejaVu Serif', '24', 'bold'))
+        lang_lbl = BilingualLabel(
+            lang_frame,
+            text_dict={
+                'eng': 'Language',
+                'rus': 'Язык',
+            },
+            font=('DejaVu Serif', '24', 'bold')
+        )
         lang_lbl.pack(side=tk.LEFT)
 
         style = ttk.Style()
