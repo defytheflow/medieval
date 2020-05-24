@@ -38,9 +38,9 @@ class ToolTip:
             self.toplevel.destroy()
 
 
-class ToolTipButton(tk.Button, Bilingual):
+class ImageButton(tk.Button):
 
-    def __init__(self, master, file, text_dict, **kwargs):
+    def __init__(self, master, file, **kwargs):
         self.image = create_photo_image(file, (110, 110)) if file else None
         super().__init__(master,
                          image=self.image,
@@ -50,6 +50,12 @@ class ToolTipButton(tk.Button, Bilingual):
                          activebackground='#7f6f28',
                          relief=tk.RAISED,
                          **kwargs)
+
+
+class ToolTipButton(ImageButton, Bilingual):
+
+    def __init__(self, master, file, text_dict, **kwargs):
+        super().__init__(master, file)
         self.text_dict = text_dict
         self.tooltip = ToolTip(text_dict['eng'])
         self.bind('<Enter>', self.tooltip.show)

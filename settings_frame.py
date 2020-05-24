@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from widget_behavior import Bilingual
-from widgets import ToolTipButton, BilingualLabel
+from widgets import ImageButton, BilingualLabel
 from utils import get_all_children
 
 
@@ -17,13 +17,9 @@ class SettingsFrame(tk.Frame):
         self.top_frame = tk.Frame(self, background='#0f0')
         self.top_frame.pack(fill=tk.BOTH)
 
-        return_btn = ToolTipButton(
+        return_btn = ImageButton(
             self.top_frame,
             file=os.path.join('assets', 'return-icon.png'),
-            text_dict={
-                'eng': 'Return',
-                'rus': 'Nazad',
-            },
         )
         return_btn.pack(side=tk.LEFT)
         return_btn.bind('<Button-1>', self.hide)
@@ -31,8 +27,8 @@ class SettingsFrame(tk.Frame):
         settings_lbl = BilingualLabel(
             self.top_frame,
             text_dict={
-                'eng': 'Settings Menu',
-                'rus': 'Nastroiki menu',
+                'eng': 'Settings',
+                'rus': 'Настройки',
             },
             background=self.BG_COLOR,
             font=('DejaVu Serif', '32', 'bold italic')
@@ -55,7 +51,9 @@ class SettingsFrame(tk.Frame):
                 'eng': 'Language',
                 'rus': 'Язык',
             },
-            font=('DejaVu Serif', '24', 'bold')
+            font=('DejaVu Serif', '24', 'bold'),
+            padx=20,
+            background=self.BG_COLOR,
         )
         lang_lbl.pack(side=tk.LEFT)
 
