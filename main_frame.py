@@ -1,8 +1,8 @@
 import os
 import tkinter as tk
 
+import utils
 from widgets import ToolTipButton, BilingualLabel, Radiobutton
-from utils import create_photo_image
 
 
 class MainFrame(tk.Frame):
@@ -10,7 +10,7 @@ class MainFrame(tk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Buttons.
+        # Public bindable Buttons.
         self.settings_btn = None
         self.map_btn = None
         self.inventory_btn = None
@@ -18,15 +18,15 @@ class MainFrame(tk.Frame):
         self.bank_btn = None
         self.smith_btn = None
 
-        # Labels.
+        # Public bindable Labels.
         self.hint_lbl = None
         self.dialogue_lbl = None
 
-        # Canvases.
+        # Public bindable Canvases.
         self.main_canvas = None
         self.bottom_canvas = None
 
-        # Variables.
+        # Public Variables.
         self.choice_var = tk.IntVar(self)
 
         self._init_top_frame()
@@ -71,7 +71,7 @@ class MainFrame(tk.Frame):
         )
         self.main_canvas.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        self.main_canvas_image = create_photo_image(
+        self.main_canvas_image = utils.create_photo_image(
             os.path.join('assets', 'bazaar.jpg'),
             (int(self.main_canvas['width']), int(self.main_canvas['height'])),
         )
@@ -160,7 +160,7 @@ class MainFrame(tk.Frame):
         )
         self.bottom_canvas.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        self.bottom_canvas_image = create_photo_image(
+        self.bottom_canvas_image = utils.create_photo_image(
             os.path.join('assets', 'witch.png'),
             (200, 200),
         )

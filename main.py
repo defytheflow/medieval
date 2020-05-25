@@ -24,7 +24,12 @@ settings_frame.lang_combobox.bind(
     lambda e: utils.notify_bilingual_children(window, settings_frame.lang_var.get())
 )
 
-map_frame = MapFrame(window, background=config.BG_COLOR)
+map_frame = MapFrame(
+    window,
+    width=config.WIDTH,
+    height=config.HEIGHT,
+    background=config.BG_COLOR
+)
 map_frame.return_btn.bind(
     '<Button-1>',
     lambda e: utils.set_current_frame(main_frame, map_frame))

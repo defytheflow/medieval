@@ -1,8 +1,7 @@
 import tkinter as tk
 
 import config
-import utils
-from widgets import BilingualLabel, Combobox, TitleFrame
+from widgets import TitleFrame, BilingualLabel, Combobox
 
 
 class SettingsFrame(TitleFrame):
@@ -18,11 +17,11 @@ class SettingsFrame(TitleFrame):
         super().__init__(*args,
                          text_dict={'eng': 'Settings', 'rus': 'Настройки'},
                          **kwargs)
-        # Variables.
+        # Public Variables.
         self.lang_var = tk.StringVar(self)
         self.lang_var.set('English')
 
-        # Comboboxes.
+        # Public bindable Comboboxes.
         self.lang_combobox = None
 
         self._init_lang_frame()
@@ -41,24 +40,18 @@ class SettingsFrame(TitleFrame):
 
         lang_lbl = BilingualLabel(
             lang_frame,
-            text_dict={
-                'eng': 'Language',
-                'rus': 'Язык',
-            },
+            text_dict={'eng': 'Language', 'rus': 'Язык'},
+            width=self.LABEL_WIDTH,
             foreground='#000',
             background=self['background'],
-            font=(self.FONT_NAME, '24', 'bold'),
-            width=self.LABEL_WIDTH,
+            font=(self.FONT_NAME, '20', 'bold'),
             anchor=tk.NW,
         )
         lang_lbl.pack(side=tk.LEFT)
 
         self.lang_combobox = Combobox(
             lang_frame,
-            values=[
-                'Русский',
-                'English',
-            ],
+            values=['Русский', 'English'],
             textvariable=self.lang_var,
             state='readonly',
             background=self['background'],
@@ -82,7 +75,7 @@ class SettingsFrame(TitleFrame):
             },
             foreground='#000',
             background=self['background'],
-            font=(self.FONT_NAME, '24', 'bold'),
+            font=(self.FONT_NAME, '20', 'bold'),
             width=self.LABEL_WIDTH,
             anchor=tk.NW,
         )

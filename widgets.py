@@ -39,10 +39,14 @@ class ToolTip:
 
 class ImageButton(tk.Button):
 
-    def __init__(self, master, file, **kwargs):
-        self.image = utils.create_photo_image(file, (100, 100))
+    def __init__(self, *args, file, **kwargs):
+        if kwargs.get('width') and kwargs.get('height'):
+            width, height = kwargs.get('width'), kwargs.get('height')
+        else:
+            width, height = 100, 100
+        self.image = utils.create_photo_image(file, (width, height))
         super().__init__(
-            master,
+            *args,
             image=self.image,
             background='#c9b662',
             borderwidth=5,
@@ -55,8 +59,8 @@ class ImageButton(tk.Button):
 
 class ToolTipButton(ImageButton, Bilingual):
 
-    def __init__(self, master, file, text_dict, **kwargs):
-        super().__init__(master, file)
+    def __init__(self, *args, file, text_dict, **kwargs):
+        super().__init__(*args, file=file)
         Bilingual.__init__(self, text_dict)
 
         self.tooltip = ToolTip(text_dict['eng'])
@@ -143,7 +147,7 @@ class TitleFrame(tk.Frame, Bilingual):
         self.title_lbl = None
         self.return_btn = None
 
-        self._init_components()
+        self._init_title_frame_components()
 
     # Overrides.
     def switch_lang(self, lang):
@@ -153,21 +157,23 @@ class TitleFrame(tk.Frame, Bilingual):
             self.title_lbl.configure(text=self.text_dict['rus'])
 
     # Private.
-    def _init_components(self):
+    def _init_title_frame_components(self):
         """
             Handles construction of title frame.
         """
-        title_frame = tk.Frame(self)
-        title_frame.pack(fill=tk.BOTH)
+        self.title_frame = tk.Frame(self)
+        self.title_frame.pack(fill=tk.BOTH)
 
         self.return_btn = ImageButton(
-            title_frame,
+            self.title_frame,
             file=os.path.join('assets', 'return-icon.png'),
+            width=40,
+            height=40,
         )
-        self.return_btn.pack(side=tk.LEFT)
+        self.return_btn.pack(side=tk.LEFT, fill=tk.Y)
 
         self.title_lbl = BilingualLabel(
-            title_frame,
+            self.title_frame,
             text_dict=self.text_dict,
             background=self['background'],
             font=('DejaVu Serif', '32', 'bold italic'),
@@ -175,7 +181,7 @@ class TitleFrame(tk.Frame, Bilingual):
         self.title_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         title_right_frame = tk.Frame(
-            title_frame,
+            self.title_frame,
             width=self.return_btn.winfo_reqwidth(),
             background=self['background']
         )
