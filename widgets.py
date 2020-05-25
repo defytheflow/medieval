@@ -1,17 +1,15 @@
-"""
-    Custom widgets.
-"""
-
 import os
 import tkinter as tk
+import tkinter.ttk as ttk
+from typing import Dict
 
-from widget_behavior import Bilingual
+from widgets_behavior import Bilingual
 from utils import create_photo_image
 
 
 class ToolTip:
 
-    def __init__(self, text):
+    def __init__(self, text: str):
         self.text = text
         self.padx = 10
         self.toplevel = None
@@ -24,14 +22,15 @@ class ToolTip:
         self.toplevel.wm_geometry(f'+{x}+{y}')
         self.toplevel.wm_overrideredirect(1)
 
-        label = tk.Label(self.toplevel,
-                         text=self.text,
-                         background='#c9b662',
-                         borderwidth=3,
-                         padx=self.padx,
-                         font=('DejaVu Serif', '12', 'italic'),
-                         relief=tk.RAISED)
-        label.pack(fill=tk.BOTH, expand=True)
+        label = tk.Label(
+            self.toplevel,
+            text=self.text,
+            background='#c9b662',
+            borderwidth=3,
+            padx=self.padx,
+            font=('DejaVu Serif', '12', 'italic'),
+            relief=tk.RAISED
+        ).pack(fill=tk.BOTH, expand=True)
 
     def hide(self, event):
         if self.toplevel:
@@ -40,28 +39,31 @@ class ToolTip:
 
 class ImageButton(tk.Button):
 
-    def __init__(self, master, file, **kwargs):
-        self.image = create_photo_image(file, (110, 110)) if file else None
-        super().__init__(master,
-                         image=self.image,
-                         background='#c9b662',
-                         borderwidth=5,
-                         highlightbackground='#000',
-                         activebackground='#7f6f28',
-                         relief=tk.RAISED,
-                         **kwargs)
+    def __init__(self, master: tk.Widget, file: str, **kwargs):
+        self.image = create_photo_image(file, (110, 110))
+        super().__init__(
+            master,
+            image=self.image,
+            background='#c9b662',
+            borderwidth=5,
+            highlightbackground='#000',
+            activebackground='#7f6f28',
+            relief=tk.RAISED,
+            **kwargs
+        )
 
 
 class ToolTipButton(ImageButton, Bilingual):
 
-    def __init__(self, master, file, text_dict, **kwargs):
+    def __init__(self, master: tk.Widget, file: str, text_dict: Dict[str, str],
+                 **kwargs):
         super().__init__(master, file)
         self.text_dict = text_dict
         self.tooltip = ToolTip(text_dict['eng'])
         self.bind('<Enter>', self.tooltip.show)
         self.bind('<Leave>', self.tooltip.hide)
 
-    def switch_lang(self, lang):
+    def switch_lang(self, lang: str):
         if lang == 'English':
             self.tooltip.text = self.text_dict['eng']
         elif lang == 'Русский':
@@ -70,33 +72,49 @@ class ToolTipButton(ImageButton, Bilingual):
 
 class BilingualLabel(tk.Label, Bilingual):
 
-    def __init__(self, *args, text_dict, **kwargs):
+    def __init__(self, *args, text_dict: Dict[str, str], **kwargs):
         self.text_dict = text_dict
-        super().__init__(*args,
-                         **kwargs,
-                         text=self.text_dict['eng'])
+        super().__init__(*args, **kwargs, text=self.text_dict['eng'])
 
-    def switch_lang(self, lang):
+    def switch_lang(self, lang: str):
         if lang == 'English':
             self.configure(text=self.text_dict['eng'])
         elif lang == 'Русский':
             self.configure(text=self.text_dict['rus'])
 
 
+class Combobox(ttk.Combobox):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        ttk.Style().map(
+            'TCombobox',
+            background=[('readonly', '#c9b662')],
+            fieldbackground=[('readonly', '#c9b662')],
+            selectbackground=[('readonly', '#c9b662')],
+            selectforeground=[('readonly', '#000')],
+            borderwidth=[('readonly', 5)],
+            selectborderwidth=[('readonly', 0)],
+            arrowsize=[('readonly', 24)],
+        )
+
+        self.master.option_add('*TCombobox*Listbox.background', '#c9b662')
+        self.master.option_add('*TCombobox*Listbox.selectBackground', '#7f6f28')
+        self.master.option_add('*TCombobox*Listbox.font', ('DejaVu Serif', '20'))
+
+
 class Radiobutton(tk.Radiobutton):
-    """
-        Styled tk.Radiobutton.
-    """
 
     def __init__(self, *args, **kwargs):
         file = os.path.join('assets', 'choice-icon.png')
         self.image = create_photo_image(file, (180, 90))
-        super().__init__(*args,
-                         **kwargs,
-                         image=self.image,
-                         background='#c9b662',
-                         activebackground='#c9b662',
-                         highlightbackground='#c9b662',
-                         compound=tk.CENTER)
-
-
+        super().__init__(
+            *args,
+            **kwargs,
+            image=self.image,
+            background='#c9b662',
+            activebackground='#c9b662',
+            highlightbackground='#c9b662',
+            compound=tk.CENTER
+        )

@@ -1,4 +1,4 @@
-#!/home/defytheflow/.envs/medieval/bin/python3
+#!/usr/bin/python3
 
 import tkinter as tk
 
