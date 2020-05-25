@@ -10,6 +10,3 @@ HEIGHT = 900
 
 # Background color.
 BG_COLOR = '#c9b662'
-
-# Foreground color.
-# FG_COLOR = '#000'
