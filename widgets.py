@@ -41,7 +41,7 @@ class ToolTip:
 class ImageButton(tk.Button):
 
     def __init__(self, master: tk.Widget, file: str, **kwargs):
-        self.image = create_photo_image(file, (110, 110))
+        self.image = create_photo_image(file, (100, 100))
         super().__init__(
             master,
             image=self.image,

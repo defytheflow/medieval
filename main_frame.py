@@ -14,7 +14,9 @@ class MainFrame(tk.Frame):
         self.settings_btn = None
         self.map_btn = None
         self.inventory_btn = None
-        self.store_btn = None
+        self.market_btn = None
+        self.bank_btn = None
+        self.smith_btn = None
 
         # Labels.
         self.hint_lbl = None
@@ -78,7 +80,7 @@ class MainFrame(tk.Frame):
         )
 
         middle_right_frame = tk.Frame(middle_frame)
-        middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+        middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.settings_btn = ToolTipButton(
             middle_right_frame,
@@ -88,7 +90,7 @@ class MainFrame(tk.Frame):
                 'rus': 'Настройки'
             }
         )
-        self.settings_btn.pack(fill=tk.BOTH)
+        self.settings_btn.pack(fill=tk.BOTH, expand=True)
 
         self.map_btn = ToolTipButton(
             middle_right_frame,
@@ -98,7 +100,7 @@ class MainFrame(tk.Frame):
                 'rus': 'Карта'
             }
         )
-        self.map_btn.pack(fill=tk.BOTH)
+        self.map_btn.pack(fill=tk.BOTH, expand=True)
 
         self.inventory_btn = ToolTipButton(
             middle_right_frame,
@@ -108,11 +110,38 @@ class MainFrame(tk.Frame):
                 'rus': 'Инвентарь'
             }
         )
-        self.inventory_btn.pack(fill=tk.BOTH)
+        self.inventory_btn.pack(fill=tk.BOTH, expand=True)
 
-        # TODO store button.
-        # btn4 = ToolTipButton(self.middle_right_frame)
-        # btn4.pack(fill=tk.BOTH, expand=True)
+        self.market_btn = ToolTipButton(
+            middle_right_frame,
+            file=os.path.join('assets', 'market-icon.png'),
+            text_dict={
+                'eng': 'Market',
+                'rus': 'Магазин'
+            }
+        )
+        self.market_btn.pack(fill=tk.BOTH, expand=True)
+
+        self.bank_btn = ToolTipButton(
+            middle_right_frame,
+            file=os.path.join('assets', 'coin-icon.png'),
+            text_dict={
+                'eng': 'Bank',
+                'rus': 'Банк'
+            }
+        )
+        self.bank_btn.pack(fill=tk.BOTH, expand=True)
+
+        self.smith_btn = ToolTipButton(
+            middle_right_frame,
+            file=os.path.join('assets', 'smith-icon.png'),
+            text_dict={
+                'eng': 'Smith',
+                'rus': 'Кузнец'
+            },
+        )
+        self.smith_btn.pack(fill=tk.BOTH, expand=True)
+        self.smith_btn.configure(state=tk.DISABLED)
 
     def _init_bottom_frame(self):
         """
