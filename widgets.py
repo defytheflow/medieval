@@ -30,7 +30,8 @@ class ToolTip:
             padx=self.padx,
             font=('DejaVu Serif', '12', 'italic'),
             relief=tk.RAISED
-        ).pack(fill=tk.BOTH, expand=True)
+        )
+        label.pack(fill=tk.BOTH, expand=True)
 
     def hide(self, event):
         if self.toplevel:
@@ -55,10 +56,10 @@ class ImageButton(tk.Button):
 
 class ToolTipButton(ImageButton, Bilingual):
 
-    def __init__(self, master: tk.Widget, file: str, text_dict: Dict[str, str],
-                 **kwargs):
+    def __init__(self, master, file, text_dict: Dict[str, str], **kwargs):
         super().__init__(master, file)
-        self.text_dict = text_dict
+        Bilingual.__init__(self, text_dict)
+
         self.tooltip = ToolTip(text_dict['eng'])
         self.bind('<Enter>', self.tooltip.show)
         self.bind('<Leave>', self.tooltip.hide)
@@ -73,7 +74,7 @@ class ToolTipButton(ImageButton, Bilingual):
 class BilingualLabel(tk.Label, Bilingual):
 
     def __init__(self, *args, text_dict: Dict[str, str], **kwargs):
-        self.text_dict = text_dict
+        Bilingual.__init__(self, text_dict)
         super().__init__(*args, **kwargs, text=self.text_dict['eng'])
 
     def switch_lang(self, lang: str):
@@ -88,20 +89,33 @@ class Combobox(ttk.Combobox):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        ttk.Style().map(
-            'TCombobox',
-            background=[('readonly', '#c9b662')],
-            fieldbackground=[('readonly', '#c9b662')],
-            selectbackground=[('readonly', '#c9b662')],
-            selectforeground=[('readonly', '#000')],
-            borderwidth=[('readonly', 5)],
-            selectborderwidth=[('readonly', 0)],
-            arrowsize=[('readonly', 24)],
+        ttk.Style().map('TCombobox',
+            background=[
+                ('readonly', self['background'])
+            ],
+            fieldbackground=[
+                ('readonly', self['background'])
+            ],
+            selectbackground=[
+                ('readonly', self['background'])
+            ],
+            selectforeground=[
+                ('readonly', self['foreground'])
+            ],
+            borderwidth=[
+                ('readonly', 5)
+            ],
+            selectborderwidth=[
+                ('readonly', 0)
+            ],
+            arrowsize=[
+                ('readonly', 24)
+            ],
         )
 
-        self.master.option_add('*TCombobox*Listbox.background', '#c9b662')
+        self.master.option_add('*TCombobox*Listbox.background', self['background'])
         self.master.option_add('*TCombobox*Listbox.selectBackground', '#7f6f28')
-        self.master.option_add('*TCombobox*Listbox.font', ('DejaVu Serif', '20'))
+        self.master.option_add('*TCombobox*Listbox.font', self['font'])
 
 
 class Radiobutton(tk.Radiobutton):

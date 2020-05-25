@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-from tkinter import ttk
 
 from widgets import ImageButton, BilingualLabel, Combobox
 from widgets_behavior import Bilingual
@@ -9,13 +8,13 @@ from utils import get_all_widget_children
 
 class SettingsFrame(tk.Frame):
 
-    BG_COLOR = '#c9b662'
     FONT_NAME = 'Dejavu Serif'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.lang_var = tk.StringVar(self)   # Language.
+        # Variables.
+        self.lang_var = tk.StringVar(self)
         self.lang_var.set('English')
 
         self._init_top_frame()
@@ -56,7 +55,7 @@ class SettingsFrame(tk.Frame):
                 'eng': 'Settings',
                 'rus': 'Настройки',
             },
-            background=self.BG_COLOR,
+            background=self['background'],
             font=(self.FONT_NAME, '32', 'bold italic')
         )
         settings_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -64,16 +63,15 @@ class SettingsFrame(tk.Frame):
         top_right_frame = tk.Frame(
             top_frame,
             width=return_btn.winfo_reqwidth(),
-            background=self.BG_COLOR
+            background=self['background']
         )
         top_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
-
 
     def _init_lang_frame(self):
         """
             Handles construction of the lang frame.
         """
-        lang_frame = tk.Frame(self, background=self.BG_COLOR)
+        lang_frame = tk.Frame(self, background=self['background'])
         lang_frame.pack()
 
         lang_lbl = BilingualLabel(
@@ -82,9 +80,10 @@ class SettingsFrame(tk.Frame):
                 'eng': 'Language',
                 'rus': 'Язык',
             },
+            foreground='#000',
+            background=self['background'],
             font=(self.FONT_NAME, '24', 'bold'),
             padx=20,
-            background=self.BG_COLOR,
         )
         lang_lbl.pack(side=tk.LEFT)
 
@@ -96,6 +95,7 @@ class SettingsFrame(tk.Frame):
             ],
             textvariable=self.lang_var,
             state='readonly',
+            background=self['background'],
             font=(self.FONT_NAME, '20'),
         )
 

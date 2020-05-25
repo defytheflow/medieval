@@ -14,7 +14,7 @@ window.resizable(0, 0)
 
 settings_frame = SettingsFrame(
     window,
-    background=config.BG_COLOR
+    background=config.BG_COLOR,
 )
 
 main_frame = MainFrame(
