@@ -7,34 +7,44 @@ from utils import create_photo_image
 
 class MainFrame(tk.Frame):
 
-    BG_COLOR = '#c9b662'
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.top_frame = tk.Frame(self)
-        self.top_frame.pack(fill=tk.BOTH)
+        self._init_top_frame()
+        self._init_middle_frame()
+        self._init_bottom_frame()
+
+    def _init_top_frame(self):
+        """
+            Handles construction of the top frame.
+        """
+        top_frame = tk.Frame(self)
+        top_frame.pack(fill=tk.BOTH)
 
         hint_lbl = BilingualLabel(
-            self.top_frame,
+            top_frame,
             text_dict={
                 'eng': 'Hint:',
                 'rus': 'Подсказка:'
             },
-            background='#c9b662',
+            background=self['background'],
             foreground='#000',
             borderwidth=5,
             padx=10,
             relief=tk.RAISED,
-            anchor=tk.NW
+            anchor=tk.NW,
         )
         hint_lbl.pack(fill=tk.BOTH)
 
-        self.middle_frame = tk.Frame(self, bg='red')
-        self.middle_frame.pack(fill=tk.BOTH)
+    def _init_middle_frame(self):
+        """
+            Handles construction of middle frame.
+        """
+        middle_frame = tk.Frame(self, bg='red')
+        middle_frame.pack(fill=tk.BOTH)
 
         main_canvas = tk.Canvas(
-            self.middle_frame,
+            middle_frame,
             width=self.winfo_reqwidth() * 0.9,
             height=self.winfo_reqheight() * 7 / 9,
             highlightbackground='#000',
@@ -50,11 +60,11 @@ class MainFrame(tk.Frame):
             0, 0, image=self.main_canvas_image, anchor=tk.NW
         )
 
-        self.middle_right_frame = tk.Frame(self.middle_frame)
-        self.middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+        middle_right_frame = tk.Frame(middle_frame)
+        middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
         self.settings_btn = ToolTipButton(
-            self.middle_right_frame,
+            middle_right_frame,
             file=os.path.join('assets', 'settings-icon.png'),
             text_dict={
                 'eng': 'Settings',
@@ -64,7 +74,7 @@ class MainFrame(tk.Frame):
         self.settings_btn.pack(fill=tk.BOTH)
 
         self.map_btn = ToolTipButton(
-            self.middle_right_frame,
+            middle_right_frame,
             file=os.path.join('assets', 'map-icon.png'),
             text_dict={
                 'eng': 'Map',
@@ -74,7 +84,7 @@ class MainFrame(tk.Frame):
         self.map_btn.pack(fill=tk.BOTH)
 
         self.inventory_btn = ToolTipButton(
-            self.middle_right_frame,
+            middle_right_frame,
             file=os.path.join('assets', 'inventory-icon.png'),
             text_dict={
                 'eng': 'Inventory',
@@ -83,22 +93,21 @@ class MainFrame(tk.Frame):
         )
         self.inventory_btn.pack(fill=tk.BOTH)
 
+        # TODO store button.
         # btn4 = ToolTipButton(self.middle_right_frame)
         # btn4.pack(fill=tk.BOTH, expand=True)
 
-        # btn5 = ToolTipButton(self.middle_right_frame)
-        # btn5.pack(fill=tk.BOTH, expand=True)
-
-        # btn6 = ToolTipButton(self.middle_right_frame)
-        # btn6.pack(fill=tk.BOTH, expand=True)
-
-        self.bottom_frame = tk.Frame(self)
-        self.bottom_frame.pack(fill=tk.BOTH)
+    def _init_bottom_frame(self):
+        """
+            Handles construction of the bottom frame.
+        """
+        bottom_frame = tk.Frame(self)
+        bottom_frame.pack(fill=tk.BOTH)
 
         bottom_canvas = tk.Canvas(
-            self.bottom_frame,
+            bottom_frame,
             width=180,
-            background=self.BG_COLOR,
+            background=self['background'],
             borderwidth=5,
             highlightbackground='#000',
             relief=tk.RAISED
@@ -113,22 +122,22 @@ class MainFrame(tk.Frame):
             0, 0, image=self.bottom_canvas_image, anchor=tk.NW
         )
 
-        self.bottom_right_frame = tk.Frame(
-            self.bottom_frame,
+        bottom_right_frame = tk.Frame(
+            bottom_frame,
             width=(self.winfo_reqwidth() - bottom_canvas.winfo_reqwidth()),
-            background=self.BG_COLOR,
+            background=self['background'],
             borderwidth=5,
             relief=tk.RAISED
         )
-        self.bottom_right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        bottom_right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         dialogue_lbl = BilingualLabel(
-            self.bottom_right_frame,
+            bottom_right_frame,
             text_dict={
                 'eng': 'Question',
                 'rus': 'Вопрос'
             },
-            background='#c9b662',
+            background=self['background'],
             foreground='#000',
             borderwidth=5,
             padx=10,
@@ -138,14 +147,18 @@ class MainFrame(tk.Frame):
         dialogue_lbl.pack(fill=tk.BOTH)
 
         choice_var = tk.IntVar()
-        choice_btn1 = Radiobutton(self.bottom_right_frame,
-                                  text='Yes',
-                                  value=1,
-                                  variable=choice_var)
+        choice_btn1 = Radiobutton(
+            bottom_right_frame,
+            text='Yes',
+            value=1,
+            variable=choice_var
+        )
         choice_btn1.pack(side=tk.LEFT, expand=True)
 
-        choice_btn2 = Radiobutton(self.bottom_right_frame,
-                                  text='No',
-                                  value=2,
-                                  variable=choice_var)
+        choice_btn2 = Radiobutton(
+            bottom_right_frame,
+            text='No',
+            value=2,
+            variable=choice_var
+        )
         choice_btn2.pack(side=tk.LEFT, expand=True)

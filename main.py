@@ -2,18 +2,28 @@
 
 import tkinter as tk
 
+import config
 from main_frame import MainFrame
 from settings_frame import SettingsFrame
 
 
 window = tk.Tk()
 window.title('Medieval')
-window.geometry('1200x900')
+window.geometry(f'{config.WIDTH}x{config.HEIGHT}')
 window.resizable(0, 0)
 
-settings_frame = SettingsFrame(window, background='#c9b662')
+settings_frame = SettingsFrame(
+    window,
+    background=config.BG_COLOR
+)
 
-main_frame = MainFrame(window, width=1200, height=900)
+main_frame = MainFrame(
+    window,
+    width=config.WIDTH,
+    height=config.HEIGHT,
+    background=config.BG_COLOR,
+)
+
 main_frame.settings_btn.bind('<Button-1>', settings_frame.show)
 main_frame.pack(fill=tk.BOTH)
 
