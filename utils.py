@@ -26,3 +26,8 @@ def get_all_widget_children(parent: tk.Widget) -> List[tk.Widget]:
         children.extend(get_all_widget_children(child))
 
     return set(children)
+
+
+def set_current_frame(current: tk.Frame, previous: tk.Frame):
+    previous.forget()
+    current.pack(fill=tk.BOTH, expand=True)

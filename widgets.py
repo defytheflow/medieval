@@ -1,10 +1,9 @@
 import os
 import tkinter as tk
 import tkinter.ttk as ttk
-from typing import Dict
 
+import utils
 from widgets_behavior import Bilingual
-from utils import create_photo_image
 
 
 class ToolTip:
@@ -40,8 +39,8 @@ class ToolTip:
 
 class ImageButton(tk.Button):
 
-    def __init__(self, master: tk.Widget, file: str, **kwargs):
-        self.image = create_photo_image(file, (100, 100))
+    def __init__(self, master, file, **kwargs):
+        self.image = utils.create_photo_image(file, (100, 100))
         super().__init__(
             master,
             image=self.image,
@@ -56,7 +55,7 @@ class ImageButton(tk.Button):
 
 class ToolTipButton(ImageButton, Bilingual):
 
-    def __init__(self, master, file, text_dict: Dict[str, str], **kwargs):
+    def __init__(self, master, file, text_dict, **kwargs):
         super().__init__(master, file)
         Bilingual.__init__(self, text_dict)
 
@@ -73,7 +72,7 @@ class ToolTipButton(ImageButton, Bilingual):
 
 class BilingualLabel(tk.Label, Bilingual):
 
-    def __init__(self, *args, text_dict: Dict[str, str], **kwargs):
+    def __init__(self, *args, text_dict, **kwargs):
         Bilingual.__init__(self, text_dict)
         super().__init__(*args, **kwargs, text=self.text_dict['eng'])
 
@@ -89,7 +88,8 @@ class Combobox(ttk.Combobox):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        ttk.Style().map('TCombobox',
+        ttk.Style().map(
+            'TCombobox',
             background=[
                 ('readonly', self['background'])
             ],
@@ -122,7 +122,7 @@ class Radiobutton(tk.Radiobutton):
 
     def __init__(self, *args, **kwargs):
         file = os.path.join('assets', 'choice-icon.png')
-        self.image = create_photo_image(file, (180, 90))
+        self.image = utils.create_photo_image(file, (180, 90))
         super().__init__(
             *args,
             **kwargs,
@@ -132,3 +132,51 @@ class Radiobutton(tk.Radiobutton):
             highlightbackground='#c9b662',
             compound=tk.CENTER
         )
+
+
+class TitleFrame(tk.Frame, Bilingual):
+
+    def __init__(self, *args, text_dict, **kwargs):
+        Bilingual.__init__(self, text_dict)
+        super().__init__(*args, **kwargs)
+
+        self.title_lbl = None
+        self.return_btn = None
+
+        self._init_components()
+
+    # Overrides.
+    def switch_lang(self, lang):
+        if lang == 'English':
+            self.title_lbl.configure(text=self.text_dict['eng'])
+        elif lang == 'Русский':
+            self.title_lbl.configure(text=self.text_dict['rus'])
+
+    # Private.
+    def _init_components(self):
+        """
+            Handles construction of title frame.
+        """
+        title_frame = tk.Frame(self)
+        title_frame.pack(fill=tk.BOTH)
+
+        self.return_btn = ImageButton(
+            title_frame,
+            file=os.path.join('assets', 'return-icon.png'),
+        )
+        self.return_btn.pack(side=tk.LEFT)
+
+        self.title_lbl = BilingualLabel(
+            title_frame,
+            text_dict=self.text_dict,
+            background=self['background'],
+            font=('DejaVu Serif', '32', 'bold italic'),
+        )
+        self.title_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        title_right_frame = tk.Frame(
+            title_frame,
+            width=self.return_btn.winfo_reqwidth(),
+            background=self['background']
+        )
+        title_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)

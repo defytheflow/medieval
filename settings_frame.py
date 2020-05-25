@@ -1,13 +1,12 @@
-import os
 import tkinter as tk
 
 import config
-from widgets import ImageButton, BilingualLabel, Combobox
+import utils
+from widgets import BilingualLabel, Combobox, TitleFrame
 from widgets_behavior import Bilingual
-from utils import get_all_widget_children
 
 
-class SettingsFrame(tk.Frame):
+class SettingsFrame(TitleFrame):
 
     FONT_NAME = 'Dejavu Serif'
     PADY = 50
@@ -17,7 +16,14 @@ class SettingsFrame(tk.Frame):
     LABEL_WIDTH = 10
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            *args,
+            text_dict={
+                'eng': 'Settings',
+                'rus': 'Настройки'
+            },
+            **kwargs,
+        )
 
         # Variables.
         self.lang_var = tk.StringVar(self)
@@ -26,57 +32,13 @@ class SettingsFrame(tk.Frame):
         # Comboboxes.
         self.lang_combobox = None
 
-        self._init_top_frame()
         self._init_lang_frame()
         self._init_scale_frame()
 
     def switch_lang(self, event):
-        for child in get_all_widget_children(self.master):
+        for child in utils.get_all_widget_children(self.master):
             if isinstance(child, Bilingual):
                 child.switch_lang(self.lang_var.get())
-
-    def show(self, event):
-        for child in self.master.winfo_children():
-            child.forget()
-        self.pack(fill=tk.BOTH, expand=True)
-
-    def hide(self, event):
-        for child in self.master.winfo_children():
-            child.pack(fill=tk.BOTH)
-        self.forget()
-
-    def _init_top_frame(self):
-        """
-            Handles construction of the top frame.
-        """
-        top_frame = tk.Frame(self)
-        top_frame.pack(fill=tk.BOTH)
-
-        return_btn = ImageButton(
-            top_frame,
-            file=os.path.join('assets', 'return-icon.png'),
-        )
-        return_btn.pack(side=tk.LEFT)
-        return_btn.bind('<Button-1>', self.hide)
-
-        settings_lbl = BilingualLabel(
-            top_frame,
-            text_dict={
-                'eng': 'Settings',
-                'rus': 'Настройки',
-            },
-            background=self['background'],
-            font=(self.FONT_NAME, '32', 'bold italic'),
-            width=100,
-        )
-        settings_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        top_right_frame = tk.Frame(
-            top_frame,
-            width=return_btn.winfo_reqwidth(),
-            background=self['background']
-        )
-        top_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
     def _init_lang_frame(self):
         """
