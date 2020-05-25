@@ -4,6 +4,7 @@ import tkinter as tk
 
 import config
 import utils
+
 from main_frame import MainFrame
 from map_frame import MapFrame
 from settings_frame import SettingsFrame
@@ -18,6 +19,10 @@ settings_frame = SettingsFrame(window, background=config.BG_COLOR)
 settings_frame.return_btn.bind(
     '<Button-1>',
     lambda e: utils.set_current_frame(main_frame, settings_frame))
+settings_frame.lang_combobox.bind(
+    '<<ComboboxSelected>>',
+    lambda e: utils.notify_bilingual_children(window, settings_frame.lang_var.get())
+)
 
 map_frame = MapFrame(window, background=config.BG_COLOR)
 map_frame.return_btn.bind(

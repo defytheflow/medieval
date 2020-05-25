@@ -3,7 +3,6 @@ import tkinter as tk
 import config
 import utils
 from widgets import BilingualLabel, Combobox, TitleFrame
-from widgets_behavior import Bilingual
 
 
 class SettingsFrame(TitleFrame):
@@ -16,15 +15,9 @@ class SettingsFrame(TitleFrame):
     LABEL_WIDTH = 10
 
     def __init__(self, *args, **kwargs):
-        super().__init__(
-            *args,
-            text_dict={
-                'eng': 'Settings',
-                'rus': 'Настройки'
-            },
-            **kwargs,
-        )
-
+        super().__init__(*args,
+                         text_dict={'eng': 'Settings', 'rus': 'Настройки'},
+                         **kwargs)
         # Variables.
         self.lang_var = tk.StringVar(self)
         self.lang_var.set('English')
@@ -34,11 +27,6 @@ class SettingsFrame(TitleFrame):
 
         self._init_lang_frame()
         self._init_scale_frame()
-
-    def switch_lang(self, event):
-        for child in utils.get_all_widget_children(self.master):
-            if isinstance(child, Bilingual):
-                child.switch_lang(self.lang_var.get())
 
     def _init_lang_frame(self):
         """
@@ -78,7 +66,6 @@ class SettingsFrame(TitleFrame):
         )
 
         self.lang_combobox.pack(side=tk.LEFT)
-        self.lang_combobox.bind('<<ComboboxSelected>>', self.switch_lang)
 
     def _init_scale_frame(self):
         scale_frame = tk.Frame(
