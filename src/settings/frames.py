@@ -1,7 +1,9 @@
 import tkinter as tk
 
 import config
-from widgets import TitleFrame, BilingualLabel, Combobox
+from widgets import TitleFrame, BilingualLabel
+
+from .widgets import Combobox
 
 
 class SettingsFrame(TitleFrame):
