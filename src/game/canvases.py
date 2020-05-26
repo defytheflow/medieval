@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 
+import config
 import utils
 
 
@@ -12,11 +13,14 @@ class GameCanvas(tk.Canvas):
         super().__init__(*args, **kwargs)
 
         self.ROCK_IMAGE = utils.create_photo_image(
-            os.path.join('assets', 'rock.jpeg'), (self.SQUARE, self.SQUARE))
+            os.path.join(config.SPRITES_PATH, 'rock.jpeg'),
+            (self.SQUARE, self.SQUARE))
         self.WATER_IMAGE = utils.create_photo_image(
-            os.path.join('assets', 'water.jpeg'), (self.SQUARE, self.SQUARE))
+            os.path.join(config.SPRITES_PATH, 'water.jpeg'),
+            (self.SQUARE, self.SQUARE))
         self.GRASS_IMAGE = utils.create_photo_image(
-            os.path.join('assets', 'grass.png'), (self.SQUARE, self.SQUARE))
+            os.path.join(config.SPRITES_PATH, 'grass.png'),
+            (self.SQUARE, self.SQUARE))
 
     # Public
     def generate_level(self, level_num):
@@ -64,6 +68,6 @@ class DialogueCanvas(tk.Canvas):
         super().__init__(*args, **kwargs)
 
         self.background_image = utils.create_photo_image(
-            os.path.join('assets', 'witch.png'),
+            os.path.join(config.IMAGES_PATH, 'witch.png'),
             (200, 200))
         self.create_image(0, 0, image=self.background_image, anchor=tk.NW)
