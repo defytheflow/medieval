@@ -5,6 +5,60 @@ import utils
 from widgets import ToolTipButton, BilingualLabel, Radiobutton
 
 
+class GameCanvas(tk.Canvas):
+
+    SQUARE = 20
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.ROCK_IMAGE = utils.create_photo_image(
+            os.path.join('assets', 'rock.jpeg'), (self.SQUARE, self.SQUARE))
+        self.WATER_IMAGE = utils.create_photo_image(
+            os.path.join('assets', 'water.jpeg'), (self.SQUARE, self.SQUARE))
+        self.GRASS_IMAGE = utils.create_photo_image(
+            os.path.join('assets', 'grass.png'), (self.SQUARE, self.SQUARE))
+
+    # Public
+    def generate_level(self, level_num):
+        if level_num == 1:
+            self._generate_level_one()
+
+    # Private
+    def _generate_level_one(self):
+        x, y = 0, 0
+
+        # LINE OF ROCKS
+        for i in range(int(self['width']) // self.SQUARE):
+            self.create_image(x, y, image=self.ROCK_IMAGE, anchor='nw')
+            x += self.SQUARE
+        y += self.SQUARE
+
+        # MIDDLE GRASS
+        for i in range(int(self['height']) // self.SQUARE - 2):  # two lines of rocks.
+
+            # LEFT ROCK
+            x = 0
+            self.create_image(x, y, image=self.ROCK_IMAGE, anchor='nw')
+            x += self.SQUARE
+
+            # GRASS ROW
+            for j in range(int(self['width']) // self.SQUARE - 2): # two rocks.
+                self.create_image(x, y, image=self.GRASS_IMAGE, anchor='nw')
+                x += self.SQUARE
+
+            # RIGHT ROCK
+            self.create_image(x, y, image=self.ROCK_IMAGE, anchor='nw')
+
+            y += self.SQUARE
+
+        # LINE OF ROCKS
+        x = 0
+        for i in range(int(self['width']) // self.SQUARE):
+            self.create_image(x, y, image=self.ROCK_IMAGE, anchor='nw')
+            x += self.SQUARE
+
+
 class MainFrame(tk.Frame):
 
     def __init__(self, *args, **kwargs):
@@ -22,8 +76,8 @@ class MainFrame(tk.Frame):
         self.hint_lbl = None
         self.dialogue_lbl = None
 
-        # Public bindable Canvases.
-        self.main_canvas = None
+        # Public canvases.
+        self.game_canvas = None
         self.bottom_canvas = None
 
         # Public Variables.
@@ -62,22 +116,15 @@ class MainFrame(tk.Frame):
         middle_frame = tk.Frame(self)
         middle_frame.pack(fill=tk.BOTH)
 
-        self.main_canvas = tk.Canvas(
+        self.game_canvas = GameCanvas(
             middle_frame,
             width=self['width'] * 0.9,
             height=self['height'] * 7 / 9,
             highlightbackground='#000',
             relief=tk.FLAT,
         )
-        self.main_canvas.pack(side=tk.LEFT, fill=tk.BOTH)
-
-        self.main_canvas_image = utils.create_photo_image(
-            os.path.join('assets', 'bazaar.jpg'),
-            (int(self.main_canvas['width']), int(self.main_canvas['height'])),
-        )
-        self.main_canvas.create_image(
-            0, 0, image=self.main_canvas_image, anchor=tk.NW
-        )
+        self.game_canvas.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.game_canvas.generate_level(1)
 
         middle_right_frame = tk.Frame(middle_frame)
         middle_right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -111,6 +158,7 @@ class MainFrame(tk.Frame):
             }
         )
         self.inventory_btn.pack(fill=tk.BOTH, expand=True)
+        self.inventory_btn.configure(state=tk.DISABLED)
 
         self.market_btn = ToolTipButton(
             middle_right_frame,
@@ -121,6 +169,7 @@ class MainFrame(tk.Frame):
             }
         )
         self.market_btn.pack(fill=tk.BOTH, expand=True)
+        self.market_btn.configure(state=tk.DISABLED)
 
         self.bank_btn = ToolTipButton(
             middle_right_frame,
@@ -131,6 +180,7 @@ class MainFrame(tk.Frame):
             }
         )
         self.bank_btn.pack(fill=tk.BOTH, expand=True)
+        self.bank_btn.configure(state=tk.DISABLED)
 
         self.smith_btn = ToolTipButton(
             middle_right_frame,
