@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 
+import utils
 import config
 from widgets import ToolTipButton, BilingualLabel
 
@@ -56,6 +57,7 @@ class GameFrame(tk.Frame):
 
     def _init_game_frame(self):
         self.game_frame = tk.Frame(self)
+
         self.game_canvas = GameCanvas(
             self.game_frame,
             width=self['width'] * 9 / 10,
