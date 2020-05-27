@@ -5,9 +5,7 @@ import tkinter as tk
 import config
 import utils
 
-from game.frames import GameFrame
-from map.frames import MapFrame
-from settings.frames import SettingsFrame
+from frames import GameFrame, SettingsFrame, MapFrame
 
 
 window = tk.Tk()

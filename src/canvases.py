@@ -4,9 +4,7 @@ import tkinter as tk
 import config
 import utils
 
-from sprite import Sprite
-
-from .sprites import Character
+from sprites import Sprite, Character
 
 
 class GameCanvas(tk.Canvas):
@@ -113,6 +111,18 @@ class DialogueCanvas(tk.Canvas):
         super().__init__(*args, **kwargs)
 
         self.background_image = utils.create_photo_image(
-            os.path.join(config.IMAGES_PATH, 'witch.png'),
+            os.path.join(config.ASSETS_ROOT, 'witch.png'),
             (200, 200))
         self.create_image(0, 0, image=self.background_image, anchor='nw')
+
+
+class MapCanvas(tk.Canvas):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.background_image = utils.create_photo_image(
+            os.path.join(config.ASSETS_ROOT, 'map.png'),
+            (int(self['width']), int(self['height'])))
+
+        self.create_image(0, 0, image=self.background_image, anchor=tk.NW)

@@ -3,7 +3,7 @@ from typing import List
 
 from PIL import Image, ImageTk
 
-from widgets_behavior import Bilingual
+from widgets import BilingualWidget
 
 
 def create_photo_image(path: str, size: tuple = None) -> tk.PhotoImage:
@@ -37,5 +37,5 @@ def set_current_frame(current: tk.Frame, previous: tk.Frame):
 
 def notify_bilingual_children(parent, lang):
     for child in get_all_widget_children(parent):
-        if isinstance(child, Bilingual):
+        if isinstance(child, BilingualWidget):
             child.switch_lang(lang)

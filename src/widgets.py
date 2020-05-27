@@ -1,9 +1,21 @@
 import os
+import abc
 import tkinter as tk
+import tkinter.ttk as ttk
 
 import config
 import utils
-from widgets_behavior import Bilingual
+
+
+class BilingualWidget(abc.ABC):
+
+    @abc.abstractmethod
+    def __init__(self, text_dict):
+        self.text_dict = text_dict
+
+    @abc.abstractmethod
+    def switch_lang(self, lang: str):
+        raise NotImplementedError
 
 
 class ToolTip:
@@ -56,11 +68,11 @@ class ImageButton(tk.Button):
             **kwargs)
 
 
-class ToolTipButton(ImageButton, Bilingual):
+class ToolTipButton(ImageButton, BilingualWidget):
 
     def __init__(self, *args, file, text_dict, **kwargs):
         super().__init__(*args, file=file)
-        Bilingual.__init__(self, text_dict)
+        BilingualWidget.__init__(self, text_dict)
 
         self.tooltip = ToolTip(text_dict['eng'])
         self.bind('<Enter>', self.tooltip.show)
@@ -73,10 +85,10 @@ class ToolTipButton(ImageButton, Bilingual):
             self.tooltip.text = self.text_dict['rus']
 
 
-class BilingualLabel(tk.Label, Bilingual):
+class BilingualLabel(tk.Label, BilingualWidget):
 
     def __init__(self, *args, text_dict, **kwargs):
-        Bilingual.__init__(self, text_dict)
+        BilingualWidget.__init__(self, text_dict)
         super().__init__(*args, **kwargs, text=self.text_dict['eng'])
 
     def switch_lang(self, lang: str):
@@ -86,10 +98,10 @@ class BilingualLabel(tk.Label, Bilingual):
             self.configure(text=self.text_dict['rus'])
 
 
-class TitleFrame(tk.Frame, Bilingual):
+class TitleFrame(tk.Frame, BilingualWidget):
 
     def __init__(self, *args, text_dict, **kwargs):
-        Bilingual.__init__(self, text_dict)
+        BilingualWidget.__init__(self, text_dict)
         super().__init__(*args, **kwargs)
 
         self.title_lbl = None
@@ -111,7 +123,7 @@ class TitleFrame(tk.Frame, Bilingual):
 
         self.return_btn = ImageButton(
             self.title_frame,
-            file=os.path.join(config.ICONS_PATH, 'return.png'),
+            file=os.path.join(config.ICONS_ROOT, 'return.png'),
             width=40,
             height=40,
         )
@@ -131,3 +143,55 @@ class TitleFrame(tk.Frame, Bilingual):
             background=self['background']
         )
         title_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+
+
+class Combobox(ttk.Combobox):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        ttk.Style().map(
+            'TCombobox',
+            background=[
+                ('readonly', self['background'])
+            ],
+            fieldbackground=[
+                ('readonly', self['background'])
+            ],
+            selectbackground=[
+                ('readonly', self['background'])
+            ],
+            selectforeground=[
+                ('readonly', self['foreground'])
+            ],
+            borderwidth=[
+                ('readonly', 5)
+            ],
+            selectborderwidth=[
+                ('readonly', 0)
+            ],
+            arrowsize=[
+                ('readonly', 24)
+            ],
+        )
+
+        self.master.option_add('*TCombobox*Listbox.background',
+                                self['background'])
+        self.master.option_add('*TCombobox*Listbox.selectBackground',
+                                '#7f6f28')
+        self.master.option_add('*TCombobox*Listbox.font', self['font'])
+
+
+class ChoiceButton(tk.Radiobutton):
+
+    def __init__(self, *args, **kwargs):
+        file = os.path.join(config.ICONS_ROOT, 'choice.png')
+        self.image = utils.create_photo_image(file, (180, 90))
+        super().__init__(
+            *args,
+            **kwargs,
+            image=self.image,
+            background='#c9b662',
+            activebackground='#c9b662',
+            highlightbackground='#c9b662',
+            compound=tk.CENTER)
