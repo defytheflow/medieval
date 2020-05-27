@@ -1,5 +1,6 @@
 import os
 import abc
+
 import tkinter as tk
 import tkinter.ttk as ttk
 
@@ -14,67 +15,79 @@ class BilingualWidget(abc.ABC):
         self.text_dict = text_dict
 
     @abc.abstractmethod
-    def switch_lang(self, lang: str):
+    def switch_lang(self, lang):
         raise NotImplementedError
 
 
 class ToolTip:
 
-    def __init__(self, text: str):
-        self.text = text
-        self.padx = 10
-        self.toplevel = None
+    def __init__(self, text, background, font, borderwidth):
+        self._toplevel = None
+        self._text = text
+        self._background = background
+        self._font = font
+        self._borderwidth = borderwidth
+        self._padx = 10
 
     def show(self, event):
-        x = event.widget.winfo_rootx() - len(self.text) - self.padx
+        x = event.widget.winfo_rootx() - len(self._text) - self._padx
         y = event.widget.winfo_rooty()
 
-        self.toplevel = tk.Toplevel(event.widget)
-        self.toplevel.wm_geometry(f'+{x}+{y}')
-        self.toplevel.wm_overrideredirect(1)
+        self._toplevel = tk.Toplevel(event.widget)
+        self._toplevel.wm_geometry(f'+{x}+{y}')
+        self._toplevel.wm_overrideredirect(1)
 
         label = tk.Label(
-            self.toplevel,
-            text=self.text,
-            background='#c9b662',
-            borderwidth=3,
-            padx=self.padx,
-            font=('DejaVu Serif', '12', 'italic'),
-            relief=tk.RAISED
-        )
-        label.pack(fill=tk.BOTH, expand=True)
+            self._toplevel,
+            text=self._text,
+            background=self._background,
+            borderwidth=self._borderwidth,
+            padx=self._padx,
+            font=self._font,
+            relief='raised')
+
+        label.pack(fill='both', expand=True)
 
     def hide(self, event):
-        if self.toplevel:
-            self.toplevel.destroy()
+        if self._toplevel:
+            self._toplevel.destroy()
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, new_text):
+        self._text = new_text
 
 
 class ImageButton(tk.Button):
 
     def __init__(self, *args, file, **kwargs):
+
         if kwargs.get('width') and kwargs.get('height'):
             width, height = kwargs.get('width'), kwargs.get('height')
         else:
             width, height = 100, 100
+
         self.image = utils.create_photo_image(file, (width, height))
-        super().__init__(
-            *args,
-            image=self.image,
-            background='#c9b662',
-            borderwidth=5,
-            highlightbackground='#000',
-            activebackground='#7f6f28',
-            relief=tk.RAISED,
-            **kwargs)
+
+        super().__init__(*args, image=self.image, **kwargs)
 
 
 class ToolTipButton(ImageButton, BilingualWidget):
 
     def __init__(self, *args, file, text_dict, **kwargs):
-        super().__init__(*args, file=file)
+
+        super().__init__(*args, file=file, **kwargs)
         BilingualWidget.__init__(self, text_dict)
 
-        self.tooltip = ToolTip(text_dict['eng'])
+        self.tooltip = ToolTip(
+            text_dict['eng'],
+            background=self['background'],
+            font=('DejaVu Serif', '12', 'italic'),
+            borderwidth=3)
+
         self.bind('<Enter>', self.tooltip.show)
         self.bind('<Leave>', self.tooltip.hide)
 
@@ -88,6 +101,7 @@ class ToolTipButton(ImageButton, BilingualWidget):
 class BilingualLabel(tk.Label, BilingualWidget):
 
     def __init__(self, *args, text_dict, **kwargs):
+
         BilingualWidget.__init__(self, text_dict)
         super().__init__(*args, **kwargs, text=self.text_dict['eng'])
 
@@ -100,49 +114,36 @@ class BilingualLabel(tk.Label, BilingualWidget):
 
 class TitleFrame(tk.Frame, BilingualWidget):
 
-    def __init__(self, *args, text_dict, **kwargs):
+    def __init__(self, *args, text_dict, font, **kwargs):
+
         BilingualWidget.__init__(self, text_dict)
         super().__init__(*args, **kwargs)
 
-        self.title_lbl = None
-        self.return_btn = None
+        self.return_btn = ImageButton(
+            self,
+            file=os.path.join(config.ICONS_ROOT, 'return.png'),
+            width=40,
+            height=40,
+            background=self['background'],
+            borderwidth=5,
+            highlightbackground='#000',
+            activebackground='#7f6f28',
+            relief='raised')
 
-        self._init_title_frame_components()
+        self.title_lbl = BilingualLabel(
+            self,
+            text_dict=self.text_dict,
+            background=self['background'],
+            font=font)
 
-    # Overrides.
+        self.return_btn.pack(side='left', fill='both')
+        self.title_lbl.pack(side='left', fill='both', expand=True)
+
     def switch_lang(self, lang):
         if lang == 'English':
             self.title_lbl.configure(text=self.text_dict['eng'])
         elif lang == 'Русский':
             self.title_lbl.configure(text=self.text_dict['rus'])
-
-    # Private.
-    def _init_title_frame_components(self):
-        self.title_frame = tk.Frame(self)
-        self.title_frame.pack(fill=tk.BOTH)
-
-        self.return_btn = ImageButton(
-            self.title_frame,
-            file=os.path.join(config.ICONS_ROOT, 'return.png'),
-            width=40,
-            height=40,
-        )
-        self.return_btn.pack(side=tk.LEFT, fill=tk.Y)
-
-        self.title_lbl = BilingualLabel(
-            self.title_frame,
-            text_dict=self.text_dict,
-            background=self['background'],
-            font=('DejaVu Serif', '32', 'bold italic'),
-        )
-        self.title_lbl.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        title_right_frame = tk.Frame(
-            self.title_frame,
-            width=self.return_btn.winfo_reqwidth(),
-            background=self['background']
-        )
-        title_right_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
 
 class Combobox(ttk.Combobox):
