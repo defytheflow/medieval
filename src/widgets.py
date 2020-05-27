@@ -63,23 +63,31 @@ class ToolTip:
 
 class ImageButton(tk.Button):
 
-    def __init__(self, *args, file, **kwargs):
+    def __init__(self, *args, image_file, **kwargs):
 
         if kwargs.get('width') and kwargs.get('height'):
             width, height = kwargs.get('width'), kwargs.get('height')
         else:
             width, height = 100, 100
 
-        self.image = utils.create_photo_image(file, (width, height))
+        self.image = utils.create_photo_image(image_file, (width, height))
 
         super().__init__(*args, image=self.image, **kwargs)
 
 
-class ToolTipButton(ImageButton, BilingualWidget):
+class SoundButton(tk.Button):
 
-    def __init__(self, *args, file, text_dict, **kwargs):
+    def __init__(self, *args, sound_file, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        super().__init__(*args, file=file, **kwargs)
+        # self.bind('<ButtonRelease>', lambda e: utils.play_sound(sound_file))
+
+
+class ToolTipButton(ImageButton, SoundButton, BilingualWidget):
+
+    def __init__(self, *args, image_file, sound_file, text_dict, **kwargs):
+
+        super().__init__(*args, image_file=image_file, sound_file=sound_file, **kwargs)
         BilingualWidget.__init__(self, text_dict)
 
         self.tooltip = ToolTip(
@@ -121,7 +129,7 @@ class TitleFrame(tk.Frame, BilingualWidget):
 
         self.return_btn = ImageButton(
             self,
-            file=os.path.join(config.ICONS_ROOT, 'return.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'return.png'),
             width=40,
             height=40,
             background=self['background'],

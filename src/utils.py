@@ -1,8 +1,11 @@
+import os
 import tkinter as tk
 from typing import List
 
+import simpleaudio as sa
 from PIL import Image, ImageTk
 
+import config
 from widgets import BilingualWidget
 
 
@@ -39,3 +42,8 @@ def notify_bilingual_children(parent, lang):
     for child in get_all_widget_children(parent):
         if isinstance(child, BilingualWidget):
             child.switch_lang(lang)
+
+
+def play_sound(file):
+    wave_obj = sa.WaveObject.from_wave_file(file)
+    play_obj = wave_obj.play()

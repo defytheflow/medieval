@@ -33,7 +33,7 @@ class GameCanvas(tk.Canvas):
         self._pressed = False
         self._wait = 10  # milliseconds
 
-        self.focus_set()
+        # self.focus_set()
         self.bind('<KeyPress>', lambda e: self._key_press_decorator(self._handle_key_press, e))
 
     def _key_press_decorator(self, callback_func, event):

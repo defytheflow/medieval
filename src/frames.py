@@ -73,72 +73,61 @@ class MainFrame(tk.Frame):
     def _init_buttons_frame(self):
         self.buttons_frame = tk.Frame(self.game_frame)
 
+        common_attrs = {
+            'background': self['background'],
+            'borderwidth': 5,
+            'highlightbackground': self.BORDERCOLOR,
+            'activebackground': '#7f6f28',
+            'relief': 'raised',
+        }
+
         self.settings_btn = ToolTipButton(
             self.buttons_frame,
-            file=os.path.join(config.ICONS_ROOT, 'settings.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'settings.png'),
+            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
-            background=self['background'],
-            borderwidth=5,
-            highlightbackground=self.BORDERCOLOR,
-            activebackground='#7f6f28',
-            relief='raised')
+            **common_attrs)
 
         self.map_btn = ToolTipButton(
             self.buttons_frame,
-            file=os.path.join(config.ICONS_ROOT, 'map.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'map.png'),
+            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
             text_dict={'eng': 'Map', 'rus': 'Карта'},
-            background=self['background'],
-            borderwidth=5,
-            highlightbackground=self.BORDERCOLOR,
-            activebackground='#7f6f28',
-            relief='raised')
+            **common_attrs)
 
         self.inventory_btn = ToolTipButton(
             self.buttons_frame,
-            file=os.path.join(config.ICONS_ROOT, 'inventory.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'inventory.png'),
+            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
             text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'},
-            background=self['background'],
-            borderwidth=5,
-            highlightbackground=self.BORDERCOLOR,
-            activebackground='#7f6f28',
-            relief='raised')
+            **common_attrs)
 
         self.inventory_btn.configure(state='disabled')
 
         self.market_btn = ToolTipButton(
             self.buttons_frame,
-            file=os.path.join(config.ICONS_ROOT, 'market.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'market.png'),
+            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
             text_dict={'eng': 'Market', 'rus': 'Магазин'},
-            background=self['background'],
-            borderwidth=5,
-            highlightbackground=self.BORDERCOLOR,
-            activebackground='#7f6f28',
-            relief='raised')
+            **common_attrs)
 
         self.market_btn.configure(state='disabled')
 
         self.bank_btn = ToolTipButton(
             self.buttons_frame,
-            file=os.path.join(config.ICONS_ROOT, 'bank.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'bank.png'),
+            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
             text_dict={'eng': 'Bank', 'rus': 'Банк'},
-            background=self['background'],
-            borderwidth=5,
-            highlightbackground=self.BORDERCOLOR,
-            activebackground='#7f6f28',
-            relief='raised')
+            **common_attrs)
 
         self.bank_btn.configure(state='disabled')
 
         self.smith_btn = ToolTipButton(
             self.buttons_frame,
-            file=os.path.join(config.ICONS_ROOT, 'smith.png'),
+            image_file=os.path.join(config.ICONS_ROOT, 'smith.png'),
+            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
             text_dict={'eng': 'Smith', 'rus': 'Кузнец'},
-            background=self['background'],
-            borderwidth=5,
-            highlightbackground=self.BORDERCOLOR,
-            activebackground='#7f6f28',
-            relief='raised')
-
+            **common_attrs)
 
         self.smith_btn.configure(state='disabled')
 
