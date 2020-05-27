@@ -2,7 +2,7 @@ import os
 
 
 WIDTH = 1200
-HEIGHT = 900
+HEIGHT = WIDTH * 3 // 4
 
 BG_COLOR = '#c9b662'
 ACTIVE_BG_COLOR = '#7f6f28'

@@ -27,11 +27,17 @@ class Sprite:
 
 class Character(Sprite):
 
-    def __init__(self, name, size, direction=''):
+    def __init__(self, name, size, direction, speed=1):
         self._name = name
-        self._direction = direction if direction else 'south'
+        self._direction = direction
+        self._speed = speed
+        self._costume_num = 0
         super().__init__(size=size,
                          file=os.path.join(self._name, f'{self._direction}.png'))
+
+    @property
+    def name(self) -> str:
+        return self._name
 
     @property
     def direction(self) -> str:
@@ -42,4 +48,20 @@ class Character(Sprite):
         if not direction in ('north', 'south', 'west', 'east'):
             raise ValueError(f'Invalid direction value {direction}')
         self._direction = direction
+        self.image = os.path.join(self._name, f'{self._direction}.png')
+
+    @property
+    def speed(self) -> int:
+        return self._speed
+
+    def switch_costume(self):
+        self._costume_num += 1
+
+        if self._costume_num > 2:
+            self._costume_num = 1
+
+        self.image = os.path.join(
+            self._name, f'{self._direction}-{self._costume_num}.png')
+
+    def reset_costume(self):
         self.image = os.path.join(self._name, f'{self._direction}.png')
