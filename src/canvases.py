@@ -10,30 +10,30 @@ from sprites import Sprite, Character
 
 class GameCanvas(tk.Canvas):
 
-    BLOCK_SIZE = 25  # pixels
+    BLOCK_SIZE = 30  # pixels
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.rock = Sprite(
-            file='rock.jpeg',
+            file='stone.jpeg',
             size=(self.BLOCK_SIZE, self.BLOCK_SIZE))
 
         self.grass = Sprite(
-            file='grass.png',
+            file='carpet.png',
             size=(self.BLOCK_SIZE, self.BLOCK_SIZE))
 
         self.peasant = Character(
             name='peasant',
             size=(self.BLOCK_SIZE, self.BLOCK_SIZE),
             direction='south',
-            speed=1,
+            speed=3,
         )
 
         self._pressed = False
         self._wait = 10  # milliseconds
 
-        # self.focus_set()
+        self.focus_set()
         self.bind('<KeyPress>', lambda e: self._key_press_decorator(self._handle_key_press, e))
 
     def _key_press_decorator(self, callback_func, event):

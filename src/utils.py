@@ -62,16 +62,3 @@ def bind_sound(widget, sound_file):
         raise TypeError('widget parameter must be a tk.Widget instance')
 
     widget.bind('<Button-1>', lambda e: play_sound(sound_file))
-
-
-def bind_bilingual_tooltip(button, text_dict):
-    if not isinstance(button, tk.Button):
-        raise TypeError('button must be tk.Button instance')
-
-    button.tooltip = BilingualToolTip(
-        text_dict=text_dict,
-        background=button['background'],
-        font=button['font'])
-
-    button.bind('<Enter>', button.tooltip.show)
-    button.bind('<Leave>', button.tooltip.hide)

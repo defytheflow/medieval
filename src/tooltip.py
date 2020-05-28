@@ -53,7 +53,7 @@ class Tooltip:
         self.id = None
         self.tw = None
 
-        widget.tooltip = self
+        widget.tooltip = self  # added by Artyom Danilov
 
     def onEnter(self, event=None):
         self.schedule()

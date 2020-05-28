@@ -57,12 +57,12 @@ class MainFrame(tk.Frame):
         self.hint_lbl.pack(fill='both')
 
     def _init_game_frame(self):
-        self.game_frame = tk.Frame(self)
+        self.game_frame = tk.Frame(self, height=self.winfo_reqheight() * 0.8)
 
         self.game_canvas = GameCanvas(
             self.game_frame,
             width=self.winfo_reqwidth() * 0.9,
-            height=self.winfo_reqheight() * 0.78,
+            height=self.game_frame.winfo_reqheight(),
             highlightbackground=self.BORDERCOLOR)
 
         self.game_frame.pack(fill='both')
@@ -162,7 +162,8 @@ class MainFrame(tk.Frame):
 
         self.dialogue_canvas = DialogueCanvas(
             self.dialogue_frame,
-            width=self.winfo_reqwidth() * 0.15,
+            width=self.winfo_reqwidth() * 0.13,
+            # width=self.winfo_reqwidth() * 0.15,
             height=self.winfo_reqheight() * 0.2,
             background=self['background'],
             borderwidth=self.BORDERWIDTH,
