@@ -15,6 +15,12 @@ class Sprite:
     def size(self) -> int:
         return self._size
 
+    def width(self) -> int:
+        return self._size[0]
+
+    def height(self) -> int:
+        return self._size[1]
+
     @property
     def image(self) -> 'tk.PhotoImage':
         return self._image
@@ -65,3 +71,12 @@ class Character(Sprite):
 
     def reset_costume(self):
         self.image = os.path.join(self._name, f'{self._direction}.png')
+
+    def draw(self, canvas, x, y):
+        self.id = canvas.create_image(
+            x, y, image=self.image, anchor='nw', tags='character')
+
+    def redraw(self, canvas, x, y):
+        canvas.delete(self.id)
+        self.id = canvas.create_image(
+            x, y, image=self.image, anchor='nw', tags='character')

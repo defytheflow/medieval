@@ -8,7 +8,8 @@ from widgets import (
     BilingualLabel, BilingualButton, BilingualTooltip, BilingualRadiobutton,
     TitleFrame, Combobox)
 
-from canvases import GameCanvas, DialogueCanvas, MapCanvas
+from canvases import DialogueCanvas, MapCanvas
+from game_canvas import GameCanvas
 
 
 class MainFrame(tk.Frame):

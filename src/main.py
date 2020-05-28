@@ -7,6 +7,10 @@ import utils
 
 from frames import MainFrame, SettingsFrame, MapFrame
 
+from level import Level
+from backgrounds import GrassBackground
+from sprites import Character
+
 
 window = tk.Tk()
 window.title('Medieval')
@@ -48,7 +52,12 @@ main_frame.map_btn.bind(
 
 main_frame.pack(fill=tk.BOTH)
 
-main_frame.game_canvas.generate_level(1)
+# Level creation.
+background = GrassBackground()
+character = Character(name='peasant', size=(30, 30), direction='south', speed=3)
+
+lvl1 = Level(main_frame.game_canvas, character, background)
+lvl1.play()
 
 
 if __name__ == '__main__':
