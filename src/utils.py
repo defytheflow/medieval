@@ -6,10 +6,10 @@ import simpleaudio as sa
 from PIL import Image, ImageTk
 
 import config
-from widgets import BilingualWidget
+from widgets import BilingualWidget, BilingualTooltip
 
 
-def create_photo_image(path: str, size: tuple = None) -> tk.PhotoImage:
+def create_photo_image(path, size=None) -> tk.PhotoImage:
     """
         Creates a new PhotoImage object.
     """
@@ -44,6 +44,34 @@ def notify_bilingual_children(parent, lang):
             child.switch_lang(lang)
 
 
-def play_sound(file):
-    wave_obj = sa.WaveObject.from_wave_file(file)
+def play_sound(sound_file):
+    wave_obj = sa.WaveObject.from_wave_file(sound_file)
     play_obj = wave_obj.play()
+
+
+def bind_image(widget, image_file, size):
+    if not isinstance(widget, tk.Widget):
+        raise TypeError('widget parameter must be a tk.Widget instance')
+
+    widget.image = create_photo_image(image_file, size)
+    widget.configure(image=widget.image)
+
+
+def bind_sound(widget, sound_file):
+    if not isinstance(widget, tk.Widget):
+        raise TypeError('widget parameter must be a tk.Widget instance')
+
+    widget.bind('<Button-1>', lambda e: play_sound(sound_file))
+
+
+def bind_bilingual_tooltip(button, text_dict):
+    if not isinstance(button, tk.Button):
+        raise TypeError('button must be tk.Button instance')
+
+    button.tooltip = BilingualToolTip(
+        text_dict=text_dict,
+        background=button['background'],
+        font=button['font'])
+
+    button.bind('<Enter>', button.tooltip.show)
+    button.bind('<Leave>', button.tooltip.hide)

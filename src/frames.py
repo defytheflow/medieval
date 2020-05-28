@@ -5,8 +5,9 @@ import utils
 import config
 
 from widgets import (
-    TitleFrame, BilingualLabel, Combobox, ToolTipButton,
-    ChoiceButton)
+    BilingualLabel, BilingualButton, BilingualTooltip, BilingualRadiobutton,
+    TitleFrame, Combobox)
+
 from canvases import GameCanvas, DialogueCanvas, MapCanvas
 
 
@@ -44,8 +45,7 @@ class MainFrame(tk.Frame):
     def _init_hint_frame(self):
         self.hint_frame = tk.Frame(self)
 
-        self.hint_lbl = BilingualLabel(
-            self.hint_frame,
+        self.hint_lbl = BilingualLabel(self.hint_frame,
             text_dict={'eng': 'Hint:', 'rus': 'Подсказка:'},
             background=self['background'],
             borderwidth=self.BORDERWIDTH,
@@ -81,60 +81,81 @@ class MainFrame(tk.Frame):
             'relief': 'raised',
         }
 
-        self.settings_btn = ToolTipButton(
-            self.buttons_frame,
-            image_file=os.path.join(config.ICONS_ROOT, 'settings.png'),
-            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
+        self.settings_btn = BilingualButton(self.buttons_frame,
+            text_dict={'eng': 'Settings', 'rus': 'Настройки'}, **common_attrs)
+
+        BilingualTooltip(self.settings_btn,
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
-            **common_attrs)
+            bg=self['background'],
+            waittime=300)
 
-        self.map_btn = ToolTipButton(
-            self.buttons_frame,
-            image_file=os.path.join(config.ICONS_ROOT, 'map.png'),
-            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
+        utils.bind_image(self.settings_btn,
+            os.path.join(config.ICONS_ROOT, 'settings.png'), (100, 100))
+
+        self.map_btn = BilingualButton(self.buttons_frame,
+            text_dict={'eng': 'Map', 'rus': 'Карта'}, **common_attrs)
+
+        BilingualTooltip(self.map_btn,
             text_dict={'eng': 'Map', 'rus': 'Карта'},
-            **common_attrs)
+            bg=self['background'],
+            waittime=300)
 
-        self.inventory_btn = ToolTipButton(
-            self.buttons_frame,
-            image_file=os.path.join(config.ICONS_ROOT, 'inventory.png'),
-            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
-            text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'},
-            **common_attrs)
+        utils.bind_image(self.map_btn,
+            os.path.join(config.ICONS_ROOT, 'map.png'), (100, 100))
 
+        self.inventory_btn = BilingualButton(self.buttons_frame,
+            text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'}, **common_attrs)
         self.inventory_btn.configure(state='disabled')
 
-        self.market_btn = ToolTipButton(
-            self.buttons_frame,
-            image_file=os.path.join(config.ICONS_ROOT, 'market.png'),
-            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
-            text_dict={'eng': 'Market', 'rus': 'Магазин'},
-            **common_attrs)
+        BilingualTooltip(self.inventory_btn,
+            text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'},
+            bg=self['background'],
+            waittime=300)
 
+        utils.bind_image(self.inventory_btn,
+            os.path.join(config.ICONS_ROOT, 'inventory.png'), (100, 100))
+
+        self.market_btn = BilingualButton(self.buttons_frame,
+            text_dict={'eng': 'Market', 'rus': 'Магазин'}, **common_attrs)
         self.market_btn.configure(state='disabled')
 
-        self.bank_btn = ToolTipButton(
-            self.buttons_frame,
-            image_file=os.path.join(config.ICONS_ROOT, 'bank.png'),
-            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
-            text_dict={'eng': 'Bank', 'rus': 'Банк'},
-            **common_attrs)
+        BilingualTooltip(self.market_btn,
+            text_dict={'eng': 'Market', 'rus': 'Магазин'},
+            bg=self['background'],
+            waittime=300)
 
+        utils.bind_image(self.market_btn,
+            os.path.join(config.ICONS_ROOT, 'market.png'), (100, 100))
+
+        self.bank_btn = BilingualButton(self.buttons_frame,
+            text_dict={'eng': 'Bank', 'rus': 'Банк'}, **common_attrs)
         self.bank_btn.configure(state='disabled')
 
-        self.smith_btn = ToolTipButton(
-            self.buttons_frame,
-            image_file=os.path.join(config.ICONS_ROOT, 'smith.png'),
-            sound_file=os.path.join(config.SOUNDS_ROOT, 'button.wav'),
-            text_dict={'eng': 'Smith', 'rus': 'Кузнец'},
-            **common_attrs)
+        BilingualTooltip(self.bank_btn,
+            text_dict={'eng': 'Bank', 'rus': 'Банк'},
+            bg=self['background'],
+            waittime=300)
 
+        utils.bind_image(self.bank_btn,
+            os.path.join(config.ICONS_ROOT, 'bank.png'), (100, 100))
+
+        self.smith_btn = BilingualButton(self.buttons_frame,
+            text_dict={'eng': 'Smith', 'rus': 'Кузнец'}, **common_attrs)
         self.smith_btn.configure(state='disabled')
+
+        BilingualTooltip(self.smith_btn,
+            text_dict={'eng': 'Smith', 'rus': 'Кузнец'},
+            bg=self['background'],
+            waittime=300)
+
+        utils.bind_image(self.smith_btn,
+            os.path.join(config.ICONS_ROOT, 'smith.png'), (100, 100))
 
         self.buttons_frame.pack(side='left', fill='both', expand=True)
 
         for btn in self.buttons_frame.winfo_children():
             btn.pack(fill='both', expand=True)
+            utils.bind_sound(btn, os.path.join(config.SOUNDS_ROOT, 'click.wav'))
 
     def _init_dialogue_frame(self):
         self.dialogue_frame = tk.Frame(self)
@@ -169,23 +190,39 @@ class MainFrame(tk.Frame):
             relief='raised',
             anchor='nw')
 
-        choice_btn1 = ChoiceButton(
-            self.choice_frame,
-            text='Yes',
-            value=1,
-            variable=self.choice_var)
+        file = os.path.join(config.ICONS_ROOT, 'choice.png')
+        image = utils.create_photo_image(file, (180, 90))
 
-        choice_btn2 = ChoiceButton(
-            self.choice_frame,
-            text='No',
+        common_attrs = {
+            'background': self['background'],
+            'activebackground': self['background'],
+            'highlightbackground': self['background'],
+            'compound': 'center',
+        }
+
+        btn1 = BilingualRadiobutton(self.choice_frame,
+            text_dict={'eng': 'yes', 'rus': 'да'},
+            value=1,
+            variable=self.choice_var,
+            **common_attrs)
+
+        utils.bind_image(btn1,
+            os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
+
+        btn2 = BilingualRadiobutton(self.choice_frame,
+            text_dict={'eng': 'no', 'rus': 'нет'},
             value=2,
-            variable=self.choice_var)
+            variable=self.choice_var,
+            **common_attrs)
+
+        utils.bind_image(btn2,
+            os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
 
         self.choice_frame.pack(side='left', fill='both', expand=True)
         self.dialogue_lbl.pack(fill='both')
 
-        choice_btn1.pack(side='left', expand=True)
-        choice_btn2.pack(side='left', expand=True)
+        btn1.pack(side='left', expand=True)
+        btn2.pack(side='left', expand=True)
 
 
 class SettingsFrame(tk.Frame):
@@ -197,8 +234,7 @@ class SettingsFrame(tk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title_frame = TitleFrame(
-            self,
+        self.title_frame = TitleFrame(self,
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
             background=self['background'],
             font=('DejaVu Serif', 32, 'bold italic'))
