@@ -8,7 +8,6 @@ from frames import GameFrame, MapFrame, SettingsFrame
 from utils import get_all_widget_children
 from widgets import BilingualWidget
 
-
 # Very bad
 from backgrounds import GrassBackground
 from level import Level  # Super bad
@@ -73,12 +72,11 @@ class MedievalApp(tk.Tk):
         """
 
         """
-        self.bg = GrassBackground()
-        character = Character(name='peasant',
+        self.bg = GrassBackground()  # FUCK !
+        character = Character(tag='peasant',
                               size=(30, 30),
                               direction='south',
                               speed=3)
-
         level = Level(self._frames['game'].game_canvas, character, self.bg)
         level.play()
 

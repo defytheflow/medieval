@@ -1,58 +1,55 @@
 import abc
 import tkinter as tk
 
+from config import BLOCK_SIZE
 from sprites import Sprite
 
 
 class Background(abc.ABC):
 
     @abc.abstractmethod
-    def draw(self):
+    def draw(self, canvas: tk.Canvas):
         pass
 
 
 class GrassBackground(Background):
 
-    BLOCK_SIZE = 30
-
     def __init__(self):
-        self._stone = Sprite(file='stone.jpeg',
-                            size=(self.BLOCK_SIZE, self.BLOCK_SIZE))
-        self._grass = Sprite(file='carpet.png',
-                            size=(self.BLOCK_SIZE, self.BLOCK_SIZE))
+        self._block_size: int = BLOCK_SIZE
+        self._grass = Sprite(image_file='carpet.png',
+                             size=(self._block_size, self._block_size))
+        self._stone = Sprite(image_file='stone.jpeg',
+                             size=(self._block_size, self._block_size))
 
     def draw(self, canvas: tk.Canvas):
-
         x, y = 0, 0
 
         # LINE OF STONES
-        for i in range(canvas.winfo_reqwidth() // self.BLOCK_SIZE):
-            # print('x:', x, 'y:', y)
+        for i in range(canvas.winfo_reqwidth() // self._block_size):
             canvas.create_image(x, y, image=self._stone.image, anchor='nw')
-            x += self.BLOCK_SIZE
-            # print(canvas.find_all())
-        y += self.BLOCK_SIZE
+            x += self._block_size
+        y += self._block_size
 
         # MIDDLE GRASS
-        for i in range(canvas.winfo_reqheight() // self.BLOCK_SIZE - 2):
+        for i in range(canvas.winfo_reqheight() // self._block_size - 2):
 
             # LEFT STONE
             x = 0
             canvas.create_image(x, y, image=self._stone.image, anchor='nw')
-            x += self.BLOCK_SIZE
+            x += self._block_size
 
             # GRASS ROW
-            for j in range(canvas.winfo_reqwidth() // self.BLOCK_SIZE - 2):
+            for j in range(canvas.winfo_reqwidth() // self._block_size - 2):
                 canvas.create_image(x, y, image=self._grass.image, anchor='nw')
-                x += self.BLOCK_SIZE
+                x += self._block_size
 
             # RIGHT STONE
             canvas.create_image(x, y, image=self._stone.image, anchor='nw')
 
-            y += self.BLOCK_SIZE
+            y += self._block_size
 
         # LINE OF STONES
         x = 0
-        for i in range(canvas.winfo_reqwidth() // self.BLOCK_SIZE):
+        for i in range(canvas.winfo_reqwidth() // self._block_size):
             canvas.create_image(x, y, image=self._stone.image, anchor='nw')
-            x += self.BLOCK_SIZE
+            x += self._block_size
