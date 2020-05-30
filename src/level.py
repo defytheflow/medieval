@@ -1,6 +1,15 @@
+import tkinter as tk
+
+from sprites import Character
+from backgrounds import Background
+
 class Level:
 
-    def __init__(self, canvas, character, background):
+    def __init__(self,
+                 canvas: tk.Canvas,
+                 character: Character,
+                 background: Background):
+
         self.canvas = canvas
         self.character = character
         self.background = background

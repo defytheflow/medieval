@@ -74,9 +74,9 @@ class Character(Sprite):
 
     def draw(self, canvas, x, y):
         self.id = canvas.create_image(
-            x, y, image=self.image, anchor='nw', tags='character')
+            x, y, image=self._image, anchor='nw', tags='character')
 
     def redraw(self, canvas, x, y):
         canvas.delete(self.id)
         self.id = canvas.create_image(
-            x, y, image=self.image, anchor='nw', tags='character')
+            x, y, image=self._image, anchor='nw', tags='character')

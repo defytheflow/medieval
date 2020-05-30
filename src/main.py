@@ -5,60 +5,102 @@ import tkinter as tk
 import config
 import utils
 
-from frames import MainFrame, SettingsFrame, MapFrame
+from frames import GameFrame, MapFrame, SettingsFrame
+from widgets import BilingualWidget
 
-from level import Level
+# Very bad
 from backgrounds import GrassBackground
+from level import Level
 from sprites import Character
 
 
-window = tk.Tk()
-window.title('Medieval')
-window.geometry(f'{config.WIDTH}x{config.HEIGHT}')
-window.resizable(0, 0)
+class MedievalApp(tk.Tk):
 
-settings_frame = SettingsFrame(window, background=config.BG_COLOR)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-settings_frame.title_frame.return_btn.bind(
-    '<Button-1>',
-    lambda e: utils.set_current_frame(main_frame, settings_frame))
+        self.title('Medieval')
+        self.config(width=config.WIDTH, height=config.HEIGHT, bg=config.BG_COLOR)
+        self.geometry(f'{config.WIDTH}x{config.HEIGHT}')
+        self.resizable(0, 0)
 
-settings_frame.lang_combobox.bind(
-    '<<ComboboxSelected>>',
-    lambda e: utils.notify_bilingual_children(window, settings_frame.lang_var.get()))
+        self._current_frame = None  # type: tk.Frame
+        self._frames = {}           # type: Dict[str, tk.Frame]
 
-map_frame = MapFrame(
-    window,
-    width=config.WIDTH,
-    height=config.HEIGHT,
-    background=config.BG_COLOR)
+        self._init_frames()
+        self._init_keyboard_binds()
+        self._init_mouse_binds()
 
-map_frame.title_frame.return_btn.bind(
-    '<Button-1>',
-    lambda e: utils.set_current_frame(main_frame, map_frame))
+        self._show_frame('game')
 
-main_frame = MainFrame(
-    window,
-    width=config.WIDTH,
-    height=config.HEIGHT,
-    background=config.BG_COLOR)
+        self._init_level()
 
-main_frame.settings_btn.bind(
-    '<Button-1>',
-    lambda e: utils.set_current_frame(settings_frame, main_frame))
-main_frame.map_btn.bind(
-    '<Button-1>',
-    lambda e: utils.set_current_frame(map_frame, main_frame))
+    def _init_frames(self):
+        """
 
-main_frame.pack(fill=tk.BOTH)
+        """
+        common_attrs = {
+            'bg':     self['bg'],
+            'width':  self['width'],
+            'height': self['height'],
+        }
 
-# Level creation.
-background = GrassBackground()
-character = Character(name='peasant', size=(30, 30), direction='south', speed=3)
+        self._frames['game'] = GameFrame(self, **common_attrs)
+        self._frames['map'] = MapFrame(self, **common_attrs)
+        self._frames['settings'] = SettingsFrame(self, **common_attrs)
 
-lvl1 = Level(main_frame.game_canvas, character, background)
-lvl1.play()
+    def _init_keyboard_binds(self):
+        """
+
+        """
+        self.bind_all('G', lambda e: self._show_frame('game'))
+        self.bind_all('M', lambda e: self._show_frame('map'))
+        self.bind_all('S', lambda e: self._show_frame('settings'))
+
+    def _init_mouse_binds(self):
+        """
+
+        """
+        self._frames['game'].settings_btn.bind('<1>', lambda e: self._show_frame('settings'))
+        self._frames['game'].map_btn.bind('<1>', lambda e: self._show_frame('map'))
+        self._frames['map'].return_btn.bind('<1>', lambda e: self._show_frame('game'))
+        self._frames['settings'].return_btn.bind('<1>', lambda e: self._show_frame('game'))
+
+        self._frames['settings'].lang_combobox.bind('<<ComboboxSelected>>',
+            lambda e: self._notify_bilingual_children(self._frames['settings'].lang))
+
+    def _init_level(self):
+        """
+
+        """
+        self.bg = GrassBackground()
+        character = Character(name='peasant',
+                              size=(30, 30),
+                              direction='south',
+                              speed=3)
+
+        level = Level(self._frames['game'].game_canvas, character, self.bg)
+        level.play()
+
+    def _show_frame(self, frame_tag: str):
+        """
+
+        """
+        if self._current_frame:
+            self._current_frame.forget()
+
+        self._current_frame = self._frames[frame_tag]
+        self._current_frame.pack(fill=tk.BOTH)
+
+    def _notify_bilingual_children(self, lang: str):
+        """
+
+        """
+        for child in utils.get_all_widget_children(self):
+            if isinstance(child, BilingualWidget):
+                child.switch_lang(lang)
 
 
 if __name__ == '__main__':
-    window.mainloop()
+    app = MedievalApp()
+    app.mainloop()

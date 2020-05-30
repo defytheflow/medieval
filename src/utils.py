@@ -33,11 +33,6 @@ def get_all_widget_children(parent: tk.Widget) -> List[tk.Widget]:
     return set(children)
 
 
-def set_current_frame(current: tk.Frame, previous: tk.Frame):
-    previous.forget()
-    current.pack(fill=tk.BOTH, expand=True)
-
-
 def notify_bilingual_children(parent, lang):
     for child in get_all_widget_children(parent):
         if isinstance(child, BilingualWidget):

@@ -12,7 +12,7 @@ from canvases import DialogueCanvas, MapCanvas
 from game_canvas import GameCanvas
 
 
-class MainFrame(tk.Frame):
+class GameFrame(tk.Frame):
 
     BORDERWIDTH = 5
     BORDERCOLOR = '#000'
@@ -253,6 +253,14 @@ class SettingsFrame(tk.Frame):
         self._init_lang_frame()
         self._init_scale_frame()
 
+    @property
+    def return_btn(self):
+        return self.title_frame.return_btn
+
+    @property
+    def lang(self):
+        return self.lang_var.get()
+
     def _init_lang_frame(self):
         self.lang_frame = tk.Frame(
             self,
@@ -327,3 +335,7 @@ class MapFrame(tk.Frame):
 
         self.title_frame.pack(fill='both')
         self.canvas.pack(fill='both', expand=True)
+
+    @property
+    def return_btn(self):
+        return self.title_frame.return_btn

@@ -21,13 +21,16 @@ class GrassBackground(Background):
         self._grass = Sprite(file='carpet.png',
                             size=(self.BLOCK_SIZE, self.BLOCK_SIZE))
 
-    def draw(self, canvas):
+    def draw(self, canvas: tk.Canvas):
+
         x, y = 0, 0
 
         # LINE OF STONES
         for i in range(canvas.winfo_reqwidth() // self.BLOCK_SIZE):
+            # print('x:', x, 'y:', y)
             canvas.create_image(x, y, image=self._stone.image, anchor='nw')
             x += self.BLOCK_SIZE
+            # print(canvas.find_all())
         y += self.BLOCK_SIZE
 
         # MIDDLE GRASS

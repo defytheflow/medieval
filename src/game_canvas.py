@@ -1,5 +1,6 @@
 import tkinter as tk
 
+import utils
 
 class GameCanvas(tk.Canvas):
 
@@ -7,10 +8,10 @@ class GameCanvas(tk.Canvas):
         super().__init__(*args, **kwargs)
         self._pressed = False
 
-        self.bind('<w>', lambda e: self._key_press_decorator(self._on_w, e))
-        self.bind('<a>', lambda e: self._key_press_decorator(self._on_a, e))
-        self.bind('<s>', lambda e: self._key_press_decorator(self._on_s, e))
-        self.bind('<d>', lambda e: self._key_press_decorator(self._on_d, e))
+        self.bind('<KeyPress w>', lambda e: self._key_press_decorator(self._on_w, e))
+        self.bind('<KeyPress a>', lambda e: self._key_press_decorator(self._on_a, e))
+        self.bind('<KeyPress s>', lambda e: self._key_press_decorator(self._on_s, e))
+        self.bind('<KeyPress d>', lambda e: self._key_press_decorator(self._on_d, e))
 
         self.focus_set()
 
