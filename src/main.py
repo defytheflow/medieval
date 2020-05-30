@@ -2,15 +2,16 @@
 
 import tkinter as tk
 
-import config
-import utils
+import config as conf
 
 from frames import GameFrame, MapFrame, SettingsFrame
+from utils import get_all_widget_children
 from widgets import BilingualWidget
+
 
 # Very bad
 from backgrounds import GrassBackground
-from level import Level
+from level import Level  # Super bad
 from sprites import Character
 
 
@@ -20,8 +21,8 @@ class MedievalApp(tk.Tk):
         super().__init__(*args, **kwargs)
 
         self.title('Medieval')
-        self.config(width=config.WIDTH, height=config.HEIGHT, bg=config.BG_COLOR)
-        self.geometry(f'{config.WIDTH}x{config.HEIGHT}')
+        self.config(width=conf.WIDTH, height=conf.HEIGHT, bg=conf.BG_COLOR)
+        self.geometry(f'{conf.WIDTH}x{conf.HEIGHT}')
         self.resizable(0, 0)
 
         self._current_frame = None  # type: tk.Frame
@@ -30,10 +31,9 @@ class MedievalApp(tk.Tk):
         self._init_frames()
         self._init_keyboard_binds()
         self._init_mouse_binds()
+        self._init_level()
 
         self._show_frame('game')
-
-        self._init_level()
 
     def _init_frames(self):
         """
@@ -92,11 +92,12 @@ class MedievalApp(tk.Tk):
         self._current_frame = self._frames[frame_tag]
         self._current_frame.pack(fill=tk.BOTH)
 
+
     def _notify_bilingual_children(self, lang: str):
         """
 
         """
-        for child in utils.get_all_widget_children(self):
+        for child in get_all_widget_children(self):
             if isinstance(child, BilingualWidget):
                 child.switch_lang(lang)
 

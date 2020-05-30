@@ -156,7 +156,7 @@ class GameFrame(tk.Frame):
 
         for btn in self.buttons_frame.winfo_children():
             btn.pack(fill='both', expand=True)
-            utils.bind_sound(btn, os.path.join(config.SOUNDS_ROOT, 'click.wav'))
+            utils.bind_sound(btn, '<1>', os.path.join(config.SOUNDS_ROOT, 'click.wav'))
 
     def _init_dialogue_frame(self):
         self.dialogue_frame = tk.Frame(self)

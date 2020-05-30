@@ -1,59 +1,38 @@
-import os
 import tkinter as tk
-from typing import List
 
-import simpleaudio as sa
-from PIL import Image, ImageTk
-
-import config
-from widgets import BilingualWidget, BilingualTooltip
+from typing import Tuple, Set
 
 
-def create_photo_image(path, size=None) -> tk.PhotoImage:
-    """
-        Creates a new PhotoImage object.
-    """
+def create_photo_image(path: str,
+                       size: Tuple[int, int] = None) -> tk.PhotoImage:
+    from PIL import Image, ImageTk
     image = Image.open(path)
-
     if size:
         image = image.resize(size)
-
     return ImageTk.PhotoImage(image)
 
 
-def get_all_widget_children(parent: tk.Widget) -> List[tk.Widget]:
+def get_all_widget_children(parent: tk.Misc) -> Set[tk.Widget]:
     """
-        Recursively collects all parent widget children.
+        Recursively collects all parent widget's children.
     """
     children = parent.winfo_children()
-
     for child in children:
         children.extend(get_all_widget_children(child))
-
     return set(children)
 
-
-def notify_bilingual_children(parent, lang):
-    for child in get_all_widget_children(parent):
-        if isinstance(child, BilingualWidget):
-            child.switch_lang(lang)
-
-
-def play_sound(sound_file):
+def play_sound(sound_file: str) -> None:
+    import simpleaudio as sa
     wave_obj = sa.WaveObject.from_wave_file(sound_file)
     play_obj = wave_obj.play()
 
 
-def bind_image(widget, image_file, size):
-    if not isinstance(widget, tk.Widget):
-        raise TypeError('widget parameter must be a tk.Widget instance')
-
+def bind_image(widget: tk.Widget,
+               image_file: str,
+               size: Tuple[int, int]) -> None:
     widget.image = create_photo_image(image_file, size)
     widget.configure(image=widget.image)
 
 
-def bind_sound(widget, sound_file):
-    if not isinstance(widget, tk.Widget):
-        raise TypeError('widget parameter must be a tk.Widget instance')
-
-    widget.bind('<Button-1>', lambda e: play_sound(sound_file))
+def bind_sound(widget: tk.Widget, event: str, sound_file: str) -> None:
+    widget.bind(event, lambda e: play_sound(sound_file))
