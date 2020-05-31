@@ -1,19 +1,12 @@
 import os
-import abc
+
 import tkinter as tk
 import tkinter.ttk as ttk
 
 import config
-import utils
+from utils import bind_image
 
 from .bilingual import BilingualLabel
-
-
-class KeyboardBoundWidget(abc.ABC):
-
-    @abc.abstractmethod
-    def init_keyboard_binds(self):
-        pass
 
 
 class TitleFrame(tk.Frame):
@@ -30,8 +23,7 @@ class TitleFrame(tk.Frame):
             activebackground='#7f6f28',
             relief='raised')
 
-        utils.bind_image(self.return_btn,
-            os.path.join(config.ICONS_ROOT, 'return.png'), (40, 40))
+        bind_image(self.return_btn,os.path.join(config.ICONS_ROOT, 'return.png'), (40, 40))
 
         self.title_lbl = BilingualLabel(self,
             text_dict=text_dict,

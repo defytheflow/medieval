@@ -1,18 +1,22 @@
 import tkinter as tk
 
 import config
+
+from utils import get_all_widget_children
 from widgets import BilingualLabel, TitleFrame, Combobox
+from widgets.behavior import KeyboardBoundWidget, MouseBoundWidget, BilingualWidget
 
 
-class SettingsFrame(tk.Frame):
+
+class SettingsFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
     ACTIVE_BG = config.ACTIVE_BG
     FONT = ('Dejavu Serif', 20)
     LBL_WIDTH = 10
     WIDGET_WIDTH = 350
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, master: tk.Tk, **kwargs):
+        super().__init__(master, **kwargs)
 
         self.title_frame = TitleFrame(self, bg=self['bg'],
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
@@ -30,13 +34,36 @@ class SettingsFrame(tk.Frame):
         self._init_lang_frame()
         self._init_scale_frame()
 
-    @property
-    def return_btn(self):
-        return self.title_frame.return_btn
+    # Overrides KeyboardBoundWidget.
+    def init_keyboard_binds(self):
+        self.bind(config.KEYBOARD_BINDS['settings-switch-lang'],
+            lambda e: self._toggle_lang())
+
+    # Overrides MouseBoundWidget.
+    def init_mouse_binds(self):
+        self.lang_combobox.bind('<<ComboboxSelected>>',
+            lambda e: self._notify_bilingual_widgets(self.lang))
 
     @property
     def lang(self):
         return self.lang_var.get()
+
+    @lang.setter
+    def lang(self, lang: str):
+        self.lang_var.set(lang)
+
+    @property
+    def return_btn(self):
+        return self.title_frame.return_btn
+
+    def _toggle_lang(self):
+        self.lang = 'Русский' if (self.lang == 'English') else 'English'
+        self._notify_bilingual_widgets(self.lang)
+
+    def _notify_bilingual_widgets(self, lang: str):
+        for widget in get_all_widget_children(self.master):
+            if isinstance(widget, BilingualWidget):
+                widget.switch_lang(lang)
 
     def _init_lang_frame(self):
         self.lang_frame = tk.Frame(

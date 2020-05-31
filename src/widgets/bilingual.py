@@ -1,16 +1,9 @@
-import abc
 import tkinter as tk
 
 from typing import Dict
 
+from .behavior import BilingualWidget
 from .tooltip import Tooltip
-
-
-class BilingualWidget(abc.ABC):
-
-    @abc.abstractmethod
-    def switch_lang(self, lang):
-        pass
 
 
 class BilingualLabel(tk.Label, BilingualWidget):
