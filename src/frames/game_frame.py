@@ -1,14 +1,33 @@
 import os
 import tkinter as tk
+from tkinter import ttk
 
 import config
 
-from utils import bind_image, bind_sound, create_photo_image
-from widgets.behavior import KeyboardBoundWidget, MouseBoundWidget
-from widgets.bilingual import *
+from utils import (
+    bind_image,
+    bind_sound,
+    create_photo_image,
+)
+
+from widgets.behavior import (
+    KeyboardBoundWidget,
+    MouseBoundWidget,
+)
+
+from widgets.bilingual import (
+    BilingualRadiobutton,
+    BilingualLabel,
+    BilingualButton,
+    BilingualTooltip,
+)
+
 from widgets.utils import get_widget_parent
 
-from canvases import DialogueCanvas, GameCanvas
+from canvases import (
+    DialogueCanvas,
+    GameCanvas,
+)
 
 
 class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
@@ -16,8 +35,8 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
     BD = 5
     LBL_PADX = 10
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, master: tk.Tk, **kwargs):
+        super().__init__(master, **kwargs)
 
         self.choice_var = tk.IntVar(self)
 
@@ -69,83 +88,73 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
         buttons_frame = tk.Frame(game_frame)
 
-        common_attrs = {
-            'bg':                  self['bg'],
-            'bd':                  5,
-            'highlightbackground': config.HIGHLIGHT_BG,
-            'activebackground':    config.ACTIVE_BG,
-            'relief':              'raised',
-        }
+        ttk.Style().configure('GF.TButton',
+            background=config.BG,
+            borderwidth=5,
+            relief='raised'
+        )
+
+        ttk.Style().map('GF.TButton',
+            background=[('active', config.ACTIVE_BG)]
+        )
 
         self.settings_btn = BilingualButton(buttons_frame,
-            text_dict={'eng': 'Settings', 'rus': 'Настройки'}, **common_attrs)
+            text_dict={'eng': 'Settings', 'rus': 'Настройки'}, style='GF.TButton')
 
         BilingualTooltip(self.settings_btn,
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
-            bg=self['background'],
-            waittime=300)
+            bg=self['bg'], waittime=300)
 
-        bind_image(self.settings_btn,
-            os.path.join(config.ICONS_ROOT, 'settings.png'), (100, 100))
+        bind_image(self.settings_btn, os.path.join(config.ICONS_ROOT, 'settings.png'), (100, 100))
 
         self.map_btn = BilingualButton(buttons_frame,
-            text_dict={'eng': 'Map', 'rus': 'Карта'}, **common_attrs)
+            text_dict={'eng': 'Map', 'rus': 'Карта'}, style='GF.TButton')
 
         BilingualTooltip(self.map_btn,
             text_dict={'eng': 'Map', 'rus': 'Карта'},
-            bg=self['background'],
-            waittime=300)
+            bg=self['bg'], waittime=300)
 
-        bind_image(self.map_btn,
-            os.path.join(config.ICONS_ROOT, 'map.png'), (100, 100))
+        bind_image(self.map_btn, os.path.join(config.ICONS_ROOT, 'map.png'), (100, 100))
 
         self.inventory_btn = BilingualButton(buttons_frame,
-            text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'}, **common_attrs)
+            text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'}, style='GF.TButton')
         self.inventory_btn.configure(state='disabled')
 
         BilingualTooltip(self.inventory_btn,
             text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'},
-            bg=self['background'],
-            waittime=300)
+            bg=self['bg'], waittime=300)
 
-        bind_image(self.inventory_btn,
-            os.path.join(config.ICONS_ROOT, 'inventory.png'), (100, 100))
+        bind_image(self.inventory_btn, os.path.join(config.ICONS_ROOT, 'inventory.png'), (100, 100))
 
         self.market_btn = BilingualButton(buttons_frame,
-            text_dict={'eng': 'Market', 'rus': 'Магазин'}, **common_attrs)
+            text_dict={'eng': 'Market', 'rus': 'Магазин'}, style='GF.TButton')
         self.market_btn.configure(state='disabled')
 
         BilingualTooltip(self.market_btn,
             text_dict={'eng': 'Market', 'rus': 'Магазин'},
-            bg=self['background'],
-            waittime=300)
+            bg=self['bg'], waittime=300)
 
-        bind_image(self.market_btn,
-            os.path.join(config.ICONS_ROOT, 'market.png'), (100, 100))
+        bind_image(self.market_btn, os.path.join(config.ICONS_ROOT, 'market.png'), (100, 100))
 
         self.bank_btn = BilingualButton(buttons_frame,
-            text_dict={'eng': 'Bank', 'rus': 'Банк'}, **common_attrs)
+            text_dict={'eng': 'Bank', 'rus': 'Банк'}, style='GF.TButton')
         self.bank_btn.configure(state='disabled')
 
         BilingualTooltip(self.bank_btn,
             text_dict={'eng': 'Bank', 'rus': 'Банк'},
-            bg=self['background'],
-            waittime=300)
+            bg=self['bg'], waittime=300)
 
-        bind_image(self.bank_btn,
-            os.path.join(config.ICONS_ROOT, 'bank.png'), (100, 100))
+        bind_image(self.bank_btn, os.path.join(config.ICONS_ROOT, 'bank.png'), (100, 100))
 
         self.smith_btn = BilingualButton(buttons_frame,
-            text_dict={'eng': 'Smith', 'rus': 'Кузнец'}, **common_attrs)
+            text_dict={'eng': 'Smith', 'rus': 'Кузнец'}, style='GF.TButton')
         self.smith_btn.configure(state='disabled')
 
         BilingualTooltip(self.smith_btn,
             text_dict={'eng': 'Smith', 'rus': 'Кузнец'},
-            bg=self['background'],
-            waittime=300)
+            bg=self['bg'], waittime=300)
 
-        bind_image(self.smith_btn,
-            os.path.join(config.ICONS_ROOT, 'smith.png'), (100, 100))
+        bind_image(self.smith_btn, os.path.join(config.ICONS_ROOT, 'smith.png'), (100, 100))
 
         game_frame.pack(fill='both')
         self.game_canvas.pack(side='left', fill='both')

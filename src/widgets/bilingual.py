@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 from typing import Dict
 
@@ -21,10 +22,10 @@ class BilingualLabel(tk.Label, BilingualWidget):
             self.configure(text=self._text_dict['rus'])
 
 
-class BilingualButton(tk.Button, BilingualWidget):
+class BilingualButton(ttk.Button, BilingualWidget):
 
-    def __init__(self, *args, text_dict, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, master, text_dict, **kwargs):
+        super().__init__(master, **kwargs)
         self._text_dict: Dict[str, str] = text_dict
 
     def switch_lang(self, lang):

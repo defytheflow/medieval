@@ -42,8 +42,7 @@ class Combobox(ttk.Combobox):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        ttk.Style().map(
-            'TCombobox',
+        ttk.Style().map('TCombobox',
             background=[
                 ('readonly', self['background'])
             ],

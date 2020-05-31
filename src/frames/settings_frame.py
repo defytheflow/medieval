@@ -2,8 +2,16 @@ import tkinter as tk
 
 import config
 
-from widgets import TitleFrame, Combobox
-from widgets.behavior import KeyboardBoundWidget, MouseBoundWidget
+from widgets import (
+    TitleFrame,
+    Combobox,
+)
+
+from widgets.behavior import (
+    KeyboardBoundWidget,
+    MouseBoundWidget,
+)
+
 from widgets.bilingual import BilingualLabel
 from widgets.notifiers import notify_bilingual_widgets
 from widgets.utils import get_widget_parent

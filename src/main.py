@@ -4,8 +4,16 @@ import tkinter as tk
 
 import config
 
-from frames import GameFrame, MapFrame, SettingsFrame
-from widgets.notifiers import notify_keyboardbound_widgets, notify_mousebound_widgets
+from frames import (
+    GameFrame,
+    MapFrame,
+    SettingsFrame,
+)
+
+from widgets.notifiers import (
+    notify_keyboardbound_widgets,
+    notify_mousebound_widgets,
+)
 
 from backgrounds import GrassBackground
 from level import Level
