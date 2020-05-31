@@ -16,7 +16,7 @@ class GrassBackground(Background):
 
     def __init__(self):
         self._block_size: int = BLOCK_SIZE
-        self._grass = Sprite(image_file='carpet.png',
+        self._grass = Sprite(image_file='grass.png',
                              size=(self._block_size, self._block_size))
         self._stone = Sprite(image_file='stone.jpeg',
                              size=(self._block_size, self._block_size))

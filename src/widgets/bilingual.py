@@ -7,12 +7,6 @@ from .tooltip import Tooltip
 from .utils import get_all_widget_children
 
 
-def notify_bilingual_widgets(root: tk.Tk, lang: str) -> None:
-    for widget in get_all_widget_children(root):
-        if isinstance(widget, BilingualWidget):
-            widget.switch_lang(lang)
-
-
 class BilingualLabel(tk.Label, BilingualWidget):
 
     def __init__(self, *args, text_dict, **kwargs):

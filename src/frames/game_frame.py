@@ -1,40 +1,23 @@
 import os
 import tkinter as tk
 
-import utils
 import config
 
-from widgets.bilingual import (
-    BilingualLabel, BilingualButton, BilingualTooltip, BilingualRadiobutton
-)
+from utils import bind_image, bind_sound, create_photo_image
+from widgets.behavior import KeyboardBoundWidget, MouseBoundWidget
+from widgets.bilingual import *
+from widgets.utils import get_widget_parent
 
 from canvases import DialogueCanvas, GameCanvas
 
 
-class GameFrame(tk.Frame):
+class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
-    BORDERWIDTH = 5
-    BORDERCOLOR = '#000'
+    BD = 5
+    LBL_PADX = 10
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.hint_frame = None
-        self.game_frame = None
-        self.dialogue_frame = None
-
-        self.game_canvas = None
-        self.dialogue_canvas = None
-
-        self.settings_btn = None
-        self.map_btn = None
-        self.inventory_btn = None
-        self.market_btn = None
-        self.bank_btn = None
-        self.smith_btn = None
-
-        self.hint_lbl = None
-        self.dialogue_lbl = None
 
         self.choice_var = tk.IntVar(self)
 
@@ -42,46 +25,59 @@ class GameFrame(tk.Frame):
         self._init_game_frame()
         self._init_dialogue_frame()
 
-    def _init_hint_frame(self):
-        self.hint_frame = tk.Frame(self)
+    # Overrides tk.Frame.
+    def focus_set(self):
+        super().focus_set()
+        self.game_canvas.focus_set()
 
-        self.hint_lbl = BilingualLabel(self.hint_frame,
+    # Overrides KeyboardBoundWidget.
+    def init_keyboard_binds(self):
+        self.bind_all(config.KEYBOARD_BINDS['show-game-frame'],
+            lambda e: get_widget_parent(self).show_frame('game'))
+        self.bind_all(config.KEYBOARD_BINDS['show-map-frame'],
+            lambda e: get_widget_parent(self).show_frame('map'))
+        self.bind_all(config.KEYBOARD_BINDS['show-settings-frame'],
+            lambda e: get_widget_parent(self).show_frame('settings'))
+
+    # Overrides MouseBoundWidget.
+    def init_mouse_binds(self):
+        self.settings_btn.bind('<1>',
+            lambda e: get_widget_parent(self).show_frame('settings'))
+        self.map_btn.bind('<1>',
+            lambda e: get_widget_parent(self).show_frame('map'))
+
+    def _init_hint_frame(self):
+        hint_frame = tk.Frame(self)
+        self.hint_lbl = BilingualLabel(hint_frame,
+            bg=self['bg'],
+            bd=self.BD,
             text_dict={'eng': 'Hint:', 'rus': 'Подсказка:'},
-            background=self['background'],
-            borderwidth=self.BORDERWIDTH,
-            padx=10,
+            padx=self.LBL_PADX,
             relief='raised',
             anchor='nw')
 
-        self.hint_frame.pack(fill='both')
+        hint_frame.pack(fill='both')
         self.hint_lbl.pack(fill='both')
 
     def _init_game_frame(self):
-        self.game_frame = tk.Frame(self, height=self.winfo_reqheight() * 0.8)
+        game_frame = tk.Frame(self, height=self.winfo_reqheight() * 0.8)
 
-        self.game_canvas = GameCanvas(
-            self.game_frame,
+        self.game_canvas = GameCanvas(game_frame,
             width=self.winfo_reqwidth() * 0.9,
-            height=self.game_frame.winfo_reqheight(),
-            highlightbackground=self.BORDERCOLOR)
+            height=game_frame.winfo_reqheight(),
+            highlightbackground=config.HIGHLIGHT_BG)
 
-        self.game_frame.pack(fill='both')
-        self.game_canvas.pack(side='left', fill='both')
-
-        self._init_buttons_frame()
-
-    def _init_buttons_frame(self):
-        self.buttons_frame = tk.Frame(self.game_frame)
+        buttons_frame = tk.Frame(game_frame)
 
         common_attrs = {
-            'background': self['background'],
-            'borderwidth': 5,
-            'highlightbackground': self.BORDERCOLOR,
-            'activebackground': '#7f6f28',
-            'relief': 'raised',
+            'bg':                  self['bg'],
+            'bd':                  5,
+            'highlightbackground': config.HIGHLIGHT_BG,
+            'activebackground':    config.ACTIVE_BG,
+            'relief':              'raised',
         }
 
-        self.settings_btn = BilingualButton(self.buttons_frame,
+        self.settings_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Settings', 'rus': 'Настройки'}, **common_attrs)
 
         BilingualTooltip(self.settings_btn,
@@ -89,10 +85,10 @@ class GameFrame(tk.Frame):
             bg=self['background'],
             waittime=300)
 
-        utils.bind_image(self.settings_btn,
+        bind_image(self.settings_btn,
             os.path.join(config.ICONS_ROOT, 'settings.png'), (100, 100))
 
-        self.map_btn = BilingualButton(self.buttons_frame,
+        self.map_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Map', 'rus': 'Карта'}, **common_attrs)
 
         BilingualTooltip(self.map_btn,
@@ -100,10 +96,10 @@ class GameFrame(tk.Frame):
             bg=self['background'],
             waittime=300)
 
-        utils.bind_image(self.map_btn,
+        bind_image(self.map_btn,
             os.path.join(config.ICONS_ROOT, 'map.png'), (100, 100))
 
-        self.inventory_btn = BilingualButton(self.buttons_frame,
+        self.inventory_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'}, **common_attrs)
         self.inventory_btn.configure(state='disabled')
 
@@ -112,10 +108,10 @@ class GameFrame(tk.Frame):
             bg=self['background'],
             waittime=300)
 
-        utils.bind_image(self.inventory_btn,
+        bind_image(self.inventory_btn,
             os.path.join(config.ICONS_ROOT, 'inventory.png'), (100, 100))
 
-        self.market_btn = BilingualButton(self.buttons_frame,
+        self.market_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Market', 'rus': 'Магазин'}, **common_attrs)
         self.market_btn.configure(state='disabled')
 
@@ -124,10 +120,10 @@ class GameFrame(tk.Frame):
             bg=self['background'],
             waittime=300)
 
-        utils.bind_image(self.market_btn,
+        bind_image(self.market_btn,
             os.path.join(config.ICONS_ROOT, 'market.png'), (100, 100))
 
-        self.bank_btn = BilingualButton(self.buttons_frame,
+        self.bank_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Bank', 'rus': 'Банк'}, **common_attrs)
         self.bank_btn.configure(state='disabled')
 
@@ -136,10 +132,10 @@ class GameFrame(tk.Frame):
             bg=self['background'],
             waittime=300)
 
-        utils.bind_image(self.bank_btn,
+        bind_image(self.bank_btn,
             os.path.join(config.ICONS_ROOT, 'bank.png'), (100, 100))
 
-        self.smith_btn = BilingualButton(self.buttons_frame,
+        self.smith_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Smith', 'rus': 'Кузнец'}, **common_attrs)
         self.smith_btn.configure(state='disabled')
 
@@ -148,78 +144,68 @@ class GameFrame(tk.Frame):
             bg=self['background'],
             waittime=300)
 
-        utils.bind_image(self.smith_btn,
+        bind_image(self.smith_btn,
             os.path.join(config.ICONS_ROOT, 'smith.png'), (100, 100))
 
-        self.buttons_frame.pack(side='left', fill='both', expand=True)
+        game_frame.pack(fill='both')
+        self.game_canvas.pack(side='left', fill='both')
 
-        for btn in self.buttons_frame.winfo_children():
+        buttons_frame.pack(side='left', fill='both', expand=True)
+
+        for btn in buttons_frame.winfo_children():
             btn.pack(fill='both', expand=True)
-            utils.bind_sound(btn, '<1>', os.path.join(config.SOUNDS_ROOT, 'click.wav'))
+            bind_sound(btn, '<1>', os.path.join(config.SOUNDS_ROOT, 'click.wav'))
 
     def _init_dialogue_frame(self):
-        self.dialogue_frame = tk.Frame(self)
+        dialogue_frame = tk.Frame(self)
 
-        self.dialogue_canvas = DialogueCanvas(
-            self.dialogue_frame,
+        self.dialogue_canvas = DialogueCanvas(dialogue_frame,
             width=self.winfo_reqwidth() * 0.13,
-            # width=self.winfo_reqwidth() * 0.15,
             height=self.winfo_reqheight() * 0.2,
-            background=self['background'],
-            borderwidth=self.BORDERWIDTH,
-            highlightbackground=self.BORDERCOLOR,
+            bg=self['bg'],
+            bd=self.BD,
+            highlightbackground=config.HIGHLIGHT_BG,
             relief='raised')
 
-        self.dialogue_frame.pack(fill='both')
-        self.dialogue_canvas.pack(side='left', fill='both')
-
-        self._init_choice_frame()
-
-    def _init_choice_frame(self):
-        self.choice_frame = tk.Frame(
-            self.dialogue_frame,
-            background=self['background'],
-            borderwidth=self.BORDERWIDTH,
+        choice_frame = tk.Frame(dialogue_frame,
+            bg=self['bg'],
+            bd=self.BD,
             relief='raised')
 
-        self.dialogue_lbl = BilingualLabel(
-            self.choice_frame,
+        self.dialogue_lbl = BilingualLabel(choice_frame,
+            bg=self['bg'],
+            bd=self.BD,
             text_dict={'eng': 'Question', 'rus': 'Вопрос'},
-            background=self['background'],
-            borderwidth=self.BORDERWIDTH,
-            padx=10,
+            padx=self.LBL_PADX,
             relief='raised',
             anchor='nw')
 
-        file = os.path.join(config.ICONS_ROOT, 'choice.png')
-        image = utils.create_photo_image(file, (180, 90))
-
         common_attrs = {
-            'background': self['background'],
-            'activebackground': self['background'],
-            'highlightbackground': self['background'],
-            'compound': 'center',
+            'bg':                  self['bg'],
+            'activebackground':    self['bg'],
+            'highlightbackground': self['bg'],
+            'compound':            'center',
         }
 
-        btn1 = BilingualRadiobutton(self.choice_frame,
+        btn1 = BilingualRadiobutton(choice_frame,
             text_dict={'eng': 'yes', 'rus': 'да'},
             value=1,
             variable=self.choice_var,
             **common_attrs)
 
-        utils.bind_image(btn1,
-            os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
-
-        btn2 = BilingualRadiobutton(self.choice_frame,
+        btn2 = BilingualRadiobutton(choice_frame,
             text_dict={'eng': 'no', 'rus': 'нет'},
             value=2,
             variable=self.choice_var,
             **common_attrs)
 
-        utils.bind_image(btn2,
-            os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
+        for btn in (btn1, btn2):
+            bind_image(btn, os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
 
-        self.choice_frame.pack(side='left', fill='both', expand=True)
+        dialogue_frame.pack(fill='both')
+        self.dialogue_canvas.pack(side='left', fill='both')
+
+        choice_frame.pack(side='left', fill='both', expand=True)
         self.dialogue_lbl.pack(fill='both')
 
         btn1.pack(side='left', expand=True)

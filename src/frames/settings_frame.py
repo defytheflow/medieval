@@ -4,7 +4,8 @@ import config
 
 from widgets import TitleFrame, Combobox
 from widgets.behavior import KeyboardBoundWidget, MouseBoundWidget
-from widgets.bilingual import BilingualLabel, notify_bilingual_widgets
+from widgets.bilingual import BilingualLabel
+from widgets.notifiers import notify_bilingual_widgets
 from widgets.utils import get_widget_parent
 
 
