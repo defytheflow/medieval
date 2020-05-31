@@ -1,27 +1,32 @@
 import tkinter as tk
 
-import utils
+from typing import Callable
+
 
 class GameCanvas(tk.Canvas):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self._pressed = False
 
-        self.bind('<KeyPress w>', lambda e: self._key_press_decorator(self._on_w, e))
-        self.bind('<KeyPress a>', lambda e: self._key_press_decorator(self._on_a, e))
-        self.bind('<KeyPress s>', lambda e: self._key_press_decorator(self._on_s, e))
-        self.bind('<KeyPress d>', lambda e: self._key_press_decorator(self._on_d, e))
+        self._init_keyboard_binds()
 
         self.focus_set()
 
-    def _key_press_decorator(self, callback_func, event):
+    def _init_keyboard_binds(self):
+        self.bind('<w>', lambda e: self._lock_key(self._on_w))
+        self.bind('<a>', lambda e: self._lock_key(self._on_a))
+        self.bind('<s>', lambda e: self._lock_key(self._on_s))
+        self.bind('<d>', lambda e: self._lock_key(self._on_d))
+
+    def _lock_key(self, command: Callable):
         if not self._pressed:
             self._pressed = True
-            callback_func(event)
+            command()
             self._pressed = False
 
-    def _on_w(self, event):
+    def _on_w(self):
         old_x, old_y = self.coords(self.character.id)
 
         self.character.direction = 'north'
@@ -32,7 +37,7 @@ class GameCanvas(tk.Canvas):
         self.character.reset_costume()
         self.character.redraw(self, new_x, new_y)
 
-    def _on_a(self, event):
+    def _on_a(self):
         old_x, old_y = self.coords(self.character.id)
 
         self.character.direction = 'west'
@@ -43,7 +48,7 @@ class GameCanvas(tk.Canvas):
         self.character.reset_costume()
         self.character.redraw(self, new_x, new_y)
 
-    def _on_s(self, event):
+    def _on_s(self):
         old_x, old_y = self.coords(self.character.id)
 
         self.character.direction = 'south'
@@ -54,7 +59,7 @@ class GameCanvas(tk.Canvas):
         self.character.reset_costume()
         self.character.redraw(self, new_x, new_y)
 
-    def _on_d(self, event):
+    def _on_d(self):
         old_x, old_y = self.coords(self.character.id)
 
         self.character.direction = 'east'

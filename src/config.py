@@ -20,3 +20,9 @@ ICONS_ROOT = os.path.join(ASSETS_ROOT, 'icons')
 SPRITES_ROOT = os.path.join(ASSETS_ROOT, 'sprites')
 
 SOUNDS_ROOT = os.path.join(ASSETS_ROOT, 'sounds')
+
+KEYBOARD_BINDS = {
+    'game':     'G',
+    'map':      'M',
+    'settings': 'S',
+}

@@ -35,9 +35,6 @@ class MedievalApp(tk.Tk):
         self._show_frame('game')
 
     def _init_frames(self):
-        """
-
-        """
         common_attrs = {
             'bg':     self['bg'],
             'width':  self['width'],
@@ -49,22 +46,22 @@ class MedievalApp(tk.Tk):
         self._frames['settings'] = SettingsFrame(self, **common_attrs)
 
     def _init_keyboard_binds(self):
-        """
-
-        """
-        self.bind_all('G', lambda e: self._show_frame('game'))
-        self.bind_all('M', lambda e: self._show_frame('map'))
-        self.bind_all('S', lambda e: self._show_frame('settings'))
+        self.bind_all(conf.KEYBOARD_BINDS['game'],
+                      lambda e: self._show_frame('game'))
+        self.bind_all(conf.KEYBOARD_BINDS['map'],
+                      lambda e: self._show_frame('map'))
+        self.bind_all(conf.KEYBOARD_BINDS['settings'],
+                      lambda e: self._show_frame('settings'))
 
     def _init_mouse_binds(self):
-        """
-
-        """
-        self._frames['game'].settings_btn.bind('<1>', lambda e: self._show_frame('settings'))
-        self._frames['game'].map_btn.bind('<1>', lambda e: self._show_frame('map'))
-        self._frames['map'].return_btn.bind('<1>', lambda e: self._show_frame('game'))
-        self._frames['settings'].return_btn.bind('<1>', lambda e: self._show_frame('game'))
-
+        self._frames['game'].settings_btn.bind('<1>',
+            lambda e: self._show_frame('settings'))
+        self._frames['game'].map_btn.bind('<1>',
+            lambda e: self._show_frame('map'))
+        self._frames['map'].return_btn.bind('<1>',
+            lambda e: self._show_frame('game'))
+        self._frames['settings'].return_btn.bind('<1>',
+            lambda e: self._show_frame('game'))
         self._frames['settings'].lang_combobox.bind('<<ComboboxSelected>>',
             lambda e: self._notify_bilingual_children(self._frames['settings'].lang))
 

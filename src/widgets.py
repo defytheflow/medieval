@@ -10,6 +10,13 @@ import config
 import utils
 
 
+class KeyboardBindableWidget(abc.ABC):
+
+    @abc.abstractmethod
+    def init_keyboard_binds(self):
+        pass
+
+
 class BilingualWidget(abc.ABC):
 
     @abc.abstractmethod
