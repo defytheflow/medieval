@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from typing import Tuple, Set
+from typing import Tuple
 
 
 def create_photo_image(path: str,
@@ -11,15 +11,6 @@ def create_photo_image(path: str,
         image = image.resize(size)
     return ImageTk.PhotoImage(image)
 
-
-def get_all_widget_children(parent: tk.Misc) -> Set[tk.Widget]:
-    """
-        Recursively collects all parent widget's children.
-    """
-    children = parent.winfo_children()
-    for child in children:
-        children.extend(get_all_widget_children(child))
-    return set(children)
 
 def play_sound(sound_file: str) -> None:
     import simpleaudio as sa

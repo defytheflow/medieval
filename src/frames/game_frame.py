@@ -4,8 +4,9 @@ import tkinter as tk
 import utils
 import config
 
-from widgets import (
-    BilingualLabel, BilingualButton, BilingualTooltip, BilingualRadiobutton)
+from widgets.bilingual import (
+    BilingualLabel, BilingualButton, BilingualTooltip, BilingualRadiobutton
+)
 
 from canvases import DialogueCanvas, GameCanvas
 
