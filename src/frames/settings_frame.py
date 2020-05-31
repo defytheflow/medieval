@@ -1,12 +1,12 @@
 import tkinter as tk
 
 import config
-
 from widgets import BilingualLabel, TitleFrame, Combobox
 
 
 class SettingsFrame(tk.Frame):
 
+    ACTIVE_BG = config.ACTIVE_BG
     FONT = ('Dejavu Serif', 20)
     LBL_WIDTH = 10
     WIDGET_WIDTH = 350
@@ -14,9 +14,8 @@ class SettingsFrame(tk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title_frame = TitleFrame(self,
+        self.title_frame = TitleFrame(self, bg=self['bg'],
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
-            background=self['background'],
             font=('DejaVu Serif', 32, 'bold italic'))
 
         self.title_frame.pack(fill='both')
@@ -84,7 +83,7 @@ class SettingsFrame(tk.Frame):
             borderwidth=5,
             relief=tk.SUNKEN,
             highlightbackground=self['background'],
-            activebackground=config.ACTIVE_BG_COLOR,
+            activebackground=self.ACTIVE_BG,
             font=self.FONT,
             troughcolor=self['background'])
 

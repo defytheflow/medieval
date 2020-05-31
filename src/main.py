@@ -2,37 +2,46 @@
 
 import tkinter as tk
 
-import config as conf
+import config
 
 from frames import GameFrame, MapFrame, SettingsFrame
 from utils import get_all_widget_children
-from widgets import BilingualWidget
+from widgets import BilingualWidget, KeyboardBoundWidget
 
-# Very bad
 from backgrounds import GrassBackground
-from level import Level  # Super bad
+from level import Level
 from sprites import Character
 
 
-class MedievalApp(tk.Tk):
+class MedievalApp(tk.Tk, KeyboardBoundWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.title('Medieval')
-        self.config(width=conf.WIDTH, height=conf.HEIGHT, bg=conf.BG_COLOR)
-        self.geometry(f'{conf.WIDTH}x{conf.HEIGHT}')
+        self.config(width=config.WIDTH, height=config.HEIGHT, bg=config.BG)
+        self.geometry(f'{config.WIDTH}x{config.HEIGHT}')
         self.resizable(0, 0)
 
         self._current_frame = None  # type: tk.Frame
         self._frames = {}           # type: Dict[str, tk.Frame]
 
+
         self._init_frames()
-        self._init_keyboard_binds()
+        self.init_keyboard_binds()
         self._init_mouse_binds()
         self._init_level()
 
         self._show_frame('game')
+
+    # Override.
+    def init_keyboard_binds(self):
+        self.bind_all(config.KEYBOARD_BINDS['game'],
+                      lambda e: self._show_frame('game'))
+        self.bind_all(config.KEYBOARD_BINDS['map'],
+                      lambda e: self._show_frame('map'))
+        self.bind_all(config.KEYBOARD_BINDS['settings'],
+                      lambda e: self._show_frame('settings'))
 
     def _init_frames(self):
         common_attrs = {
@@ -44,14 +53,6 @@ class MedievalApp(tk.Tk):
         self._frames['game'] = GameFrame(self, **common_attrs)
         self._frames['map'] = MapFrame(self, **common_attrs)
         self._frames['settings'] = SettingsFrame(self, **common_attrs)
-
-    def _init_keyboard_binds(self):
-        self.bind_all(conf.KEYBOARD_BINDS['game'],
-                      lambda e: self._show_frame('game'))
-        self.bind_all(conf.KEYBOARD_BINDS['map'],
-                      lambda e: self._show_frame('map'))
-        self.bind_all(conf.KEYBOARD_BINDS['settings'],
-                      lambda e: self._show_frame('settings'))
 
     def _init_mouse_binds(self):
         self._frames['game'].settings_btn.bind('<1>',

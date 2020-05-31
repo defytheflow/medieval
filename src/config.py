@@ -7,9 +7,9 @@ HEIGHT = WIDTH * 3 // 4
 
 BLOCK_SIZE = 30
 
-BG_COLOR = '#c9b662'
+BG = '#c9b662'
 
-ACTIVE_BG_COLOR = '#7f6f28'
+ACTIVE_BG = '#7f6f28'
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
