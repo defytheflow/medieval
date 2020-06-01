@@ -5,7 +5,7 @@ from typing import Tuple, List
 import simpleaudio as sa
 
 import config
-from utils import create_photo_image, play_sound
+from utils import create_photo_image
 
 
 class Sprite:
