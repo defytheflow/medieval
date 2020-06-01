@@ -37,7 +37,7 @@ class SettingsFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
     # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self) -> None:
-        self.bind(config.KEYBOARD_BINDS['settings-switch-lang'],
+        self.bind(config.KEY_BINDS['settings-switch-lang'],
             lambda e: self._toggle_lang())
 
     # Overrides MouseBoundWidget.

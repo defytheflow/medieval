@@ -51,11 +51,11 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
     # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self):
-        self.bind_all(config.KEYBOARD_BINDS['show-game-frame'],
+        self.bind_all(config.KEY_BINDS['show-game'],
             lambda e: get_widget_parent(self).show_frame('game'))
-        self.bind_all(config.KEYBOARD_BINDS['show-map-frame'],
+        self.bind_all(config.KEY_BINDS['show-map'],
             lambda e: get_widget_parent(self).show_frame('map'))
-        self.bind_all(config.KEYBOARD_BINDS['show-settings-frame'],
+        self.bind_all(config.KEY_BINDS['show-settings'],
             lambda e: get_widget_parent(self).show_frame('settings'))
 
     # Overrides MouseBoundWidget.

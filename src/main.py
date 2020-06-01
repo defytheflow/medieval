@@ -15,7 +15,7 @@ from widgets.notifiers import (
     notify_mousebound_widgets,
 )
 
-from backgrounds import GrassBackground
+from backgrounds import VillageBackground
 from level import Level
 from sprites import Character
 
@@ -60,8 +60,8 @@ class MedievalApp(tk.Tk):
         self._frames['settings'] = SettingsFrame(self, **common_attrs)
 
     def _init_level(self):
-        self.bg = GrassBackground()  # FUCK !
-        character = Character(tag='peasant',
+        self.bg = VillageBackground()
+        character = Character(name='peasant',
                               size=(30, 30),
                               direction='south',
                               speed=3)

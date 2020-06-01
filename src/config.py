@@ -36,9 +36,15 @@ SOUNDS_ROOT = os.path.join(ASSETS_ROOT, 'sounds')
 
 # Bindings.
 
-KEYBOARD_BINDS = {
-    'show-game-frame':      'G',
-    'show-map-frame':       'M',
-    'show-settings-frame':  'S',
+KEY_BINDS = {
+    'show-game':            'G',
+    'show-map':             'M',
+    'show-settings':        'S',
+
     'settings-switch-lang': 'L',
+
+    'game-move-up':         'w',
+    'game-move-down':       's',
+    'game-move-left':       'a',
+    'game-move-right':      'd',
 }

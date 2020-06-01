@@ -1,7 +1,7 @@
 import abc
 import tkinter as tk
 
-from config import BLOCK_SIZE
+import config
 from sprites import Sprite
 
 
@@ -12,14 +12,22 @@ class Background(abc.ABC):
         pass
 
 
-class GrassBackground(Background):
+class VillageBackground(Background):
 
     def __init__(self):
-        self._block_size: int = BLOCK_SIZE
-        self._grass = Sprite(image_file='grass.png',
+        self._block_size = config.BLOCK_SIZE  # type: int
+
+        self._grass = Sprite(name='grass',
+                             image_file='grass.png',
                              size=(self._block_size, self._block_size))
-        self._stone = Sprite(image_file='stone.jpeg',
+
+        self._stone = Sprite(name='stone',
+                             image_file='stone.jpeg',
                              size=(self._block_size, self._block_size))
+
+        self._tree = Sprite(name='tree',
+                            image_file='tree.png',
+                            size=(self._block_size * 2, self._block_size * 2))
 
     def draw(self, canvas: tk.Canvas):
         x, y = 0, 0
