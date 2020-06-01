@@ -65,12 +65,13 @@ class MedievalApp(tk.Tk):
 
         peasant = Sprite(
             name='peasant',
-            game_canvas=game_canvas,
+            canvas=game_canvas,
+            position=(0, 0),
             size=(config.BLOCK_SIZE, config.BLOCK_SIZE),
             speed=3)
 
-        background.draw_on_game_canvas(game_canvas)
-        peasant.draw_on_game_canvas(0, 0)
+        background.draw_on_canvas(game_canvas)
+        peasant.draw_on_canvas()
 
 
 if __name__ == '__main__':
