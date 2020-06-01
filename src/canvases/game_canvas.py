@@ -17,13 +17,13 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
     # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self):
         self.bind(config.KEY_BINDS['character-move-up'],
-            lambda e: self._lock_key(self._sprites['peasant'].move_north))
+            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('north')))
         self.bind(config.KEY_BINDS['character-move-left'],
-            lambda e: self._lock_key(self._sprites['peasant'].move_west))
+            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('west')))
         self.bind(config.KEY_BINDS['character-move-down'],
-            lambda e: self._lock_key(self._sprites['peasant'].move_south))
+            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('south')))
         self.bind(config.KEY_BINDS['character-move-right'],
-            lambda e: self._lock_key(self._sprites['peasant'].move_east))
+            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('east')))
 
     def add_sprite(self, sprite) -> None:
         self._sprites[sprite.get_name()] = sprite

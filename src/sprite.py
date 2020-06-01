@@ -26,15 +26,11 @@ class Sprite:
         self._position = position
         self._direction = direction
         self._speed = speed
-
         self._canvas.add_sprite(self)
         self._canvas_id = self.NO_CANVAS_ID   # type: int
-
         self._sleep_time = 10
-
         image_file=os.path.join(config.SPRITES_ROOT, name, f'{direction}.png')
         self._image = create_photo_image(image_file, size)
-
         self._costume_num = 0
 
     def __repr__(self):
@@ -46,11 +42,6 @@ class Sprite:
 
     def get_tags(self) -> List[str]:
         return [self._name, self.__class__.__name__.lower()]
-
-    def get_canvas_id(self) -> int:
-        if self._canvas_id == self.NO_CANVAS_ID:
-            raise AttributeError('canvas_id has not been initialized.')
-        return self._canvas_id
 
     def get_size(self) -> Tuple[int, int]:
         return self._size
@@ -79,6 +70,11 @@ class Sprite:
     def get_speed(self) -> int:
         return self._speed
 
+    def get_canvas_id(self) -> int:
+        if self._canvas_id == self.NO_CANVAS_ID:
+            raise AttributeError('canvas_id has not been initialized.')
+        return self._canvas_id
+
     def set_canvas_id(self, canvas_id: int) -> None:
         self._canvas_id = canvas_id
 
@@ -86,7 +82,6 @@ class Sprite:
         self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), self._size)
 
     def set_position(self, new_position: Tuple[int, int]) -> None:
-        # Validate position
         self._position = new_position
 
     def set_direction(self, new_direction: str) -> None:
@@ -94,30 +89,6 @@ class Sprite:
             raise ValueError(f'Invalid direction value {new_direction}')
         self._direction = new_direction
         self.set_image(os.path.join(self._name, f'{self._direction}.png'))
-
-    def draw_on_canvas(self) -> None:
-        canvas_id = self._canvas.create_image(self.get_x(),
-                                              self.get_y(),
-                                              image=self._image,
-                                              anchor='nw',
-                                              tags=self.get_tags())
-        self.set_canvas_id(canvas_id)
-
-    def draw_on_canvas_at(self, x: int, y: int) -> None:
-        canvas_id = self._canvas.create_image(x,
-                                              y,
-                                              image=self._image,
-                                              anchor='nw',
-                                              tags=self.get_tags())
-        self.set_canvas_id(canvas_id)
-
-    def redraw_on_canvas(self) -> None:
-        self._canvas.delete(self.get_canvas_id())
-        self.draw_on_canvas()
-
-    def redraw_on_canvas_at(self, x: int, y: int) -> None:
-        self._canvas.delete(self.get_canvas_id())
-        self.draw_on_canvas_at(x, y)
 
     def switch_costume(self) -> None:
         self._costume_num += 1
@@ -128,58 +99,45 @@ class Sprite:
     def reset_costume(self) -> None:
         self.set_image(os.path.join(self._name, f'{self._direction}.png'))
 
-    def move_north(self) -> None:
-        self.set_direction('north')
-        self.set_position((self.get_x(), self.get_y() - self.get_width()))
-        self._animate_move_north()
+    def draw_on_canvas(self) -> None:
+        self.draw_on_canvas_at(self.get_x(), self.get_y())
+
+    def redraw_on_canvas(self) -> None:
+        self.redraw_on_canvas_at(self.get_x(), self.get_y())
+
+    def draw_on_canvas_at(self, x: int, y: int) -> None:
+        canvas_id = self._canvas.create_image(x, y,
+                    image=self._image, anchor='nw', tags=self.get_tags())
+        self.set_canvas_id(canvas_id)
+
+    def redraw_on_canvas_at(self, x: int, y: int) -> None:
+        self._canvas.delete(self.get_canvas_id())
+        self.draw_on_canvas_at(x, y)
+
+    def move(self, direction: str) -> None:
+        self.set_direction(direction)
+        if direction == 'north':
+            self.set_position((self.get_x(), self.get_y() - self.get_width()))
+        elif direction == 'west':
+            self.set_position((self.get_x() - self.get_width(), self.get_y()))
+        elif direction == 'south':
+            self.set_position((self.get_x(), self.get_y() + self.get_width()))
+        elif direction == 'east':
+            self.set_position((self.get_x() + self.get_width(), self.get_y()))
+        self._animate_move(direction)
         self.reset_costume()
         self.redraw_on_canvas()
 
-    def move_west(self) -> None:
-        self.set_direction('west')
-        self.set_position((self.get_x() - self.get_width(), self.get_y()))
-        self._animate_move_west()
-        self.reset_costume()
-        self.redraw_on_canvas()
-
-    def move_south(self) -> None:
-        self.set_direction('south')
-        self.set_position((self.get_x(), self.get_y() + self.get_width()))
-        self._animate_move_south()
-        self.reset_costume()
-        self.redraw_on_canvas()
-
-    def move_east(self) -> None:
-        self.set_direction('east')
-        self.set_position((self.get_x() + self.get_width(), self.get_y()))
-        self._animate_move_east()
-        self.reset_costume()
-        self.redraw_on_canvas()
-
-    def _animate_move_north(self) -> None:
+    def _animate_move(self, direction: str) -> None:
         for i in range(1, self.get_width() + 1, self.get_speed()):
             self.switch_costume()
-            self.redraw_on_canvas_at(self.get_x(), self.get_y() + self.get_width() - i)
-            self._canvas.after(self._sleep_time)
-            self._canvas.update()
-
-    def _animate_move_west(self) -> None:
-        for i in range(1, self.get_width() + 1, self.get_speed()):
-            self.switch_costume()
-            self.redraw_on_canvas_at(self.get_x() + self.get_width() - i, self.get_y())
-            self._canvas.after(self._sleep_time)
-            self._canvas.update()
-
-    def _animate_move_south(self) -> None:
-        for i in range(1, self.get_width() + 1, self.get_speed()):
-            self.switch_costume()
-            self.redraw_on_canvas_at(self.get_x(), self.get_y() - self.get_width() + i)
-            self._canvas.after(self._sleep_time)
-            self._canvas.update()
-
-    def _animate_move_east(self) -> None:
-        for i in range(1, self.get_width() + 1, self.get_speed()):
-            self.switch_costume()
-            self.redraw_on_canvas_at(self.get_x() - self.get_width() + i, self.get_y())
+            if direction == 'north':
+                self.redraw_on_canvas_at(self.get_x(), self.get_y() + self.get_width() - i)
+            elif direction == 'west':
+                self.redraw_on_canvas_at(self.get_x() + self.get_width() - i, self.get_y())
+            elif direction == 'south':
+                self.redraw_on_canvas_at(self.get_x(), self.get_y() - self.get_width() + i)
+            elif direction == 'east':
+                self.redraw_on_canvas_at(self.get_x() - self.get_width() + i, self.get_y())
             self._canvas.after(self._sleep_time)
             self._canvas.update()
