@@ -5,22 +5,32 @@ from typing import Tuple
 
 import config
 from utils import create_photo_image
+from canvases import GameCanvas
 
 
 class Sprite:
 
     def __init__(self,
                  name: str,
+                 canvas: GameCanvas,
                  image_file: str,
                  size: Tuple[int, int]):
 
         self._name = name
+
+        self._canvas = canvas
+        self._canvas.add_sprite(self)
+
         self._size = size
         self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), self._size)
 
     @property
     def name(self) -> str:
         return self._name
+
+    @property
+    def canvas(self) -> GameCanvas:
+        return self._canvas
 
     @property
     def size(self) -> Tuple[int, int]:
@@ -48,6 +58,7 @@ class Character(Sprite):
 
     def __init__(self,
                  name: str,
+                 canvas: GameCanvas,
                  size: Tuple[int, int],
                  direction: str,
                  speed: int = 1):
@@ -58,6 +69,7 @@ class Character(Sprite):
         self._costume_num = 0
 
         super().__init__(name=name,
+                         canvas=canvas,
                          size=size,
                          image_file=os.path.join(self._name, f'{self._direction}.png'))
 
@@ -85,9 +97,15 @@ class Character(Sprite):
     def reset_costume(self) -> None:
         self.image = os.path.join(self._name, f'{self._direction}.png')
 
-    def draw(self, canvas: tk.Canvas, x: int, y: int) -> None:
-        self.id = canvas.create_image(x, y, image=self._image, anchor='nw', tags='character')
+    def draw(self, x: int, y: int) -> None:
+        self.id = self._canvas.create_image(x, y,
+                                            image=self._image,
+                                            anchor='nw',
+                                            tags='character')
 
-    def redraw(self, canvas: tk.Canvas, x: int, y: int) -> None:
-        canvas.delete(self.id)
-        self.id = canvas.create_image(x, y, image=self._image, anchor='nw', tags='character')
+    def redraw(self, x: int, y: int) -> None:
+        self._canvas.delete(self.id)
+        self.id = self._canvas.create_image(x, y,
+                                            image=self._image,
+                                            anchor='nw',
+                                            tags='character')
