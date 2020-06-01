@@ -59,19 +59,22 @@ class MedievalApp(tk.Tk):
         self._frames['settings'] = SettingsFrame(self, **common_attrs)
 
     def _init_level(self):
+        game_canvas = self._frames['game'].game_canvas
 
-        bg = VillageBackground(name='village',
-                               canvas=self._frames['game'].game_canvas,
-                               block_size=config.BLOCK_SIZE)
+        background = VillageBackground(
+            name='village',
+            canvas=game_canvas,
+            block_size=config.BLOCK_SIZE)
 
-        character = Character(name='peasant',
-                              canvas=self._frames['game'].game_canvas,
-                              size=(config.BLOCK_SIZE, config.BLOCK_SIZE),
-                              direction='south',
-                              speed=3)
+        character = Character(
+            name='peasant',
+            canvas=game_canvas,
+            size=(config.BLOCK_SIZE, config.BLOCK_SIZE),
+            speed=3)
 
-        bg.draw()
-        character.draw(0, 0)
+        background.draw_on_canvas()
+        character.draw_on_canvas(0, 0)
+
 
 if __name__ == '__main__':
     app = MedievalApp()

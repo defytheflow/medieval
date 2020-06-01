@@ -1,66 +1,78 @@
 import os
 import tkinter as tk
 
-from typing import Tuple
+from typing import Tuple, List
 
 import config
 from utils import create_photo_image
-from canvases import GameCanvas
 
 
 class Sprite:
 
+    NO_CANVAS_ID = -1
+
     def __init__(self,
                  name: str,
-                 canvas: GameCanvas,
+                 canvas,
                  image_file: str,
                  size: Tuple[int, int]):
 
         self._name = name
-
         self._canvas = canvas
         self._canvas.add_sprite(self)
-
+        self._canvas_id = self.NO_CANVAS_ID   # type: int
         self._size = size
-        self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), self._size)
+        self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), size)
 
-    @property
-    def name(self) -> str:
+    def __repr__(self):
+        return (f"{self.__class__.__name__}(name='{self._name}', size={self._size}, "
+                f"canvas_id={self._canvas_id}, tags={self.get_tags()})")
+
+    def get_name(self) -> str:
         return self._name
 
-    @property
-    def canvas(self) -> GameCanvas:
-        return self._canvas
+    def get_tags(self) -> List[str]:
+        return [self._name, self.__class__.__name__.lower()]
 
-    @property
-    def size(self) -> Tuple[int, int]:
+    def get_canvas_id(self) -> int:
+        if self._canvas_id == self.NO_CANVAS_ID:
+            raise AttributeError('canvas_id has not been initialized.')
+        return self._canvas_id
+
+    def get_size(self) -> Tuple[int, int]:
         return self._size
 
-    @property
-    def image(self) -> tk.PhotoImage:
+    def get_image(self) -> tk.PhotoImage:
         return self._image
 
-    @property
-    def width(self) -> int:
+    def get_width(self) -> int:
         return self._size[0]
 
-    @property
-    def height(self) -> int:
+    def get_height(self) -> int:
         return self._size[1]
 
-    @image.setter
-    def image(self, image_file: str) -> None:
+    def set_canvas_id(self, canvas_id: int) -> None:
+        self._canvas_id = canvas_id
+
+    def set_image(self, image_file: str) -> None:
         self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), self._size)
 
+    def draw_on_canvas(self, x: int, y: int) -> None:
+        canvas_id = self._canvas.create_image(x, y, image=self._image, anchor='nw', tags=self.get_tags())
+        self.set_canvas_id(canvas_id)
+
+    def redraw_on_canvas(self, x: int, y: int) -> None:
+        self._canvas.delete(self.get_canvas_id())
+        self.draw_on_canvas(x, y)
 
 
 class Character(Sprite):
 
     def __init__(self,
                  name: str,
-                 canvas: GameCanvas,
+                 canvas,
                  size: Tuple[int, int],
-                 direction: str,
+                 direction: str = 'south',
                  speed: int = 1):
 
         self._name = name
@@ -73,39 +85,23 @@ class Character(Sprite):
                          size=size,
                          image_file=os.path.join(self._name, f'{self._direction}.png'))
 
-    @property
-    def direction(self) -> str:
+    def get_direction(self) -> str:
         return self._direction
 
-    @property
-    def speed(self) -> int:
+    def get_speed(self) -> int:
         return self._speed
 
-    @direction.setter
-    def direction(self, direction: str) -> None:
-        if not direction in ('north', 'south', 'west', 'east'):
-            raise ValueError(f'Invalid direction value {direction}')
-        self._direction = direction
-        self.image = os.path.join(self._name, f'{self._direction}.png')
+    def set_direction(self, new_direction: str) -> None:
+        if not new_direction in ('north', 'south', 'west', 'east'):
+            raise ValueError(f'Invalid direction value {new_direction}')
+        self._direction = new_direction
+        self.set_image(os.path.join(self._name, f'{self._direction}.png'))
 
     def switch_costume(self) -> None:
         self._costume_num += 1
         if self._costume_num > 2:  # Why 2?
             self._costume_num = 1
-        self.image = os.path.join(self._name, f'{self._direction}-{self._costume_num}.png')
+        self.set_image(os.path.join(self._name, f'{self._direction}-{self._costume_num}.png'))
 
     def reset_costume(self) -> None:
-        self.image = os.path.join(self._name, f'{self._direction}.png')
-
-    def draw(self, x: int, y: int) -> None:
-        self.id = self._canvas.create_image(x, y,
-                                            image=self._image,
-                                            anchor='nw',
-                                            tags='character')
-
-    def redraw(self, x: int, y: int) -> None:
-        self._canvas.delete(self.id)
-        self.id = self._canvas.create_image(x, y,
-                                            image=self._image,
-                                            anchor='nw',
-                                            tags='character')
+        self.set_image(os.path.join(self._name, f'{self._direction}.png'))

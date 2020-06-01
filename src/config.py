@@ -43,8 +43,8 @@ KEY_BINDS = {
 
     'settings-switch-lang': 'L',
 
-    'game-move-up':         'w',
-    'game-move-down':       's',
-    'game-move-left':       'a',
-    'game-move-right':      'd',
+    'character-move-up':    'w',
+    'character-move-down':  's',
+    'character-move-left':  'a',
+    'character-move-right': 'd',
 }
