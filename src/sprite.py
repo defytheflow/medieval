@@ -5,6 +5,7 @@ from typing import Tuple, List
 
 import config
 from utils import create_photo_image
+from canvases import GameCanvas
 
 
 class Sprite:
@@ -13,26 +14,28 @@ class Sprite:
 
     def __init__(self,
                  name: str,
-                 canvas,
+                 game_canvas: GameCanvas,
                  size: Tuple[int, int],
                  direction: str = 'south',
                  speed: int = 1):
 
-        image_file=os.path.join(config.SPRITES_ROOT, name, f'{direction}.png')
-
         self._name = name
-        self._canvas = canvas
-        self._canvas.add_sprite(self)
-        self._canvas_id = self.NO_CANVAS_ID   # type: int
+        self._game_canvas = game_canvas
         self._size = size
-        self._image = create_photo_image(image_file, size)
         self._direction = direction
         self._speed = speed
+
+        self._game_canvas.add_sprite(self)
+        self._game_canvas_id = self.NO_CANVAS_ID   # type: int
+
+        image_file=os.path.join(config.SPRITES_ROOT, name, f'{direction}.png')
+        self._image = create_photo_image(image_file, size)
+
         self._costume_num = 0
 
     def __repr__(self):
         return (f"{self.__class__.__name__}(name='{self._name}', size={self._size}, "
-                f"canvas_id={self._canvas_id}, tags={self.get_tags()})")
+                f"canvas_id={self._game_canvas_id}, tags={self.get_tags()})")
 
     def get_name(self) -> str:
         return self._name
@@ -41,9 +44,9 @@ class Sprite:
         return [self._name, self.__class__.__name__.lower()]
 
     def get_canvas_id(self) -> int:
-        if self._canvas_id == self.NO_CANVAS_ID:
+        if self._game_canvas_id == self.NO_CANVAS_ID:
             raise AttributeError('canvas_id has not been initialized.')
-        return self._canvas_id
+        return self._game_canvas_id
 
     def get_size(self) -> Tuple[int, int]:
         return self._size
@@ -64,7 +67,7 @@ class Sprite:
         return self._speed
 
     def set_canvas_id(self, canvas_id: int) -> None:
-        self._canvas_id = canvas_id
+        self._game_canvas_id = canvas_id
 
     def set_image(self, image_file: str) -> None:
         self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), self._size)
@@ -75,13 +78,13 @@ class Sprite:
         self._direction = new_direction
         self.set_image(os.path.join(self._name, f'{self._direction}.png'))
 
-    def draw_on_canvas(self, x: int, y: int) -> None:
-        canvas_id = self._canvas.create_image(x, y, image=self._image, anchor='nw', tags=self.get_tags())
+    def draw_on_game_canvas(self, x: int, y: int) -> None:
+        canvas_id = self._game_canvas.create_image(x, y, image=self._image, anchor='nw', tags=self.get_tags())
         self.set_canvas_id(canvas_id)
 
-    def redraw_on_canvas(self, x: int, y: int) -> None:
-        self._canvas.delete(self.get_canvas_id())
-        self.draw_on_canvas(x, y)
+    def redraw_on_game_canvas(self, x: int, y: int) -> None:
+        self._game_canvas.delete(self.get_canvas_id())
+        self.draw_on_game_canvas(x, y)
 
     def switch_costume(self) -> None:
         self._costume_num += 1

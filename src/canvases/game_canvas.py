@@ -12,13 +12,7 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
         super().__init__(*args, **kwargs)
         self._pressed = False
         self._sprites = {}      # type: Dict[str, Sprite]
-        self._images = {}       # type: Dict[int, PhotoImage]
-
-    #Overrides tk.Canvas.
-    def create_image(self, *args, **kwargs):
-        image_id = super().create_image(*args, **kwargs)
-        self._images[image_id] = kwargs.get('image')
-        return image_id
+        self._images = {}       # type: Dict[str, tk.PhotoImage]
 
     # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self):
@@ -31,8 +25,11 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
         self.bind(config.KEY_BINDS['character-move-right'],
             lambda e: self._lock_key(self._move_right))
 
-    def add_sprite(self, sprite):
+    def add_sprite(self, sprite) -> None:
         self._sprites[sprite.get_name()] = sprite
+
+    def add_image(self, image_name: str, image: tk.PhotoImage) -> None:
+        self._images[image_name] = image
 
     def _lock_key(self, command: Callable):
         if not self._pressed:
@@ -42,6 +39,7 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
 
     def _move_up(self):
         print(self._sprites)
+        print(self._images)
         x, y = self.coords(self._sprites['peasant'].get_canvas_id())
 
         self._sprites['peasant'].set_direction('north')
@@ -49,7 +47,7 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
 
         self._animate_character_movement(x, y + self._sprites['peasant'].get_width(), x, y)
         self._sprites['peasant'].reset_costume()
-        self._sprites['peasant'].redraw_on_canvas(x, y)
+        self._sprites['peasant'].redraw_on_game_canvas(x, y)
 
     def _move_left(self):
         old_x, old_y = self.coords(self._sprites['peasant'].get_canvas_id())
@@ -60,7 +58,7 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
 
         self._animate_character_movement(old_x, old_y, new_x, new_y)
         self._sprites['peasant'].reset_costume()
-        self._sprites['peasant'].redraw_on_canvas(new_x, new_y)
+        self._sprites['peasant'].redraw_on_game_canvas(new_x, new_y)
 
     def _move_down(self):
         old_x, old_y = self.coords(self._sprites['peasant'].get_canvas_id())
@@ -71,7 +69,7 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
 
         self._animate_character_movement(old_x, old_y, new_x, new_y)
         self._sprites['peasant'].reset_costume()
-        self._sprites['peasant'].redraw_on_canvas(new_x, new_y)
+        self._sprites['peasant'].redraw_on_game_canvas(new_x, new_y)
 
     def _move_right(self):
         old_x, old_y = self.coords(self._sprites['peasant'].get_canvas_id())
@@ -82,7 +80,7 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
 
         self._animate_character_movement(old_x, old_y, new_x, new_y)
         self._sprites['peasant'].reset_costume()
-        self._sprites['peasant'].redraw_on_canvas(new_x, new_y)
+        self._sprites['peasant'].redraw_on_game_canvas(new_x, new_y)
 
     def _animate_character_movement(self, old_x, old_y, new_x, new_y):
         sleep_time = 10
@@ -91,25 +89,25 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
             if old_x < new_x:
                 for i in range(1, self._sprites['peasant'].get_width() + 1, self._sprites['peasant'].get_speed()):
                     self._sprites['peasant'].switch_costume()
-                    self._sprites['peasant'].redraw_on_canvas(old_x + i, old_y)
+                    self._sprites['peasant'].redraw_on_game_canvas(old_x + i, old_y)
                     self.after(sleep_time)
                     self.update()
             else:
                 for i in range(1, self._sprites['peasant'].get_width() + 1, self._sprites['peasant'].get_speed()):
                     self._sprites['peasant'].switch_costume()
-                    self._sprites['peasant'].redraw_on_canvas(old_x - i, old_y)
+                    self._sprites['peasant'].redraw_on_game_canvas(old_x - i, old_y)
                     self.after(sleep_time)
                     self.update()
         else:
             if old_y < new_y:
                 for i in range(1, self._sprites['peasant'].get_width() + 1, self._sprites['peasant'].get_speed()):
                     self._sprites['peasant'].switch_costume()
-                    self._sprites['peasant'].redraw_on_canvas(old_x, old_y + i)
+                    self._sprites['peasant'].redraw_on_game_canvas(old_x, old_y + i)
                     self.after(sleep_time)
                     self.update()
             else:
                 for i in range(1, self._sprites['peasant'].get_width() + 1, self._sprites['peasant'].get_speed()):
                     self._sprites['peasant'].switch_costume()
-                    self._sprites['peasant'].redraw_on_canvas(old_x, old_y - i)
+                    self._sprites['peasant'].redraw_on_game_canvas(old_x, old_y - i)
                     self.after(sleep_time)
                     self.update()
