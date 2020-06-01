@@ -12,6 +12,13 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
         super().__init__(*args, **kwargs)
         self._pressed = False
         self._sprites = {}      # type: Dict[str, Sprite]
+        self._images = {}       # type: Dict[int, PhotoImage]
+
+    #Overrides tk.Canvas.
+    def create_image(self, *args, **kwargs):
+        image_id = super().create_image(*args, **kwargs)
+        self._images[image_id] = kwargs.get('image')
+        return image_id
 
     # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self):

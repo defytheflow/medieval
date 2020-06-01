@@ -16,7 +16,7 @@ from widgets.notifiers import (
 )
 
 from backgrounds import VillageBackground
-from sprites import Character
+from sprite import Sprite
 
 
 class MedievalApp(tk.Tk):
@@ -61,19 +61,16 @@ class MedievalApp(tk.Tk):
     def _init_level(self):
         game_canvas = self._frames['game'].game_canvas
 
-        background = VillageBackground(
-            name='village',
-            canvas=game_canvas,
-            block_size=config.BLOCK_SIZE)
+        background = VillageBackground(block_size=config.BLOCK_SIZE)
 
-        character = Character(
+        peasant = Sprite(
             name='peasant',
             canvas=game_canvas,
             size=(config.BLOCK_SIZE, config.BLOCK_SIZE),
             speed=3)
 
-        background.draw_on_canvas()
-        character.draw_on_canvas(0, 0)
+        background.draw_on_canvas(game_canvas)
+        peasant.draw_on_canvas(0, 0)
 
 
 if __name__ == '__main__':
