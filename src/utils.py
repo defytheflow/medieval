@@ -24,7 +24,7 @@ def create_photo_image(path: str,
 def play_sound(sound_file: str) -> None:
     import simpleaudio as sa
     wave_obj = sa.WaveObject.from_wave_file(sound_file)
-    play_obj = wave_obj.play()
+    wave_obj.play()
 
 
 def bind_image(widget: tk.Widget,

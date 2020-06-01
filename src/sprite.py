@@ -1,11 +1,11 @@
 import os
 import tkinter as tk
-
 from typing import Tuple, List
 
+import simpleaudio as sa
+
 import config
-from utils import create_photo_image
-from canvases import GameCanvas
+from utils import create_photo_image, play_sound
 
 
 class Sprite:
@@ -14,7 +14,7 @@ class Sprite:
 
     def __init__(self,
                  name: str,
-                 canvas: GameCanvas,
+                 canvas: 'GameCanvas',
                  position: Tuple[int, int],
                  size: Tuple[int, int],
                  direction: str = 'south',
@@ -22,35 +22,31 @@ class Sprite:
 
         self._name = name
         self._canvas = canvas
+        self._canvas.add_sprite(self)
         self._size = size
         self._position = position
         self._direction = direction
         self._speed = speed
-        self._canvas.add_sprite(self)
-        self._canvas_id = self.NO_CANVAS_ID   # type: int
+        self._canvas_id = self.NO_CANVAS_ID
         self._sleep_time = 10
-        image_file=os.path.join(config.SPRITES_ROOT, name, f'{direction}.png')
-        self._image = create_photo_image(image_file, size)
         self._costume_num = 0
+        self._image = None
+        self.set_image(os.path.join(self._name, f'{self._direction}.png'))
 
     def __repr__(self):
-        return (f"{self.__class__.__name__}(name='{self._name}', size={self._size}, "
-                f"canvas_id={self._canvas_id}, tags={self.get_tags()})")
+        return (f"{self.__class__.__name__}("
+                f"name='{self._name}', "
+                f"direction='{self._direction}', "
+                f"position={self._position}, "
+                f"size={self._size}, "
+                f"canvas_id={self._canvas_id}, "
+                f"tags={self.get_tags()})")
 
     def get_name(self) -> str:
         return self._name
 
-    def get_tags(self) -> List[str]:
-        return [self._name, self.__class__.__name__.lower()]
-
-    def get_size(self) -> Tuple[int, int]:
-        return self._size
-
-    def get_position(self) -> Tuple[int, int]:
-        return self._position
-
-    def get_image(self) -> tk.PhotoImage:
-        return self._image
+    def get_direction(self) -> str:
+        return self._direction
 
     def get_x(self) -> int:
         return self._position[0]
@@ -64,11 +60,20 @@ class Sprite:
     def get_height(self) -> int:
         return self._size[1]
 
-    def get_direction(self) -> str:
-        return self._direction
-
     def get_speed(self) -> int:
         return self._speed
+
+    def get_image(self) -> tk.PhotoImage:
+        return self._image
+
+    def get_tags(self) -> List[str]:
+        return [self._name, self.__class__.__name__.lower()]
+
+    def get_size(self) -> Tuple[int, int]:
+        return self._size
+
+    def get_position(self) -> Tuple[int, int]:
+        return self._position
 
     def get_canvas_id(self) -> int:
         if self._canvas_id == self.NO_CANVAS_ID:
@@ -85,8 +90,8 @@ class Sprite:
         self._position = new_position
 
     def set_direction(self, new_direction: str) -> None:
-        if not new_direction in ('north', 'south', 'west', 'east'):
-            raise ValueError(f'Invalid direction value {new_direction}')
+        if new_direction not in ('north', 'south', 'west', 'east'):
+            raise ValueError(f"Invalid direction value '{new_direction}'")
         self._direction = new_direction
         self.set_image(os.path.join(self._name, f'{self._direction}.png'))
 
@@ -106,8 +111,8 @@ class Sprite:
         self.redraw_on_canvas_at(self.get_x(), self.get_y())
 
     def draw_on_canvas_at(self, x: int, y: int) -> None:
-        canvas_id = self._canvas.create_image(x, y,
-                    image=self._image, anchor='nw', tags=self.get_tags())
+        canvas_id = self._canvas.create_image(
+            x, y, image=self._image, anchor='nw', tags=self.get_tags())
         self.set_canvas_id(canvas_id)
 
     def redraw_on_canvas_at(self, x: int, y: int) -> None:
@@ -129,6 +134,9 @@ class Sprite:
         self.redraw_on_canvas()
 
     def _animate_move(self, direction: str) -> None:
+        wave_obj = sa.WaveObject.from_wave_file(os.path.join(config.SOUNDS_ROOT, 'grass-move.wav'))
+        play_obj = wave_obj.play()
+
         for i in range(1, self.get_width() + 1, self.get_speed()):
             self.switch_costume()
             if direction == 'north':
@@ -141,3 +149,5 @@ class Sprite:
                 self.redraw_on_canvas_at(self.get_x() - self.get_width() + i, self.get_y())
             self._canvas.after(self._sleep_time)
             self._canvas.update()
+
+        play_obj.stop()
