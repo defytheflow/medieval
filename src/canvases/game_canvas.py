@@ -1,9 +1,10 @@
 import tkinter as tk
-from typing import Callable
+from typing import Dict
 
 import config
 
 from widgets.behavior import KeyboardBoundWidget
+from utils import lock_key_press
 
 
 class GameCanvas(tk.Canvas, KeyboardBoundWidget):
@@ -16,23 +17,20 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget):
 
     # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self):
-        self.bind(config.KEY_BINDS['character-move-up'],
-            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('north')))
-        self.bind(config.KEY_BINDS['character-move-left'],
-            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('west')))
-        self.bind(config.KEY_BINDS['character-move-down'],
-            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('south')))
-        self.bind(config.KEY_BINDS['character-move-right'],
-            lambda e: self._lock_key(lambda: self._sprites['peasant'].move('east')))
+        self.bind(config.KEY_BINDS['character-move-north'],
+                  lambda e: lock_key_press(lambda: self._sprites['peasant'].move('north')))
+
+        self.bind(config.KEY_BINDS['character-move-west'],
+                  lambda e: lock_key_press(lambda: self._sprites['peasant'].move('west')))
+
+        self.bind(config.KEY_BINDS['character-move-south'],
+                  lambda e: lock_key_press(lambda: self._sprites['peasant'].move('south')))
+
+        self.bind(config.KEY_BINDS['character-move-east'],
+                  lambda e: lock_key_press(lambda: self._sprites['peasant'].move('east')))
 
     def add_sprite(self, sprite) -> None:
         self._sprites[sprite.get_name()] = sprite
 
     def add_image(self, image_name: str, image: tk.PhotoImage) -> None:
         self._images[image_name] = image
-
-    def _lock_key(self, command: Callable):
-        if not self._pressed:
-            self._pressed = True
-            command()
-            self._pressed = False
