@@ -16,6 +16,10 @@ ACTIVE_BG = '#7f6f28'
 
 HIGHLIGHT_BG = '#000'
 
+# Foreground colors.
+
+FG = '#000'
+
 # Fonts.
 
 H_FONT = ('DejaVu Serif', 32, 'bold')

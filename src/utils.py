@@ -25,14 +25,3 @@ def play_sound(sound_file: str) -> None:
     import simpleaudio as sa
     wave_obj = sa.WaveObject.from_wave_file(sound_file)
     wave_obj.play()
-
-
-def bind_image(widget: tk.Widget,
-               image_file: str,
-               size: Tuple[int, int]) -> None:
-    widget.image = create_photo_image(image_file, size)
-    widget.configure(image=widget.image)
-
-
-def bind_sound(widget: tk.Widget, event: str, sound_file: str) -> None:
-    widget.bind(event, lambda e: play_sound(sound_file))
