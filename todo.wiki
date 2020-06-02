@@ -1,0 +1,8 @@
+TODO:
+
+- [ ] Complete VillageBackground
+- [ ] Water gif.
+
+DONE:
+
+- [x] Bla bla bla

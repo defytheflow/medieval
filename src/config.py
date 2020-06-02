@@ -6,7 +6,7 @@ WIDTH = 1200
 
 HEIGHT = WIDTH * 3 // 4
 
-BLOCK_SIZE = 30
+BLOCK_SIZE = WIDTH // 40
 
 # Background colors.
 
@@ -27,6 +27,8 @@ P_FONT = ('DejaVu Serif', 20)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ASSETS_ROOT = os.path.join(ROOT, 'assets')
+
+BG_ROOT = os.path.join(ASSETS_ROOT, 'bg')
 
 ICONS_ROOT = os.path.join(ASSETS_ROOT, 'icons')
 
