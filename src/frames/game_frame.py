@@ -5,8 +5,6 @@ from tkinter import ttk
 import config
 
 from utils import (
-    bind_image,
-    bind_sound,
     create_photo_image,
 )
 
@@ -22,7 +20,11 @@ from widgets.bilingual import (
     BilingualTooltip,
 )
 
-from widgets.utils import get_widget_parent
+from widgets.utils import (
+    get_widget_parent,
+    bind_image_to_widget,
+    bind_sound_to_widget,
+)
 
 from canvases import (
     DialogueCanvas,
@@ -106,7 +108,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             text_dict={'eng': 'Settings', 'rus': 'Настройки'},
             bg=self['bg'], waittime=300)
 
-        bind_image(self.settings_btn, os.path.join(config.ICONS_ROOT, 'settings.png'), (100, 100))
+        bind_image_to_widget(self.settings_btn, os.path.join(config.ICONS_ROOT, 'settings.png'), (100, 100))
 
         self.map_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Map', 'rus': 'Карта'}, style='GF.TButton')
@@ -115,7 +117,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             text_dict={'eng': 'Map', 'rus': 'Карта'},
             bg=self['bg'], waittime=300)
 
-        bind_image(self.map_btn, os.path.join(config.ICONS_ROOT, 'map.png'), (100, 100))
+        bind_image_to_widget(self.map_btn, os.path.join(config.ICONS_ROOT, 'map.png'), (100, 100))
 
         self.inventory_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'}, style='GF.TButton')
@@ -125,7 +127,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             text_dict={'eng': 'Inventory', 'rus': 'Инвентарь'},
             bg=self['bg'], waittime=300)
 
-        bind_image(self.inventory_btn, os.path.join(config.ICONS_ROOT, 'inventory.png'), (100, 100))
+        bind_image_to_widget(self.inventory_btn, os.path.join(config.ICONS_ROOT, 'inventory.png'), (100, 100))
 
         self.market_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Market', 'rus': 'Магазин'}, style='GF.TButton')
@@ -135,7 +137,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             text_dict={'eng': 'Market', 'rus': 'Магазин'},
             bg=self['bg'], waittime=300)
 
-        bind_image(self.market_btn, os.path.join(config.ICONS_ROOT, 'market.png'), (100, 100))
+        bind_image_to_widget(self.market_btn, os.path.join(config.ICONS_ROOT, 'market.png'), (100, 100))
 
         self.bank_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Bank', 'rus': 'Банк'}, style='GF.TButton')
@@ -145,7 +147,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             text_dict={'eng': 'Bank', 'rus': 'Банк'},
             bg=self['bg'], waittime=300)
 
-        bind_image(self.bank_btn, os.path.join(config.ICONS_ROOT, 'bank.png'), (100, 100))
+        bind_image_to_widget(self.bank_btn, os.path.join(config.ICONS_ROOT, 'bank.png'), (100, 100))
 
         self.smith_btn = BilingualButton(buttons_frame,
             text_dict={'eng': 'Smith', 'rus': 'Кузнец'}, style='GF.TButton')
@@ -155,7 +157,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             text_dict={'eng': 'Smith', 'rus': 'Кузнец'},
             bg=self['bg'], waittime=300)
 
-        bind_image(self.smith_btn, os.path.join(config.ICONS_ROOT, 'smith.png'), (100, 100))
+        bind_image_to_widget(self.smith_btn, os.path.join(config.ICONS_ROOT, 'smith.png'), (100, 100))
 
         game_frame.pack(fill='both')
         self.game_canvas.pack(side='left', fill='both')
@@ -164,7 +166,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
         for btn in buttons_frame.winfo_children():
             btn.pack(fill='both', expand=True)
-            bind_sound(btn, '<1>', os.path.join(config.SOUNDS_ROOT, 'click.wav'))
+            bind_sound_to_widget(btn, '<1>', os.path.join(config.SOUNDS_ROOT, 'click.wav'))
 
     def _init_dialogue_frame(self):
         dialogue_frame = tk.Frame(self)
@@ -210,7 +212,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
             **common_attrs)
 
         for btn in (btn1, btn2):
-            bind_image(btn, os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
+            bind_image_to_widget(btn, os.path.join(config.ICONS_ROOT, 'choice.png'), (180, 90))
 
         dialogue_frame.pack(fill='both')
         self.dialogue_canvas.pack(side='left', fill='both')

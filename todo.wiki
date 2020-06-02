@@ -1,8 +1,4 @@
 TODO:
 
-- [ ] Complete VillageBackground
+- [ ] Create a Dark/White mode setting.
 - [ ] Water gif.
-
-DONE:
-
-- [x] Bla bla bla
