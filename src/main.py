@@ -61,7 +61,7 @@ class MedievalApp(tk.Tk):
     def _init_level(self):
         game_canvas = self._frames['game'].game_canvas
 
-        background = VillageBackground(block_size=config.BLOCK_SIZE)
+        background = VillageBackground(config.BLOCK_SIZE)
         peasant = Sprite(
             name='peasant',
             canvas=game_canvas,

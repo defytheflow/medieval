@@ -79,10 +79,11 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
         self.hint_lbl.pack(fill='both')
 
     def _init_game_frame(self):
-        game_frame = tk.Frame(self, height=self.winfo_reqheight() * 0.8)
+        game_frame = tk.Frame(self, height=self.winfo_reqheight() * 0.8,
+                              bg=self['bg'])
 
         self.game_canvas = GameCanvas(game_frame,
-            width=self.winfo_reqwidth() * 0.9,
+            width=self.winfo_reqwidth() * 0.8,
             height=game_frame.winfo_reqheight(),
             highlightbackground=config.HIGHLIGHT_BG)
 
@@ -159,7 +160,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
         game_frame.pack(fill='both')
         self.game_canvas.pack(side='left', fill='both')
 
-        buttons_frame.pack(side='left', fill='both', expand=True)
+        buttons_frame.pack(side='left', fill='both')
 
         for btn in buttons_frame.winfo_children():
             btn.pack(fill='both', expand=True)
