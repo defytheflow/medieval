@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 import config
 
@@ -13,21 +14,21 @@ from widgets.behavior import (
 from widgets.utils import get_widget_parent
 
 
-class MapFrame(tk.Frame, MouseBoundWidget):
+class MapFrame(ttk.Frame, MouseBoundWidget):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
         self.title_frame = TitleFrame(self,
-                                      background=self['bg'],
+                                      background=config.BG,
                                       font=config.H_FONT,
                                       text_dict={'eng': 'Map', 'rus': 'Карта'})
 
         self.canvas = MapCanvas(self,
                                 width=self.winfo_reqwidth(),
                                 height=self.winfo_reqheight() - self.title_frame.winfo_reqheight(),
-                                background=self['bg'],
-                                highlightbackground=self['bg'])
+                                background=config.BG,
+                                highlightbackground=config.BG)
 
         self.title_frame.pack(fill='both')
         self.canvas.pack(fill='both', expand=True)

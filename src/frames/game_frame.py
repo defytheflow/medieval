@@ -33,7 +33,7 @@ from widgets.utils import (
 )
 
 
-class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
+class GameFrame(ttk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
     BD = 5
 
@@ -133,14 +133,14 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
     def _init_game_frame(self):
         game_frame = tk.Frame(self,
                               height=self.winfo_reqheight() * 0.8,
-                              background=self['bg'])
+                              background=config.BG)
 
         self.game_canvas = GameCanvas(game_frame,
                                       width=config.GAME_CANVAS_WIDTH,
                                       height=config.GAME_CANVAS_HEIGHT,
                                       highlightbackground=config.HIGHLIGHT_BG)
 
-        button_frame = tk.Frame(game_frame)
+        button_frame = tk.Frame(game_frame, background=config.BG)
 
         self.settings_btn = self._create_button(button_frame,
                                                 {'eng': 'Settings', 'rus': 'Настройки'},
@@ -172,7 +172,7 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
 
         game_frame.pack(fill='both')
         self.game_canvas.pack(side='left', fill='both')
-        button_frame.pack(side='left', fill='both')
+        button_frame.pack(side='left', fill='both', expand=True)
 
         for btn in button_frame.winfo_children():
             btn.pack(fill='both', expand=True)
@@ -183,13 +183,13 @@ class GameFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
         self.dialogue_canvas = DialogueCanvas(dialogue_frame,
                                               width=self.winfo_reqwidth() * 0.16,
                                               height=self.winfo_reqheight() * 0.2,
-                                              background=self['bg'],
+                                              background=config.BG,
                                               borderwidth=self.BD,
                                               highlightbackground=config.HIGHLIGHT_BG,
                                               relief='raised')
 
         choice_frame = tk.Frame(dialogue_frame,
-                                background=self['bg'],
+                                background=config.BG,
                                 borderwidth=self.BD,
                                 relief='raised')
 
