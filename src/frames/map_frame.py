@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import ttk
 
 import config
@@ -7,14 +6,14 @@ from canvases import MapCanvas
 from widgets import TitleFrame
 
 from widgets.behavior import (
-    KeyboardBoundWidget,
     MouseBoundWidget,
+    StyledWidget,
 )
 
 from widgets.utils import get_widget_parent
 
 
-class MapFrame(ttk.Frame, MouseBoundWidget):
+class MapFrame(ttk.Frame, MouseBoundWidget, StyledWidget):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
@@ -34,3 +33,6 @@ class MapFrame(ttk.Frame, MouseBoundWidget):
         ' Overrides MouseBoundWidget. '
         self.title_frame.return_btn.bind('<1>',
                                          lambda e: get_widget_parent(self).show_frame('game'))
+
+    def init_style(self):
+        ' Overrides StyledWidget. '
