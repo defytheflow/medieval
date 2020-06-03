@@ -1,4 +1,4 @@
 TODO:
-
 - [ ] Create a Dark/White mode setting.
-- [ ] Water gif.
+- [ ] Fix Player loses ability to move after button was pressed.
+- [ ] Add Water gif.

@@ -1,42 +1,51 @@
 import tkinter as tk
-from typing import Dict
 
 import config
 
-from utils import lock_key_press
-from widgets.behavior import KeyboardBoundWidget
+from widgets.behavior import (
+    KeyboardBoundWidget,
+    MouseBoundWidget,
+)
 
 
-class GameCanvas(tk.Canvas, KeyboardBoundWidget):
+class GameCanvas(tk.Canvas, KeyboardBoundWidget, MouseBoundWidget):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._images: Dict[str, tk.PhotoImage] = {}
-        self._sprites: Dict[str, 'Sprite'] = {}
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+        self.images = {}
+        self.sprites = {}
+        self.key_pressed = False
 
-    def __repr__(self):
-        return f'{self.__class__.__name__}()'
-
-    # Overrides KeyboardBoundWidget.
     def init_keyboard_binds(self):
+        ' Overrides KeyboardBoundWidget. '
         self.bind(config.KEY_BINDS['character-move-north'],
-                  lambda e: lock_key_press(lambda: self._sprites.get('peasant').move('north')))
-
+                  lambda e: self.move_sprite('peasant', 'north'))
         self.bind(config.KEY_BINDS['character-move-west'],
-                  lambda e: lock_key_press(lambda: self._sprites.get('peasant').move('west')))
-
+                  lambda e: self.move_sprite('peasant', 'west'))
         self.bind(config.KEY_BINDS['character-move-south'],
-                  lambda e: lock_key_press(lambda: self._sprites.get('peasant').move('south')))
-
+                  lambda e: self.move_sprite('peasant', 'south'))
         self.bind(config.KEY_BINDS['character-move-east'],
-                  lambda e: lock_key_press(lambda: self._sprites.get('peasant').move('east')))
+                  lambda e: self.move_sprite('peasant', 'east'))
 
-    def add_image(self, image_name: str, image: tk.PhotoImage) -> None:
-        if image in self._images.values():
-            raise ValueError(f'PhotoImage {image} already stored in {self}')
-        self._images[image_name] = image
+    def init_mouse_binds(self):
+        ' Overrides MouseBoundWidget. '
+        self.bind('<Enter>', lambda e: self.focus_set())
 
-    def add_sprite(self, sprite: 'Sprite') -> None:
-        if sprite in self._sprites.values():
+    def add_image(self, image_name, image):
+        if image in self.images.values():
+            raise ValueError(f'Image {image} already stored in {self}.')
+        self.images[image_name] = image
+
+    def add_sprite(self, sprite):
+        if sprite in self.sprites.values():
             raise ValueError(f'Sprite {sprite} already stored in {self}.')
-        self._sprites[sprite.get_name()] = sprite
+        self.sprites[sprite.name] = sprite
+
+    def move_sprite(self, sprite_name, direction):
+        self._lock_key_press(lambda: self.sprites.get(sprite_name).move(direction))
+
+    def _lock_key_press(self, command):
+        if not self.key_pressed:
+            self.key_pressed = True
+            command()
+            self.key_pressed = False
