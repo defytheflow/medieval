@@ -19,10 +19,7 @@ class MapFrame(ttk.Frame, MouseBoundWidget):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
-        self.title_frame = TitleFrame(self,
-                                      background=config.BG,
-                                      font=config.H_FONT,
-                                      text_dict={'eng': 'Map', 'rus': 'Карта'})
+        self.title_frame = TitleFrame(self, text_dict={'eng': 'Map', 'rus': 'Карта'})
 
         self.canvas = MapCanvas(self,
                                 width=self.winfo_reqwidth(),

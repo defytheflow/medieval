@@ -30,8 +30,6 @@ class SettingsFrame(ttk.Frame,
         super().__init__(master, **kwargs)
 
         self.title_frame = TitleFrame(self,
-                                      bg=config.BG,
-                                      font=config.H_FONT,
                                       text_dict={'eng': 'Settings',
                                                  'rus': 'Настройки'})
         self.title_frame.pack(fill='both')
