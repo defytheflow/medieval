@@ -1,6 +1,7 @@
 #!/home/defytheflow/.envs/medieval/bin/python3
 
 import tkinter as tk
+from tkinter import ttk
 
 import config
 
@@ -10,35 +11,35 @@ from frames import (
     SettingsFrame,
 )
 
-from widgets.notifiers import (
-    notify_keyboardbound_widgets,
-    notify_mousebound_widgets,
+from widgets.behavior import (
+    KeyboardBoundWidget,
+    MouseBoundWidget,
+    StyledWidget,
 )
 
+from widgets.utils import notify_widget_class
 from backgrounds import VillageBackground
 from sprite import Sprite
 
 
-class MedievalApp(tk.Tk):
+class MedievalApp(tk.Tk, StyledWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.title('Medieval')
-        self.config(width=config.WINDOW_WIDTH,
-                    height=config.WINDOW_HEIGHT,
-                    background=config.BG)
         self.geometry(f'{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}')
         self.resizable(0, 0)
 
-        self._current_frame = None  # type: tk.Frame
-        self._frames = {}           # type: Dict[str, tk.Frame]
+        self._current_frame = None
+        self.frames = {}
 
         self._init_frames()
         self._init_level()
 
-        notify_keyboardbound_widgets(self)
-        notify_mousebound_widgets(self)
+        notify_widget_class(self, KeyboardBoundWidget, 'init_keyboard_binds')
+        notify_widget_class(self, MouseBoundWidget, 'init_mouse_binds')
+        notify_widget_class(self, StyledWidget, 'init_style')
 
         self.show_frame('game')
 
@@ -46,22 +47,30 @@ class MedievalApp(tk.Tk):
         if self._current_frame:
             self._current_frame.forget()
 
-        self._current_frame = self._frames[frame_tag]
-        self._current_frame.pack(fill=tk.BOTH)
+        self._current_frame = self.frames[frame_tag]
+        self._current_frame.pack(fill=tk.BOTH, expand=True)
         self._current_frame.focus_set()
 
+    def init_style(self):
+        ' Overrides StyledWidget. '
+        self.style = ttk.Style()
+        self.style.configure('MA.TFrame', background=config.BG)
+
     def _init_frames(self):
-        common_attrs = {
-            'bg':     self['bg'],
-            'width':  self['width'],
-            'height': self['height'],
+        frames_dict = {
+            'game':     GameFrame,
+            'map':      MapFrame,
+            'settings': SettingsFrame
         }
-        self._frames['game'] = GameFrame(self, **common_attrs)
-        self._frames['map'] = MapFrame(self, **common_attrs)
-        self._frames['settings'] = SettingsFrame(self, **common_attrs)
+
+        for name, frame_cls in frames_dict.items():
+            self.frames[name] = frame_cls(self,
+                                          style='MA.TFrame',
+                                          width=config.WINDOW_WIDTH,
+                                          height=config.WINDOW_HEIGHT)
 
     def _init_level(self):
-        game_canvas = self._frames['game'].game_canvas
+        game_canvas = self.frames['game'].game_canvas
 
         background = VillageBackground(config.BLOCK_SIZE)
         peasant = Sprite(
