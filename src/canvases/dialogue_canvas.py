@@ -10,7 +10,6 @@ class DialogueCanvas(tk.Canvas):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.background_image = create_photo_image(
-            os.path.join(config.ASSETS_ROOT, 'witch.png'),
-            (self.winfo_reqwidth(), self.winfo_reqheight()))
-        self.create_image(0, 0, image=self.background_image, anchor='nw')
+        self.wizard_image = create_photo_image(os.path.join(config.ASSETS_ROOT, 'witch.png'),
+                                               (self.winfo_reqwidth(), self.winfo_reqheight()))
+        self.create_image(0, 0, image=self.wizard_image, anchor='nw')

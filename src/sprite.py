@@ -20,9 +20,9 @@ class Sprite:
                  direction: str = 'south',
                  speed: int = 1):
 
-        self._name = name
+        self.name = name
         self._canvas = canvas
-        self._canvas.add_sprite(self)
+        self._canvas.cache_sprite(self)
         self._size = size
         self._position = position
         self._direction = direction
@@ -31,11 +31,11 @@ class Sprite:
         self._sleep_time = 10
         self._costume_num = 0
         self._image = None
-        self.set_image(os.path.join(self._name, f'{self._direction}.png'))
+        self.set_image(os.path.join(self.name, f'{self._direction}.png'))
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
-                f"name='{self._name}', "
+                f"name='{self.name}', "
                 f"direction='{self._direction}', "
                 f"position={self._position}, "
                 f"size={self._size}, "
@@ -43,7 +43,7 @@ class Sprite:
                 f"tags={self.get_tags()})")
 
     def get_name(self) -> str:
-        return self._name
+        return self.name
 
     def get_direction(self) -> str:
         return self._direction
@@ -67,7 +67,7 @@ class Sprite:
         return self._image
 
     def get_tags(self) -> List[str]:
-        return [self._name, self.__class__.__name__.lower()]
+        return [self.name, self.__class__.__name__.lower()]
 
     def get_size(self) -> Tuple[int, int]:
         return self._size
@@ -93,16 +93,16 @@ class Sprite:
         if new_direction not in ('north', 'south', 'west', 'east'):
             raise ValueError(f"Invalid direction value '{new_direction}'")
         self._direction = new_direction
-        self.set_image(os.path.join(self._name, f'{self._direction}.png'))
+        self.set_image(os.path.join(self.name, f'{self._direction}.png'))
 
     def switch_costume(self) -> None:
         self._costume_num += 1
         if self._costume_num > 2:  # Why 2?
             self._costume_num = 1
-        self.set_image(os.path.join(self._name, f'{self._direction}-{self._costume_num}.png'))
+        self.set_image(os.path.join(self.name, f'{self._direction}-{self._costume_num}.png'))
 
     def reset_costume(self) -> None:
-        self.set_image(os.path.join(self._name, f'{self._direction}.png'))
+        self.set_image(os.path.join(self.name, f'{self._direction}.png'))
 
     def draw_on_canvas(self) -> None:
         self.draw_on_canvas_at(self.get_x(), self.get_y())

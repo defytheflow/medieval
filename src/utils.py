@@ -1,16 +1,6 @@
 import tkinter as tk
 from typing import Tuple, Callable
 
-from decorators import static_vars
-
-
-@static_vars(pressed=False)
-def lock_key_press(command: Callable):
-    if not lock_key_press.pressed:
-        lock_key_press.pressed = True
-        command()
-        lock_key_press.pressed = False
-
 
 def create_photo_image(path: str,
                        size: Tuple[int, int] = None) -> tk.PhotoImage:

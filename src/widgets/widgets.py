@@ -33,6 +33,7 @@ class TitleFrame(tk.Frame):
 
         self.title_lbl = BilingualLabel(self,
                                         text_dict=text_dict,
-                                        bg=self['bg'],
-                                        font=font)
+                                        background=self['bg'],
+                                        font=font,
+                                        anchor='center')
         self.title_lbl.pack(side='left', fill='both', expand=True)

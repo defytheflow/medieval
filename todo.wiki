@@ -1,4 +1,5 @@
 TODO:
-
 - [ ] Create a Dark/White mode setting.
-- [ ] Water gif.
+- [ ] Add Water gif.
+- [ ] Refactor Sprite.
+- [ ] make BillingualLabel a ttk widget.

@@ -34,7 +34,7 @@ class VillageBackground(Background):
     # Overrides Background.
     def draw_on_canvas(self, canvas: GameCanvas) -> None:
         for name, image in self._images.items():
-            canvas.add_image(name, image)
+            canvas.cache_image(name, image)
 
         self._draw_grass(canvas)
         self._draw_trees(canvas)
