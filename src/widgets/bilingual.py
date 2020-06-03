@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import ttk
 
 from .behavior import BilingualWidget
@@ -52,7 +51,7 @@ class BilingualTooltip(Tooltip, BilingualWidget):
             self.text = self.text_dict['rus']
 
 
-class BilingualRadiobutton(tk.Radiobutton, BilingualWidget):
+class BilingualRadiobutton(ttk.Radiobutton, BilingualWidget):
 
     def __init__(self, master, text_dict, **kwargs):
         super().__init__(master, text=text_dict['eng'], **kwargs)
