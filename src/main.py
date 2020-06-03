@@ -25,8 +25,10 @@ class MedievalApp(tk.Tk):
         super().__init__(*args, **kwargs)
 
         self.title('Medieval')
-        self.config(width=config.WIDTH, height=config.HEIGHT, bg=config.BG)
-        self.geometry(f'{config.WIDTH}x{config.HEIGHT}')
+        self.config(width=config.WINDOW_WIDTH,
+                    height=config.WINDOW_HEIGHT,
+                    background=config.BG)
+        self.geometry(f'{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}')
         self.resizable(0, 0)
 
         self._current_frame = None  # type: tk.Frame

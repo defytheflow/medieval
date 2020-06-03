@@ -2,11 +2,15 @@ import os
 
 # Window dimensions.
 
-WIDTH = 1200
+WINDOW_WIDTH = 1200
 
-HEIGHT = WIDTH * 3 // 4
+WINDOW_HEIGHT = WINDOW_WIDTH * 3 // 4 + 50
 
-BLOCK_SIZE = WIDTH // 40
+BLOCK_SIZE = WINDOW_WIDTH // 40
+
+GAME_CANVAS_WIDTH = WINDOW_WIDTH * 4 // 5
+
+GAME_CANVAS_HEIGHT = GAME_CANVAS_WIDTH * 3 // 4
 
 # Background colors.
 

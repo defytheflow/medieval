@@ -60,7 +60,7 @@ class SettingsFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
                               pady=100)
 
         lang_lbl = BilingualLabel(lang_frame,
-                                  bg=self['bg'],
+                                  background=self['bg'],
                                   text_dict={'eng': 'Language', 'rus': 'Язык'},
                                   width=self.LBL_WIDTH,
                                   font=config.P_FONT + ('bold',),
@@ -96,7 +96,8 @@ class SettingsFrame(tk.Frame, KeyboardBoundWidget, MouseBoundWidget):
     def _init_scale_frame(self):
         scale_frame = tk.Frame(self, bg=self['bg'])
 
-        scale_lbl = BilingualLabel(scale_frame, bg=self['bg'],
+        scale_lbl = BilingualLabel(scale_frame,
+                                   background=self['bg'],
                                    text_dict={'eng': 'Scroller', 'rus': 'Ползунок'},
                                    width=self.LBL_WIDTH,
                                    font=config.P_FONT + ('bold',),

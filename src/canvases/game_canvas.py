@@ -31,20 +31,24 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget, MouseBoundWidget):
         ' Overrides MouseBoundWidget. '
         self.bind('<Enter>', lambda e: self.focus_set())
 
-    def add_image(self, image_name, image):
+    def cache_image(self, image_name, image):
+        ' Stores reference to image. '
         if image in self.images.values():
             raise ValueError(f'Image {image} already stored in {self}.')
         self.images[image_name] = image
 
-    def add_sprite(self, sprite):
+    def cache_sprite(self, sprite):
+        ' Stores reference to sprite. '
         if sprite in self.sprites.values():
             raise ValueError(f'Sprite {sprite} already stored in {self}.')
         self.sprites[sprite.name] = sprite
 
     def move_sprite(self, sprite_name, direction):
+        ' Sends a sprite a signal to move in direction. '
         self._lock_key_press(lambda: self.sprites.get(sprite_name).move(direction))
 
     def _lock_key_press(self, command):
+        ' Internal method to stop key events from spamming. '
         if not self.key_pressed:
             self.key_pressed = True
             command()

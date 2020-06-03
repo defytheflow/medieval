@@ -22,7 +22,7 @@ class Sprite:
 
         self.name = name
         self._canvas = canvas
-        self._canvas.add_sprite(self)
+        self._canvas.cache_sprite(self)
         self._size = size
         self._position = position
         self._direction = direction

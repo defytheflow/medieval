@@ -1,11 +1,9 @@
 import tkinter as tk
 
 import config
-from canvases import MapCanvas
 
-from widgets import (
-    TitleFrame,
-)
+from canvases import MapCanvas
+from widgets import TitleFrame
 
 from widgets.behavior import (
     KeyboardBoundWidget,
@@ -34,6 +32,7 @@ class MapFrame(tk.Frame, MouseBoundWidget):
         self.title_frame.pack(fill='both')
         self.canvas.pack(fill='both', expand=True)
 
-    # Overrides MouseBoundWidget.
-    def init_mouse_binds(self) -> None:
-        self.title_frame.return_btn.bind('<1>', lambda e: get_widget_parent(self).show_frame('game'))
+    def init_mouse_binds(self):
+        ' Overrides MouseBoundWidget. '
+        self.title_frame.return_btn.bind('<1>',
+                                         lambda e: get_widget_parent(self).show_frame('game'))
