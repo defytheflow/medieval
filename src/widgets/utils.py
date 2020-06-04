@@ -4,12 +4,12 @@ from utils import (
 )
 
 
-def get_all_widget_children(parent):
+def get_all_widget_children(parent, children=[]):
     ' Recursively collects all parent widget children.'
-    children = parent.winfo_children()
-    for child in children:
-        children.extend(get_all_widget_children(child))
-    return set(children)
+    for child in parent.winfo_children():
+        children.append(child)
+        get_all_widget_children(child)
+    return children
 
 
 def get_widget_parent(widget):
@@ -18,7 +18,7 @@ def get_widget_parent(widget):
 
 
 def notify_widget_class(root, widget_cls, method_name, args=None):
-    for widget in get_all_widget_children(root) | {root}:
+    for widget in get_all_widget_children(root) + [root]:
         if isinstance(widget, widget_cls):
             method = getattr(widget, method_name)
             method(args) if args else method()

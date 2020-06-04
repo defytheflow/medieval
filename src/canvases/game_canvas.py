@@ -3,12 +3,12 @@ import tkinter as tk
 import config
 
 from widgets.behavior import (
-    KeyboardBoundWidget,
+    KeyBoundWidget,
     MouseBoundWidget,
 )
 
 
-class GameCanvas(tk.Canvas, KeyboardBoundWidget, MouseBoundWidget):
+class GameCanvas(tk.Canvas, KeyBoundWidget, MouseBoundWidget):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
@@ -16,8 +16,8 @@ class GameCanvas(tk.Canvas, KeyboardBoundWidget, MouseBoundWidget):
         self.sprites = {}
         self.key_pressed = False
 
-    def init_keyboard_binds(self):
-        ' Overrides KeyboardBoundWidget. '
+    def init_key_binds(self):
+        ' Overrides KeyBoundWidget. '
         self.bind(config.KEY_BINDS['character-move-north'],
                   lambda e: self.move_sprite('peasant', 'north'))
         self.bind(config.KEY_BINDS['character-move-west'],

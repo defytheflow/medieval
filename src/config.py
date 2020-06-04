@@ -1,5 +1,7 @@
 import os
 
+WINDOW_TITLE = 'Medieval'
+
 # Window dimensions.
 
 WINDOW_WIDTH = 1200

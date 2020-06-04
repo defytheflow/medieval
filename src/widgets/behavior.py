@@ -8,10 +8,10 @@ class StyledWidget(abc.ABC):
         pass
 
 
-class KeyboardBoundWidget(abc.ABC):
+class KeyBoundWidget(abc.ABC):
 
     @abc.abstractmethod
-    def init_keyboard_binds(self):
+    def init_key_binds(self):
         pass
 
 

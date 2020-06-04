@@ -12,12 +12,15 @@ from frames import (
 )
 
 from widgets.behavior import (
-    KeyboardBoundWidget,
+    KeyBoundWidget,
     MouseBoundWidget,
     StyledWidget,
 )
 
-from widgets.utils import notify_widget_class
+from widgets.utils import (
+    get_all_widget_children,
+)
+
 from backgrounds import VillageBackground
 from sprite import Sprite
 
@@ -27,49 +30,44 @@ class MedievalApp(tk.Tk, StyledWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title('Medieval')
+        self.title(config.WINDOW_TITLE)
         self.geometry(f'{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}')
         self.resizable(0, 0)
 
-        self._current_frame = None
-        self.frames = {}
+        self.current_frame = None
+        self.frames = {  # <- Add new frames here.
+                'game': GameFrame,
+                 'map': MapFrame,
+            'settings': SettingsFrame
+        }
 
-        self._init_frames()
-        self._init_level()
+        self.init_frames()
+        self.init_level()
 
-        notify_widget_class(self, KeyboardBoundWidget, 'init_keyboard_binds')
-        notify_widget_class(self, MouseBoundWidget, 'init_mouse_binds')
-        notify_widget_class(self, StyledWidget, 'init_style')
-
+        self.notify_widgets(self)
         self.show_frame('game')
-
-    def show_frame(self, frame_tag: str):
-        if self._current_frame:
-            self._current_frame.forget()
-
-        self._current_frame = self.frames[frame_tag]
-        self._current_frame.pack(fill=tk.BOTH, expand=True)
-        self._current_frame.focus_set()
 
     def init_style(self):
         ' Overrides StyledWidget. '
         self.style = ttk.Style()
         self.style.configure('MA.TFrame', background=config.BG)
 
-    def _init_frames(self):
-        frames_dict = {
-            'game':     GameFrame,
-            'map':      MapFrame,
-            'settings': SettingsFrame
-        }
+    def show_frame(self, frame_name):
+        if self.current_frame:
+            self.current_frame.forget()
 
-        for name, frame_cls in frames_dict.items():
-            self.frames[name] = frame_cls(self,
-                                          style='MA.TFrame',
-                                          width=config.WINDOW_WIDTH,
-                                          height=config.WINDOW_HEIGHT)
+        self.current_frame = self.frames[frame_name]
+        self.current_frame.pack(fill='both', expand=True)
+        self.current_frame.focus_set()
 
-    def _init_level(self):
+    def init_frames(self):
+        for frame_name, frame_cls, in self.frames.items():
+            self.frames[frame_name] = frame_cls(self,
+                                                style='MA.TFrame',
+                                                width=config.WINDOW_WIDTH,
+                                                height=config.WINDOW_HEIGHT)
+
+    def init_level(self):
         game_canvas = self.frames['game'].game_canvas
 
         background = VillageBackground(config.BLOCK_SIZE)
@@ -82,6 +80,16 @@ class MedievalApp(tk.Tk, StyledWidget):
 
         background.draw_on_canvas(game_canvas)
         peasant.draw_on_canvas()
+
+    @staticmethod
+    def notify_widgets(root):
+        for widget in get_all_widget_children(root) + [root]:
+            if isinstance(widget, KeyBoundWidget):
+                widget.init_key_binds()
+            if isinstance(widget, MouseBoundWidget):
+                widget.init_mouse_binds()
+            if isinstance(widget, StyledWidget):
+                widget.init_style()
 
 
 if __name__ == '__main__':

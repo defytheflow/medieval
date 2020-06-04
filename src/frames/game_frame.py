@@ -12,7 +12,7 @@ from canvases import (
 from utils import create_photo_image
 
 from widgets.behavior import (
-    KeyboardBoundWidget,
+    KeyBoundWidget,
     MouseBoundWidget,
     StyledWidget,
 )
@@ -32,7 +32,7 @@ from widgets.utils import (
 
 
 class GameFrame(ttk.Frame,
-                KeyboardBoundWidget,
+                KeyBoundWidget,
                 MouseBoundWidget,
                 StyledWidget):
 
@@ -51,8 +51,8 @@ class GameFrame(ttk.Frame,
         super().focus_set()
         self.game_canvas.focus_set()
 
-    def init_keyboard_binds(self):
-        ' Overrides KeyboardBoundWidget. '
+    def init_key_binds(self):
+        ' Overrides KeyBoundWidget. '
         self.bind_all(config.KEY_BINDS['show-game'],
                       lambda e: get_widget_parent(self).show_frame('game'))
         self.bind_all(config.KEY_BINDS['show-map'],

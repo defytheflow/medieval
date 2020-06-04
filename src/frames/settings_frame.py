@@ -8,7 +8,7 @@ from widgets.bilingual import BilingualLabel
 
 from widgets.behavior import (
     BilingualWidget,
-    KeyboardBoundWidget,
+    KeyBoundWidget,
     MouseBoundWidget,
     StyledWidget,
 )
@@ -20,7 +20,7 @@ from widgets.utils import (
 
 
 class SettingsFrame(ttk.Frame,
-                    KeyboardBoundWidget,
+                    KeyBoundWidget,
                     MouseBoundWidget,
                     StyledWidget):
 
@@ -40,8 +40,8 @@ class SettingsFrame(ttk.Frame,
         self._init_lang_frame()
         self._init_scale_frame()
 
-    def init_keyboard_binds(self):
-        ' Overrides KeyboardBoundWidget. '
+    def init_key_binds(self):
+        ' Overrides KeyBoundWidget. '
         self.bind(config.KEY_BINDS['settings-switch-lang'],
                   lambda e: self._toggle_lang())
 
