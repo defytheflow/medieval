@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-from typing import Tuple, List
 
 import simpleaudio as sa
 
@@ -15,132 +14,112 @@ class Sprite:
 
     NO_CANVAS_ID = -1
 
-    def __init__(self,
-                 name: str,
-                 canvas: 'GameCanvas',
-                 position: Tuple[int, int],
-                 size: Tuple[int, int],
-                 direction: str = 'south',
-                 speed: int = 1):
-
+    def __init__(self, name, canvas, position, size, direction = 'south', speed = 1):
         self.name = name
         self.canvas = canvas
         self.canvas.cache_sprite(self)
-        self._size = size
+        self.size = size
         self.position = position
-        self._direction = direction
-        self._speed = speed
+        self.direction = direction
+        self.speed = speed
         self.canvas_id = self.NO_CANVAS_ID
-        self._sleep_time = 10
-        self._costume_num = 0
-        self._image = None
-        self.set_image(os.path.join(self.name, f'{self._direction}.png'))
+        self.sleep_time = 10
+        self.costume_num = 0
+        self.image = None
+        self.set_image(os.path.join(self.name, f'{self.direction}.png'))
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
                 f"name='{self.name}', "
-                f"direction='{self._direction}', "
+                f"direction='{self.direction}', "
                 f"position={self.position}, "
-                f"size={self._size}, "
+                f"size={self.size}, "
                 f"canvas_id={self.canvas_id}, "
                 f"tags={self.get_tags()})")
 
-    def get_name(self) -> str:
-        return self.name
-
-    def get_direction(self) -> str:
-        return self._direction
-
-    def get_x(self) -> int:
+    @property
+    def x(self):
         return self.position[0]
 
-    def get_y(self) -> int:
+    @property
+    def y(self):
         return self.position[1]
 
-    def get_width(self) -> int:
-        return self._size[0]
+    @property
+    def width(self):
+        return self.size[0]
 
-    def get_height(self) -> int:
-        return self._size[1]
+    @property
+    def height(self):
+        return self.size[1]
 
-    def get_speed(self) -> int:
-        return self._speed
-
-    def get_image(self) -> tk.PhotoImage:
-        return self._image
-
-    def get_tags(self) -> List[str]:
+    @property
+    def tags(self):
         return [self.name, self.__class__.__name__.lower()]
 
-    def get_size(self) -> Tuple[int, int]:
-        return self._size
-
-    def get_position(self) -> Tuple[int, int]:
-        return self.position
-
-    def get_canvas_id(self) -> int:
+    def get_canvas_id(self):
         if self.canvas_id == self.NO_CANVAS_ID:
             raise AttributeError('canvas_id has not been initialized.')
         return self.canvas_id
 
-    def set_canvas_id(self, canvas_id: int) -> None:
+    def set_canvas_id(self, canvas_id):
         self.canvas_id = canvas_id
 
-    def set_image(self, image_file: str) -> None:
-        self._image = create_photo_image(os.path.join(AssetsConfig.sprites, image_file), self._size)
+    def set_image(self, image_file):
+        self.image = create_photo_image(os.path.join(AssetsConfig.sprites, image_file), self.size)
 
-    def set_position(self, new_position: Tuple[int, int]) -> None:
+    def set_position(self, new_position):
         self.position = new_position
 
-    def set_direction(self, new_direction: str) -> None:
+    def set_direction(self, new_direction):
         if new_direction not in ('north', 'south', 'west', 'east'):
             raise ValueError(f"Invalid direction value '{new_direction}'")
-        self._direction = new_direction
-        self.set_image(os.path.join(self.name, f'{self._direction}.png'))
+        self.direction = new_direction
+        self.set_image(os.path.join(self.name, f'{self.direction}.png'))
 
-    def switch_costume(self) -> None:
-        self._costume_num += 1
-        if self._costume_num > 2:  # Why 2?
-            self._costume_num = 1
-        self.set_image(os.path.join(self.name, f'{self._direction}-{self._costume_num}.png'))
+    def switch_costume(self):
+        self.costume_num += 1
+        if self.costume_num > 2:  # Why 2?
+            self.costume_num = 1
+        self.set_image(os.path.join(self.name, f'{self.direction}-{self.costume_num}.png'))
 
-    def reset_costume(self) -> None:
-        self.set_image(os.path.join(self.name, f'{self._direction}.png'))
+    def reset_costume(self):
+        self.set_image(os.path.join(self.name, f'{self.direction}.png'))
 
-    def draw_on_canvas(self) -> None:
-        self.draw_on_canvas_at(self.get_x(), self.get_y())
+    def draw_on_canvas(self):
+        self.draw_on_canvas_at(self.x, self.y)
 
-    def redraw_on_canvas(self) -> None:
-        self.redraw_on_canvas_at(self.get_x(), self.get_y())
+    def redraw_on_canvas(self):
+        self.redraw_on_canvas_at(self.x, self.y)
 
-    def draw_on_canvas_at(self, x: int, y: int) -> None:
+    def draw_on_canvas_at(self, x, y):
         canvas_id = self.canvas.create_image(
-            x, y, image=self._image, anchor='nw', tags=self.get_tags())
+            x, y, image=self.image, anchor='nw', tags=self.tags)
         self.set_canvas_id(canvas_id)
 
-    def redraw_on_canvas_at(self, x: int, y: int) -> None:
+    def redraw_on_canvas_at(self, x, y):
         self.canvas.delete(self.get_canvas_id())
         self.draw_on_canvas_at(x, y)
 
-    def move(self, direction: str) -> None:
+    def move(self, direction):
         self.set_direction(direction)
         if direction == 'north':
-            self.set_position((self.get_x(), self.get_y() - self.get_width()))
+            self.set_position((self.x, self.y - self.width))
         elif direction == 'west':
-            self.set_position((self.get_x() - self.get_width(), self.get_y()))
+            self.set_position((self.x - self.width, self.y))
         elif direction == 'south':
-            self.set_position((self.get_x(), self.get_y() + self.get_width()))
+            self.set_position((self.x, self.y + self.width))
         elif direction == 'east':
-            self.set_position((self.get_x() + self.get_width(), self.get_y()))
+            self.set_position((self.x + self.width, self.y))
         self._animate_move(direction)
         self.reset_costume()
         self.redraw_on_canvas()
 
     def _animate_move(self, direction):
-        overlap = self.canvas.find_overlapping(self.get_x(),
-                                               self.get_y(),
-                                               self.get_x() + self.get_width(),
-                                               self.get_y() + self.get_width())
+        overlap = self.canvas.find_overlapping(self.x,
+                                               self.y,
+                                               self.x + self.width,
+                                               self.y + self.width)
 
         overlap = [self.canvas.gettags(item) for item in overlap]
 
@@ -149,17 +128,17 @@ class Sprite:
         wave_obj = sa.WaveObject.from_wave_file(os.path.join(AssetsConfig.sounds, 'grass-move.wav'))
         play_obj = wave_obj.play()
 
-        for i in range(1, self.get_width() + 1, self.get_speed()):
+        for i in range(1, self.width + 1, self.speed):
             self.switch_costume()
             if direction == 'north':
-                self.redraw_on_canvas_at(self.get_x(), self.get_y() + self.get_width() - i)
+                self.redraw_on_canvas_at(self.x, self.y + self.width - i)
             elif direction == 'west':
-                self.redraw_on_canvas_at(self.get_x() + self.get_width() - i, self.get_y())
+                self.redraw_on_canvas_at(self.x + self.width - i, self.y)
             elif direction == 'south':
-                self.redraw_on_canvas_at(self.get_x(), self.get_y() - self.get_width() + i)
+                self.redraw_on_canvas_at(self.x, self.y - self.width + i)
             elif direction == 'east':
-                self.redraw_on_canvas_at(self.get_x() - self.get_width() + i, self.get_y())
-            self.canvas.after(self._sleep_time)
+                self.redraw_on_canvas_at(self.x - self.width + i, self.y)
+            self.canvas.after(self.sleep_time)
             self.canvas.update()
 
         play_obj.stop()
