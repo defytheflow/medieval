@@ -30,8 +30,8 @@ class MedievalApp(tk.Tk, StyledWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title(config.WINDOW_TITLE)
-        self.geometry(f'{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}')
+        self.title(config.WINDOW['title'])
+        self.geometry(f"{config.WINDOW['width']}x{config.WINDOW['height']}")
         self.resizable(0, 0)
 
         self.current_frame = None
@@ -50,7 +50,7 @@ class MedievalApp(tk.Tk, StyledWidget):
     def init_style(self):
         ' Overrides StyledWidget. '
         self.style = ttk.Style()
-        self.style.configure('MA.TFrame', background=config.BG)
+        self.style.configure('MA.TFrame', background=config.COLORS['bg'])
 
     def show_frame(self, frame_name):
         if self.current_frame:
@@ -64,22 +64,20 @@ class MedievalApp(tk.Tk, StyledWidget):
         for frame_name, frame_cls, in self.frames.items():
             self.frames[frame_name] = frame_cls(self,
                                                 style='MA.TFrame',
-                                                width=config.WINDOW_WIDTH,
-                                                height=config.WINDOW_HEIGHT)
+                                                width=config.WINDOW['width'],
+                                                height=config.WINDOW['height'])
 
     def init_level(self):
-        game_canvas = self.frames['game'].game_canvas
+        background = VillageBackground(config.GAME_CANVAS['block_size'])
+        character = Sprite(name='peasant',
+                           canvas=self.frames['game'].game_canvas,
+                           position=(0, 0),
+                           size=(config.GAME_CANVAS['block_size'],
+                                 config.GAME_CANVAS['block_size']),
+                           speed=3)
 
-        background = VillageBackground(config.BLOCK_SIZE)
-        peasant = Sprite(
-            name='peasant',
-            canvas=game_canvas,
-            position=(0, 0),
-            size=(config.BLOCK_SIZE, config.BLOCK_SIZE),
-            speed=3)
-
-        background.draw_on_canvas(game_canvas)
-        peasant.draw_on_canvas()
+        background.draw_on_canvas(self.frames['game'].game_canvas)
+        character.draw_on_canvas()
 
     @staticmethod
     def notify_widgets(root):

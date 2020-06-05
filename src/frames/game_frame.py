@@ -73,39 +73,40 @@ class GameFrame(ttk.Frame,
 
         self.style.configure('GF.TLabel',
                               padding=(10, 5),
-                              background=config.BG,
-                              foreground=config.FG,
+                              background=config.COLORS['bg'],
+                              foreground=config.COLORS['fg'],
                               borderwidth=5,
-                              font=config.P_FONT)
+                              font=config.FONTS['p'])
 
         self.style.configure('GF.TButton',
-                              background=config.BG,
-                              foreground=config.FG,
+                              background=config.COLORS['bg'],
+                              foreground=config.COLORS['fg'],
                               borderwidth=5,
                               relief='raised')
 
         self.style.map('GF.TButton',
-                        background=[('active', config.ACTIVE_BG)])
+                        background=[('active', config.COLORS['active_bg'])])
 
         self.style.configure('GF.TRadiobutton',
-                              background=config.BG,
-                              foreground=config.FG,
+                              background=config.COLORS['bg'],
+                              foreground=config.COLORS['fg'],
                               indicatordiameter=20,
-                              focuscolor=config.BG,
-                              font=config.P_FONT)
+                              focuscolor=config.COLORS['bg'],
+                              font=config.FONTS['p'])
 
         self.style.map('GF.TRadiobutton',
-                        background=[('active', config.BG)],
-                        indicatorcolor=[('selected', config.ACTIVE_BG)])
+                        background=[('active', config.COLORS['bg'])],
+                        indicatorcolor=[('selected', config.COLORS['active_bg'])])
 
     def _init_hint_frame(self):
-        hint_frame = tk.Frame(self)
+        hint_frame = ttk.Frame(self)
+        hint_frame.pack(fill='both')
+
         self.hint_lbl = BilingualLabel(hint_frame,
                                        style='GF.TLabel',
                                        relief='raised',
-                                       text_dict={'eng': 'Hint:', 'rus': 'Подсказка:'})
-
-        hint_frame.pack(fill='both')
+                                       text_dict={'eng': 'Hint:',
+                                                  'rus': 'Подсказка:'})
         self.hint_lbl.pack(fill='both')
 
     def _create_button(self, master, text_dict, image_name):
@@ -120,26 +121,25 @@ class GameFrame(ttk.Frame,
                          waittime=300)
 
         bind_image_to_widget(btn,
-                             os.path.join(config.ICONS_ROOT, image_name),
+                             os.path.join(config.ASSETS['icons'], image_name),
                              (100, 100))
 
         bind_sound_to_widget(btn,
                              '<1>',
-                             os.path.join(config.SOUNDS_ROOT, 'button-click.wav'))
+                             os.path.join(config.ASSETS['sounds'], 'button-click.wav'))
         return btn
 
 
     def _init_game_frame(self):
-        game_frame = tk.Frame(self,
-                              height=self.winfo_reqheight() * 0.8,
-                              background=config.BG)
+        game_frame = ttk.Frame(self, height=self.winfo_reqheight() * 0.8)
 
         self.game_canvas = GameCanvas(game_frame,
-                                      width=config.GAME_CANVAS_WIDTH,
-                                      height=config.GAME_CANVAS_HEIGHT,
-                                      highlightbackground=config.HIGHLIGHT_BG)
+                                      background=config.COLORS['bg'],
+                                      width=config.GAME_CANVAS['width'],
+                                      height=config.GAME_CANVAS['height'],
+                                      relief='raised')
 
-        button_frame = tk.Frame(game_frame, background=config.BG)
+        button_frame = tk.Frame(game_frame, background=config.COLORS['bg'])
 
         self.settings_btn = self._create_button(button_frame,
                                                 {'eng': 'Settings', 'rus': 'Настройки'},
@@ -177,25 +177,24 @@ class GameFrame(ttk.Frame,
             btn.pack(fill='both', expand=True)
 
     def _init_dialogue_frame(self):
-        dialogue_frame = tk.Frame(self)
+        dialogue_frame = ttk.Frame(self)
 
         self.dialogue_canvas = DialogueCanvas(dialogue_frame,
                                               width=self.winfo_reqwidth() * 0.16,
                                               height=self.winfo_reqheight() * 0.2,
-                                              background=config.BG,
+                                              background=config.COLORS['bg'],
                                               borderwidth=self.BD,
-                                              highlightbackground=config.HIGHLIGHT_BG,
                                               relief='raised')
 
         choice_frame = tk.Frame(dialogue_frame,
-                                background=config.BG,
+                                background=config.COLORS['bg'],
                                 borderwidth=self.BD,
                                 relief='raised')
 
         self.dialogue_lbl = BilingualLabel(choice_frame,
                                            style='GF.TLabel',
                                            relief='flat',
-                                           font=config.P_FONT,
+                                           font=config.FONTS['p'],
                                            text_dict={'eng': 'Do you like it?', 'rus': 'Тебе нравится?'})
 
 
@@ -215,7 +214,7 @@ class GameFrame(ttk.Frame,
 
         # for btn in (btn1, btn2):
         #     bind_image_to_widget(btn,
-        #                          os.path.join(config.ICONS_ROOT, 'choice.png'),
+        #                          os.path.join(config.ASSETS['icons'], 'choice.png'),
         #                          (180, 90))
 
         dialogue_frame.pack(fill='both')

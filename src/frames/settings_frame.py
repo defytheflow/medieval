@@ -56,31 +56,31 @@ class SettingsFrame(ttk.Frame,
         ' Overrides StyledWidget. '
         self.style = ttk.Style()
 
-        self.style.configure('SF.TFrame', background=config.BG)
+        self.style.configure('SF.TFrame', background=config.COLORS['bg'])
 
         self.style.configure('SF.TLabel',
-                             background=config.BG,
-                             font=config.P_FONT + ('bold',),
+                             background=config.COLORS['bg'],
+                             font=config.FONTS['p'] + ('bold',),
                              width=10,
                              anchor='nw')
 
         self.style.configure('SF.TCombobox')
 
         self.style.map('SF.TCombobox',
-                        background=[('readonly', config.BG)],
-                        fieldbackground=[('readonly', config.BG)],
-                        selectbackground=[('readonly', config.BG)],
-                        selectforeground=[('readonly', config.FG)],
+                        background=[('readonly', config.COLORS['bg'])],
+                        fieldbackground=[('readonly', config.COLORS['bg'])],
+                        selectbackground=[('readonly', config.COLORS['bg'])],
+                        selectforeground=[('readonly', config.COLORS['fg'])],
                         borderwidth=[('readonly', 5)],
                         selectborderwidth=[('readonly', 0)],
                         arrowsize=[('readonly', 24)],
-                        arrowcolor=[('readonly', config.FG)],
-                        foreground=[('readonly', config.FG)])
+                        arrowcolor=[('readonly', config.COLORS['fg'])],
+                        foreground=[('readonly', config.COLORS['fg'])])
 
-        self.option_add('*TCombobox*Listbox.background', config.BG)
-        self.option_add('*TCombobox*Listbox.foreground', config.FG)
-        self.option_add('*TCombobox*Listbox.selectBackground', config.ACTIVE_BG)
-        self.option_add('*TCombobox*Listbox.font', config.P_FONT)
+        self.option_add('*TCombobox*Listbox.background', config.COLORS['bg'])
+        self.option_add('*TCombobox*Listbox.foreground', config.COLORS['fg'])
+        self.option_add('*TCombobox*Listbox.selectBackground', config.COLORS['active_bg'])
+        self.option_add('*TCombobox*Listbox.font', config.FONTS['p'])
 
     def _toggle_lang(self):
         if self.lang_var.get() == 'English':
@@ -103,7 +103,7 @@ class SettingsFrame(ttk.Frame,
 
         self.lang_combobox = ttk.Combobox(lang_frame,
                                           style='SF.TCombobox',
-                                          font=config.P_FONT,
+                                          font=config.FONTS['p'],
                                           values=['Русский', 'English'],
                                           textvariable=self.lang_var,
                                           state='readonly')
@@ -123,12 +123,12 @@ class SettingsFrame(ttk.Frame,
         scale = tk.Scale(scale_frame,
                          orient='horizontal',
                          length=self.WIDGET_WIDTH + 15,
-                         background=config.BG,
+                         background=config.COLORS['bg'],
                          borderwidth=5,
-                         font=config.P_FONT,
-                         troughcolor=config.BG,
-                         highlightbackground=config.BG,
-                         activebackground=config.ACTIVE_BG,
+                         font=config.FONTS['p'],
+                         troughcolor=config.COLORS['bg'],
+                         highlightbackground=config.COLORS['bg'],
+                         activebackground=config.COLORS['active_bg'],
                          relief='sunken')
 
         scale_frame.pack()

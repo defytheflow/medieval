@@ -1,17 +1,14 @@
-import tkinter as tk
-from typing import Tuple, Callable
+from PIL import Image, ImageTk
+import simpleaudio as sa
 
 
-def create_photo_image(path: str,
-                       size: Tuple[int, int] = None) -> tk.PhotoImage:
-    from PIL import Image, ImageTk
+def create_photo_image(path, size=None):
     image = Image.open(path)
     if size:
         image = image.resize(size)
     return ImageTk.PhotoImage(image)
 
 
-def play_sound(sound_file: str) -> None:
-    import simpleaudio as sa
+def play_sound(sound_file):
     wave_obj = sa.WaveObject.from_wave_file(sound_file)
     wave_obj.play()

@@ -23,8 +23,8 @@ class MapFrame(ttk.Frame, MouseBoundWidget, StyledWidget):
         self.canvas = MapCanvas(self,
                                 width=self.winfo_reqwidth(),
                                 height=self.winfo_reqheight() - self.title_frame.winfo_reqheight(),
-                                background=config.BG,
-                                highlightbackground=config.BG)
+                                background=config.COLORS['bg'],
+                                highlightbackground=config.COLORS['bg'])
 
         self.title_frame.pack(fill='both')
         self.canvas.pack(fill='both', expand=True)

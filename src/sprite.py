@@ -21,13 +21,13 @@ class Sprite:
                  speed: int = 1):
 
         self.name = name
-        self._canvas = canvas
-        self._canvas.cache_sprite(self)
+        self.canvas = canvas
+        self.canvas.cache_sprite(self)
         self._size = size
-        self._position = position
+        self.position = position
         self._direction = direction
         self._speed = speed
-        self._canvas_id = self.NO_CANVAS_ID
+        self.canvas_id = self.NO_CANVAS_ID
         self._sleep_time = 10
         self._costume_num = 0
         self._image = None
@@ -37,9 +37,9 @@ class Sprite:
         return (f"{self.__class__.__name__}("
                 f"name='{self.name}', "
                 f"direction='{self._direction}', "
-                f"position={self._position}, "
+                f"position={self.position}, "
                 f"size={self._size}, "
-                f"canvas_id={self._canvas_id}, "
+                f"canvas_id={self.canvas_id}, "
                 f"tags={self.get_tags()})")
 
     def get_name(self) -> str:
@@ -49,10 +49,10 @@ class Sprite:
         return self._direction
 
     def get_x(self) -> int:
-        return self._position[0]
+        return self.position[0]
 
     def get_y(self) -> int:
-        return self._position[1]
+        return self.position[1]
 
     def get_width(self) -> int:
         return self._size[0]
@@ -73,21 +73,21 @@ class Sprite:
         return self._size
 
     def get_position(self) -> Tuple[int, int]:
-        return self._position
+        return self.position
 
     def get_canvas_id(self) -> int:
-        if self._canvas_id == self.NO_CANVAS_ID:
+        if self.canvas_id == self.NO_CANVAS_ID:
             raise AttributeError('canvas_id has not been initialized.')
-        return self._canvas_id
+        return self.canvas_id
 
     def set_canvas_id(self, canvas_id: int) -> None:
-        self._canvas_id = canvas_id
+        self.canvas_id = canvas_id
 
     def set_image(self, image_file: str) -> None:
-        self._image = create_photo_image(os.path.join(config.SPRITES_ROOT, image_file), self._size)
+        self._image = create_photo_image(os.path.join(config.ASSETS['sprites'], image_file), self._size)
 
     def set_position(self, new_position: Tuple[int, int]) -> None:
-        self._position = new_position
+        self.position = new_position
 
     def set_direction(self, new_direction: str) -> None:
         if new_direction not in ('north', 'south', 'west', 'east'):
@@ -111,12 +111,12 @@ class Sprite:
         self.redraw_on_canvas_at(self.get_x(), self.get_y())
 
     def draw_on_canvas_at(self, x: int, y: int) -> None:
-        canvas_id = self._canvas.create_image(
+        canvas_id = self.canvas.create_image(
             x, y, image=self._image, anchor='nw', tags=self.get_tags())
         self.set_canvas_id(canvas_id)
 
     def redraw_on_canvas_at(self, x: int, y: int) -> None:
-        self._canvas.delete(self.get_canvas_id())
+        self.canvas.delete(self.get_canvas_id())
         self.draw_on_canvas_at(x, y)
 
     def move(self, direction: str) -> None:
@@ -133,8 +133,17 @@ class Sprite:
         self.reset_costume()
         self.redraw_on_canvas()
 
-    def _animate_move(self, direction: str) -> None:
-        wave_obj = sa.WaveObject.from_wave_file(os.path.join(config.SOUNDS_ROOT, 'grass-move.wav'))
+    def _animate_move(self, direction):
+        overlap = self.canvas.find_overlapping(self.get_x(),
+                                               self.get_y(),
+                                               self.get_x() + self.get_width(),
+                                               self.get_y() + self.get_width())
+
+        overlap = [self.canvas.gettags(item) for item in overlap]
+
+        print(overlap)
+
+        wave_obj = sa.WaveObject.from_wave_file(os.path.join(config.ASSETS['sounds'], 'grass-move.wav'))
         play_obj = wave_obj.play()
 
         for i in range(1, self.get_width() + 1, self.get_speed()):
@@ -147,7 +156,7 @@ class Sprite:
                 self.redraw_on_canvas_at(self.get_x(), self.get_y() - self.get_width() + i)
             elif direction == 'east':
                 self.redraw_on_canvas_at(self.get_x() - self.get_width() + i, self.get_y())
-            self._canvas.after(self._sleep_time)
-            self._canvas.update()
+            self.canvas.after(self._sleep_time)
+            self.canvas.update()
 
         play_obj.stop()

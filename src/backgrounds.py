@@ -3,195 +3,250 @@ import abc
 import random
 import tkinter as tk
 
-from typing import Dict
-
 import config
-from utils import create_photo_image
 
-from canvases import GameCanvas
+from utils import (
+    create_photo_image,
+)
+
+
+def delete_overlapping(canvas, pos1, pos2):
+    for item in canvas.find_overlapping(*pos1, *pos2):
+        canvas.delete(item)
 
 
 class Background(abc.ABC):
 
     @abc.abstractmethod
-    def draw_on_canvas(self, canvas: GameCanvas) -> None:
+    def draw_on_canvas(self, canvas):
         pass
 
 
 class VillageBackground(Background):
 
-    def __init__(self, block_size: int):
-        self._block_size = block_size
-        self._images: Dict[str, tk.PhotoImage] = {}
+    def __init__(self, block_size):
+        self.block_size = block_size
+        self.images = self.create_images({  # <- Add new backgrounds here.
+                'bridge': (block_size, block_size),
+                 'coast': (block_size, block_size),
+                 'grass': (block_size, block_size),
+                  'road': (block_size, block_size),
+                 'water': (block_size, block_size),
+                  'tree': (block_size * 2, block_size * 2),
+        })
 
-        for name in ('bridge', 'coast-rock', 'grass', 'road', 'water'):
-            file = os.path.join(config.BG_ROOT, f'{name}.png')
-            self._images[name] = create_photo_image(file, (block_size, block_size))
-
-        file = os.path.join(config.BG_ROOT, 'tree.png')
-        self._images['tree'] = create_photo_image(file, (block_size * 2, block_size * 2))
-
-    # Overrides Background.
-    def draw_on_canvas(self, canvas: GameCanvas) -> None:
-        for name, image in self._images.items():
+    def cache_images(self, canvas):
+        for name, image in self.images.items():
             canvas.cache_image(name, image)
 
-        self._draw_grass(canvas)
-        self._draw_trees(canvas)
-        self._draw_river(canvas)
-        self._draw_bridge(canvas)
-        self._draw_road(canvas)
-        self._draw_lake(canvas)
-        self._draw_houses(canvas)
+    def draw_on_canvas(self, canvas):
+        ' Overrides Background. '
+        self.cache_images(canvas)
+
+        self.draw_grass(canvas)
+        self.draw_river(canvas)
+        self.draw_bridge(canvas)
+        self.draw_road(canvas)
+        self.draw_lake(canvas)
+        self.draw_houses(canvas)
+        self.draw_trees(canvas)
+
+
+    def draw_grass(self, canvas):
+        for x in range(0, 36 * self.block_size, self.block_size):
+            for y in range(0, 24 * self.block_size, self.block_size):
+                canvas.create_image(x, y, image=self.images['grass'],
+                                    anchor='nw', tags=['grass'])
+
+
+    def draw_river(self, canvas):
+        # River
+        for col in range(6 * self.block_size, 11 * self.block_size, self.block_size):
+            x = col * self.block_size
+            for row in range(0, 19):
+                y = row * self.block_size
+                delete_overlapping(canvas, (x, y), (x + self.block_size, y + self.block_size))
+                canvas.create_image(x, y, image=self.images['water'], anchor='nw', tags=['water'])
+
+        # Left coast.
+        for col in range(6, 7):
+            x = col * self.block_size
+            for row in range(0, 19):
+                y = row * self.block_size
+                canvas.create_image(x, y, image=self.images['coast'], anchor='nw', tags=['coast'])
+
+        # Right coast.
+        for col in range(10, 11):
+            x = col * self.block_size
+            for row in range(0, 19):
+                y = row * self.block_size
+                canvas.create_image(x, y, image=self.images['coast'], anchor='nw', tags=['coast'])
+
+    def draw_trees(self, canvas):
+        for col in range(14, 31):
+            for row in range(0, 3):
+                if random.randint(0, 1):
+                    self._draw_tree_image(canvas, col, row)
 
     def _draw_image(self, canvas, col, row, image, tags):
-        canvas.create_image(col * self._block_size,
-                            row * self._block_size,
+        canvas.create_image(col * self.block_size,
+                            row * self.block_size,
                             image=image,
                             anchor='nw',
                             tags=tags)
 
     def _draw_rectangle(self, canvas, col, row, fill, tags):
-        canvas.create_rectangle(col * self._block_size,
-                                row * self._block_size,
-                                col * self._block_size + self._block_size,
-                                row * self._block_size + self._block_size,
+        canvas.create_rectangle(col * self.block_size,
+                                row * self.block_size,
+                                col * self.block_size + self.block_size,
+                                row * self.block_size + self.block_size,
                                 fill=fill,
                                 tags=tags)
 
-    def _draw_houses(self, canvas):
-        # Upper houses.
+
+    def delete_overlapping_items(self, canvas, col, row):
+        overlap_items = canvas.find_overlapping(col * self.block_size,
+                                                row * self.block_size,
+                                                col * self.block_size + self.block_size,
+                                                row * self.block_size + self.block_size)
+        for item in overlap_items:
+            canvas.delete(item)
+
+    def _draw_tree_image(self, canvas, col, row):
+        canvas.create_image(col * self.block_size,
+                            row * self.block_size,
+                            image=self.images['tree'],
+                            anchor='nw',
+                            tags=['tree', 'bg'])
+
+
+    def draw_bridge(self, canvas):
+        for col in range(6, 11):
+            x = col * self.block_size
+            for row in range(8, 10):
+                y = row * self.block_size
+                delete_overlapping(canvas, (x, y), (x + self.block_size, y + self.block_size))
+                canvas.create_image(x, y, image=self.images['bridge'], anchor='nw', tags=['bridge'])
+
+
+
+    def draw_houses(self, canvas):
+        # upper houses.
         for col in range(14, 18):
             for row in range(4, 7):
+                self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
-        self._draw_image(canvas, 15, 7, self._images['road'], ['road', 'bg'])
+
+        self.delete_overlapping_items(canvas, 15, 7)
+        self._draw_image(canvas, 15, 7, self.images['road'], ['road', 'bg'])
 
         for col in range(20, 24):
             for row in range(4, 7):
+                self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
-        self._draw_image(canvas, 21, 7, self._images['road'], ['road', 'bg'])
+
+        self.delete_overlapping_items(canvas, 21, 7)
+        self._draw_image(canvas, 21, 7, self.images['road'], ['road', 'bg'])
 
         for col in range(26, 30):
             for row in range(4, 7):
+                self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
-        self._draw_image(canvas, 27, 7, self._images['road'], ['road', 'bg'])
 
-        # Lower houses.
+        self.delete_overlapping_items(canvas, 27, 7)
+        self._draw_image(canvas, 27, 7, self.images['road'], ['road', 'bg'])
+
+        # lower houses.
         for col in range(17, 21):
             for row in range(11, 14):
+                self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
-        self._draw_image(canvas, 18, 10, self._images['road'], ['road', 'bg'])
+
+        self.delete_overlapping_items(canvas, 18, 10)
+        self._draw_image(canvas, 18, 10, self.images['road'], ['road', 'bg'])
 
         for col in range(23, 27):
             for row in range(11, 14):
+                self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
-        self._draw_image(canvas, 24, 10, self._images['road'], ['road', 'bg'])
 
-    def _draw_grass(self, canvas):
-        for col in range(36):
-            for row in range(24):
-                self._draw_image(canvas, col, row, self._images['grass'],
-                                 ['grass', 'bg'])
+        self.delete_overlapping_items(canvas, 24, 10)
+        self._draw_image(canvas, 24, 10, self.images['road'], ['road', 'bg'])
 
-    def _draw_river(self, canvas):
-        for col in range(6, 11):
-            for row in range(0, 19):
-                self._draw_image(canvas, col, row, self._images['water'],
-                                 ['water', 'river', 'bg'])
-
-        # River coast.
-        for col in range(6, 7):
-            for row in range(0, 19):
-                self._draw_image(canvas, col, row, self._images['coast-rock'],
-                                 ['coast-rock', 'river', 'bg'])
-        for col in range(10, 11):
-            for row in range(0, 19):
-                self._draw_image(canvas, col, row, self._images['coast-rock'],
-                                 ['coast-rock', 'river', 'bg'])
-
-    def _draw_bridge(self, canvas):
-        for col in range(6, 11):
-            for row in range(8, 10):
-                self._draw_image(canvas, col, row, self._images['bridge'],
-                                 ['bridge', 'bg'])
-
-    def _draw_road(self, canvas):
+    def draw_road(self, canvas):
         # Before bridge vertical.
         for col in range(0, 2):
             for row in range(0, 10):
-                self._draw_image(canvas, col, row, self._images['road'],
-                                 ['road', 'bg'])
+                self.delete_overlapping_items(canvas, col, row)
+                self._draw_image(canvas, col, row, self.images['road'], ['road', 'bg'])
 
         # Before bridge horizontal.
         for col in range(2, 6):
             for row in range(8, 10):
-                self._draw_image(canvas, col, row, self._images['road'],
-                                 ['road', 'bg'])
+                self.delete_overlapping_items(canvas, col, row)
+                self._draw_image(canvas, col, row, self.images['road'], ['road', 'bg'])
 
         # Parallel house horizontal.
         for col in range(11, 31):
             for row in range(8, 10):
-                self._draw_image(canvas, col, row, self._images['road'],
-                                 ['road', 'bg'])
+                self.delete_overlapping_items(canvas, col, row)
+                self._draw_image(canvas, col, row, self.images['road'], ['road', 'bg'])
 
         # Parallel river vertical.
         for col in range(12, 14):
             for row in range(10, 18):
-                self._draw_image(canvas, col, row, self._images['road'],
-                                 ['road', 'bg'])
+                self.delete_overlapping_items(canvas, col, row)
+                self._draw_image(canvas, col, row, self.images['road'], ['road', 'bg'])
 
         # Before lake horizontal.
         for col in range(14, 32):
             for row in range(16, 18):
-                self._draw_image(canvas, col, row, self._images['road'],
-                                 ['road', 'bg'])
-
-    def _draw_tree_image(self, canvas, col, row):
-        canvas.create_image(col * self._block_size,
-                            row * self._block_size,
-                            image=self._images['tree'],
-                            anchor='nw',
-                            tags=['tree', 'bg'])
-
-    def _draw_trees(self, canvas):
-        for col in range(14, 31):
-            for row in range(0, 3):
-                if random.randint(0, 1) == 1:
-                    self._draw_tree_image(canvas, col, row)
+                self.delete_overlapping_items(canvas, col, row)
+                self._draw_image(canvas, col, row, self.images['road'], ['road', 'bg'])
 
 
-    def _draw_lake(self, canvas):
+    def draw_lake(self, canvas):
         for col in range(18, 30):
             for row in range(19, 24):
-                self._draw_image(canvas, col, row, self._images['water'],
-                                 ['water', 'lake', 'bg'])
+                self.delete_overlapping_items(canvas, col, row)
+                self._draw_image(canvas, col, row, self.images['water'], ['water', 'lake', 'bg'])
 
-        # Left coast rock,
+        # Left coast.
         for col in range(18, 19):
             for row in range(20, 23):
-                self._draw_image(canvas, col, row, self._images['coast-rock'],
-                                 ['coast-rock', 'lake', 'bg'])
+                self._draw_image(canvas, col, row, self.images['coast'], ['coast'])
 
-        # Right coast rock.
+        # Right coast.
         for col in range(29, 30):
             for row in range(20, 23):
-                self._draw_image(canvas, col, row, self._images['coast-rock'],
-                                 ['coast-rock', 'lake', 'bg'])
+                self._draw_image(canvas, col, row, self.images['coast'], ['coast'])
 
-        # Top coast rock.
+        # Top coast.
         for col in range(19, 29):
             for row in range(19, 20):
-                self._draw_image(canvas, col, row, self._images['coast-rock'],
-                                 ['coast-rock', 'lake', 'bg'])
+                self._draw_image(canvas, col, row, self.images['coast'], ['coast'])
 
-        # Bottom coast rock.
+        # Bottom coast.
         for col in range(19, 29):
             for row in range(23, 24):
-                self._draw_image(canvas, col, row, self._images['coast-rock'],
-                                 ['coast-rock', 'lake', 'bg'])
+                self._draw_image(canvas, col, row, self.images['coast'], ['coast'])
 
         # Grass corners.
-        self._draw_image(canvas, 18, 19, self._images['grass'], ['grass', 'bg'])
-        self._draw_image(canvas, 29, 19, self._images['grass'], ['grass', 'bg'])
-        self._draw_image(canvas, 18, 23, self._images['grass'], ['grass', 'bg'])
-        self._draw_image(canvas, 29, 23, self._images['grass'], ['grass', 'bg'])
+        self.delete_overlapping_items(canvas, 18, 19)
+        self._draw_image(canvas, 18, 19, self.images['grass'], ['grass', 'bg'])
+
+        self.delete_overlapping_items(canvas, 29, 19)
+        self._draw_image(canvas, 29, 19, self.images['grass'], ['grass', 'bg'])
+
+        self.delete_overlapping_items(canvas, 18, 23)
+        self._draw_image(canvas, 18, 23, self.images['grass'], ['grass', 'bg'])
+
+        self.delete_overlapping_items(canvas, 29, 23)
+        self._draw_image(canvas, 29, 23, self.images['grass'], ['grass', 'bg'])
+
+    @staticmethod
+    def create_images(bg_dict):
+        return {
+            name: create_photo_image(os.path.join(config.ASSETS['bg'], f'{name}.png'), size)
+            for name, size in bg_dict.items()
+        }

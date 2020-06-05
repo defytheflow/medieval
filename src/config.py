@@ -1,52 +1,39 @@
 import os
 
-WINDOW_TITLE = 'Medieval'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Window dimensions.
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
-WINDOW_WIDTH = 1200
+WINDOW = {
+    'title': 'Medieval',
+    'width':  1200,
+    'height': 1200 * 3 // 4,
+}
 
-WINDOW_HEIGHT = WINDOW_WIDTH * 3 // 4 + 50
+GAME_CANVAS = {
+    'width':      WINDOW['width'] * 4 // 5,
+    'height':     WINDOW['width'] * 4 // 5 * 3 // 4,
+    'block_size': WINDOW['width'] // 40,
+}
 
-BLOCK_SIZE = WINDOW_WIDTH // 40
+COLORS = {
+    'fg':           '#000',
+    'bg':           '#c9b662',
+    'active_bg':    '#7f6f28',
+    'highlight_bg': '#000',
+}
 
-GAME_CANVAS_WIDTH = WINDOW_WIDTH * 4 // 5
+FONTS = {
+    'h': ('DejaVu Serif', 32, 'bold'),
+    'p': ('DejaVu Serif', 20, 'normal'),
+}
 
-GAME_CANVAS_HEIGHT = GAME_CANVAS_WIDTH * 3 // 4
-
-# Background colors.
-
-BG = '#c9b662'
-
-ACTIVE_BG = '#7f6f28'
-
-HIGHLIGHT_BG = '#000'
-
-# Foreground colors.
-
-FG = '#000'
-
-# Fonts.
-
-H_FONT = ('DejaVu Serif', 32, 'bold')
-
-P_FONT = ('DejaVu Serif', 20)
-
-# Asset paths.
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-ASSETS_ROOT = os.path.join(ROOT, 'assets')
-
-BG_ROOT = os.path.join(ASSETS_ROOT, 'bg')
-
-ICONS_ROOT = os.path.join(ASSETS_ROOT, 'icons')
-
-SPRITES_ROOT = os.path.join(ASSETS_ROOT, 'sprites')
-
-SOUNDS_ROOT = os.path.join(ASSETS_ROOT, 'sounds')
-
-# Bindings.
+ASSETS = {
+    'bg':      os.path.join(ASSETS_DIR, 'bg'),
+    'icons':   os.path.join(ASSETS_DIR, 'icons'),
+    'sounds':  os.path.join(ASSETS_DIR, 'sounds'),
+    'sprites': os.path.join(ASSETS_DIR, 'sprites'),
+}
 
 KEY_BINDS = {
     'show-game':            'G',

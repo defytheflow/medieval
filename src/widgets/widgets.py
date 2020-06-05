@@ -17,7 +17,7 @@ class TitleFrame(ttk.Frame, StyledWidget):
         self.return_btn.pack(side='left', fill='both')
 
         bind_image_to_widget(self.return_btn,
-                             os.path.join(config.ICONS_ROOT, 'return.png'),
+                             os.path.join(config.ASSETS['icons'], 'return.png'),
                              (40, 40))
 
         self.title_lbl = BilingualLabel(self, style='T.TLabel', text_dict=text_dict)
@@ -28,14 +28,14 @@ class TitleFrame(ttk.Frame, StyledWidget):
         self.style = ttk.Style()
 
         self.style.configure('T.TButton',
-                             background=config.BG,
+                             background=config.COLORS['bg'],
                              borderwidth=5,
                              relief='raised')
 
         self.style.map('T.TButton',
-                        background=[('active', config.ACTIVE_BG)])
+                        background=[('active', config.COLORS['active_bg'])])
 
         self.style.configure('T.TLabel',
-                             background=config.BG,
-                             font=config.H_FONT,
+                             background=config.COLORS['bg'],
+                             font=config.FONTS['h'],
                              anchor='center')
