@@ -1,16 +1,17 @@
 from tkinter import ttk
 
-import config
-
 from canvases import MapCanvas
-from widgets import TitleFrame
 
-from widgets.behavior import (
-    MouseBoundWidget,
-    StyledWidget,
+from config import (
+    ColorsConfig,
 )
 
-from widgets.utils import get_widget_parent
+from widgets import (
+    MouseBoundWidget,
+    StyledWidget,
+    TitleFrame,
+    get_widget_parent,
+)
 
 
 class MapFrame(ttk.Frame, MouseBoundWidget, StyledWidget):
@@ -23,8 +24,8 @@ class MapFrame(ttk.Frame, MouseBoundWidget, StyledWidget):
         self.canvas = MapCanvas(self,
                                 width=self.winfo_reqwidth(),
                                 height=self.winfo_reqheight() - self.title_frame.winfo_reqheight(),
-                                background=config.COLORS['bg'],
-                                highlightbackground=config.COLORS['bg'])
+                                background=ColorsConfig.bg,
+                                highlightbackground=ColorsConfig.bg)
 
         self.title_frame.pack(fill='both')
         self.canvas.pack(fill='both', expand=True)

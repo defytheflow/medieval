@@ -4,7 +4,10 @@ from typing import Tuple, List
 
 import simpleaudio as sa
 
-import config
+from config import (
+    AssetsConfig,
+)
+
 from utils import create_photo_image
 
 
@@ -84,7 +87,7 @@ class Sprite:
         self.canvas_id = canvas_id
 
     def set_image(self, image_file: str) -> None:
-        self._image = create_photo_image(os.path.join(config.ASSETS['sprites'], image_file), self._size)
+        self._image = create_photo_image(os.path.join(AssetsConfig.sprites, image_file), self._size)
 
     def set_position(self, new_position: Tuple[int, int]) -> None:
         self.position = new_position
@@ -143,7 +146,7 @@ class Sprite:
 
         print(overlap)
 
-        wave_obj = sa.WaveObject.from_wave_file(os.path.join(config.ASSETS['sounds'], 'grass-move.wav'))
+        wave_obj = sa.WaveObject.from_wave_file(os.path.join(AssetsConfig.sounds, 'grass-move.wav'))
         play_obj = wave_obj.play()
 
         for i in range(1, self.get_width() + 1, self.get_speed()):

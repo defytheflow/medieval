@@ -1,19 +1,20 @@
 import tkinter as tk
 from tkinter import ttk
 
-import config
+from config import (
+    AssetsConfig,
+    ColorsConfig,
+    FontsConfig,
+    KeyBindsConfig,
+)
 
-from widgets import TitleFrame
-from widgets.bilingual import BilingualLabel
-
-from widgets.behavior import (
+from widgets import (
+    TitleFrame,
+    BilingualLabel,
     BilingualWidget,
     KeyBoundWidget,
     MouseBoundWidget,
     StyledWidget,
-)
-
-from widgets.utils import (
     get_widget_parent,
     notify_widget_class,
 )
@@ -42,7 +43,7 @@ class SettingsFrame(ttk.Frame,
 
     def init_key_binds(self):
         ' Overrides KeyBoundWidget. '
-        self.bind(config.KEY_BINDS['settings-switch-lang'],
+        self.bind(KeyBindsConfig.settings_switch_lang,
                   lambda e: self._toggle_lang())
 
     def init_mouse_binds(self):
@@ -56,31 +57,31 @@ class SettingsFrame(ttk.Frame,
         ' Overrides StyledWidget. '
         self.style = ttk.Style()
 
-        self.style.configure('SF.TFrame', background=config.COLORS['bg'])
+        self.style.configure('SF.TFrame', background=ColorsConfig.bg)
 
         self.style.configure('SF.TLabel',
-                             background=config.COLORS['bg'],
-                             font=config.FONTS['p'] + ('bold',),
+                             background=ColorsConfig.bg,
+                             font=FontsConfig.p + ('bold',),
                              width=10,
                              anchor='nw')
 
         self.style.configure('SF.TCombobox')
 
         self.style.map('SF.TCombobox',
-                        background=[('readonly', config.COLORS['bg'])],
-                        fieldbackground=[('readonly', config.COLORS['bg'])],
-                        selectbackground=[('readonly', config.COLORS['bg'])],
-                        selectforeground=[('readonly', config.COLORS['fg'])],
+                        background=[('readonly', ColorsConfig.bg)],
+                        fieldbackground=[('readonly', ColorsConfig.bg)],
+                        selectbackground=[('readonly', ColorsConfig.bg)],
+                        selectforeground=[('readonly', ColorsConfig.fg)],
                         borderwidth=[('readonly', 5)],
                         selectborderwidth=[('readonly', 0)],
                         arrowsize=[('readonly', 24)],
-                        arrowcolor=[('readonly', config.COLORS['fg'])],
-                        foreground=[('readonly', config.COLORS['fg'])])
+                        arrowcolor=[('readonly', ColorsConfig.fg)],
+                        foreground=[('readonly', ColorsConfig.fg)])
 
-        self.option_add('*TCombobox*Listbox.background', config.COLORS['bg'])
-        self.option_add('*TCombobox*Listbox.foreground', config.COLORS['fg'])
-        self.option_add('*TCombobox*Listbox.selectBackground', config.COLORS['active_bg'])
-        self.option_add('*TCombobox*Listbox.font', config.FONTS['p'])
+        self.option_add('*TCombobox*Listbox.background', ColorsConfig.bg)
+        self.option_add('*TCombobox*Listbox.foreground', ColorsConfig.fg)
+        self.option_add('*TCombobox*Listbox.selectBackground', ColorsConfig.active_bg)
+        self.option_add('*TCombobox*Listbox.font', FontsConfig.p)
 
     def _toggle_lang(self):
         if self.lang_var.get() == 'English':
@@ -103,7 +104,7 @@ class SettingsFrame(ttk.Frame,
 
         self.lang_combobox = ttk.Combobox(lang_frame,
                                           style='SF.TCombobox',
-                                          font=config.FONTS['p'],
+                                          font=FontsConfig.p,
                                           values=['Русский', 'English'],
                                           textvariable=self.lang_var,
                                           state='readonly')
@@ -123,12 +124,12 @@ class SettingsFrame(ttk.Frame,
         scale = tk.Scale(scale_frame,
                          orient='horizontal',
                          length=self.WIDGET_WIDTH + 15,
-                         background=config.COLORS['bg'],
+                         background=ColorsConfig.bg,
                          borderwidth=5,
-                         font=config.FONTS['p'],
-                         troughcolor=config.COLORS['bg'],
-                         highlightbackground=config.COLORS['bg'],
-                         activebackground=config.COLORS['active_bg'],
+                         font=FontsConfig.p,
+                         troughcolor=ColorsConfig.bg,
+                         highlightbackground=ColorsConfig.bg,
+                         activebackground=ColorsConfig.active_bg,
                          relief='sunken')
 
         scale_frame.pack()

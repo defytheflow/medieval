@@ -1,9 +1,14 @@
-#!/home/defytheflow/.envs/medieval/bin/python3
+#!python3
 
 import tkinter as tk
 from tkinter import ttk
 
-import config
+from config import (
+    ColorsConfig,
+    GameCanvasConfig,
+    KeyBindsConfig,
+    WindowConfig,
+)
 
 from frames import (
     GameFrame,
@@ -11,13 +16,10 @@ from frames import (
     SettingsFrame,
 )
 
-from widgets.behavior import (
+from widgets import (
     KeyBoundWidget,
     MouseBoundWidget,
     StyledWidget,
-)
-
-from widgets.utils import (
     get_all_widget_children,
 )
 
@@ -30,8 +32,8 @@ class MedievalApp(tk.Tk, StyledWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title(config.WINDOW['title'])
-        self.geometry(f"{config.WINDOW['width']}x{config.WINDOW['height']}")
+        self.title(WindowConfig.title)
+        self.geometry(f"{WindowConfig.width}x{WindowConfig.height}")
         self.resizable(0, 0)
 
         self.current_frame = None
@@ -50,7 +52,7 @@ class MedievalApp(tk.Tk, StyledWidget):
     def init_style(self):
         ' Overrides StyledWidget. '
         self.style = ttk.Style()
-        self.style.configure('MA.TFrame', background=config.COLORS['bg'])
+        self.style.configure('MA.TFrame', background=ColorsConfig.bg)
 
     def show_frame(self, frame_name):
         if self.current_frame:
@@ -64,16 +66,16 @@ class MedievalApp(tk.Tk, StyledWidget):
         for frame_name, frame_cls, in self.frames.items():
             self.frames[frame_name] = frame_cls(self,
                                                 style='MA.TFrame',
-                                                width=config.WINDOW['width'],
-                                                height=config.WINDOW['height'])
+                                                width=WindowConfig.width,
+                                                height=WindowConfig.height)
 
     def init_level(self):
-        background = VillageBackground(config.GAME_CANVAS['block_size'])
+        background = VillageBackground(GameCanvasConfig.block_size)
         character = Sprite(name='peasant',
                            canvas=self.frames['game'].game_canvas,
                            position=(0, 0),
-                           size=(config.GAME_CANVAS['block_size'],
-                                 config.GAME_CANVAS['block_size']),
+                           size=(GameCanvasConfig.block_size,
+                                 GameCanvasConfig.block_size),
                            speed=3)
 
         background.draw_on_canvas(self.frames['game'].game_canvas)

@@ -1,8 +1,10 @@
 import tkinter as tk
 
-import config
+from config import (
+    KeyBindsConfig,
+)
 
-from widgets.behavior import (
+from widgets import (
     KeyBoundWidget,
     MouseBoundWidget,
 )
@@ -18,13 +20,13 @@ class GameCanvas(tk.Canvas, KeyBoundWidget, MouseBoundWidget):
 
     def init_key_binds(self):
         ' Overrides KeyBoundWidget. '
-        self.bind(config.KEY_BINDS['character-move-north'],
+        self.bind(KeyBindsConfig.character_move_north,
                   lambda e: self.move_sprite('peasant', 'north'))
-        self.bind(config.KEY_BINDS['character-move-west'],
+        self.bind(KeyBindsConfig.character_move_west,
                   lambda e: self.move_sprite('peasant', 'west'))
-        self.bind(config.KEY_BINDS['character-move-south'],
+        self.bind(KeyBindsConfig.character_move_south,
                   lambda e: self.move_sprite('peasant', 'south'))
-        self.bind(config.KEY_BINDS['character-move-east'],
+        self.bind(KeyBindsConfig.character_move_east,
                   lambda e: self.move_sprite('peasant', 'east'))
 
     def init_mouse_binds(self):

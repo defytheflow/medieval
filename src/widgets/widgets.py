@@ -1,7 +1,11 @@
 import os
 from tkinter import ttk
 
-import config
+from config import (
+    AssetsConfig,
+    ColorsConfig,
+    FontsConfig,
+)
 
 from .behavior import StyledWidget
 from .bilingual import BilingualLabel
@@ -17,7 +21,7 @@ class TitleFrame(ttk.Frame, StyledWidget):
         self.return_btn.pack(side='left', fill='both')
 
         bind_image_to_widget(self.return_btn,
-                             os.path.join(config.ASSETS['icons'], 'return.png'),
+                             os.path.join(AssetsConfig.icons, 'return.png'),
                              (40, 40))
 
         self.title_lbl = BilingualLabel(self, style='T.TLabel', text_dict=text_dict)
@@ -28,14 +32,14 @@ class TitleFrame(ttk.Frame, StyledWidget):
         self.style = ttk.Style()
 
         self.style.configure('T.TButton',
-                             background=config.COLORS['bg'],
+                             background=ColorsConfig.bg,
                              borderwidth=5,
                              relief='raised')
 
         self.style.map('T.TButton',
-                        background=[('active', config.COLORS['active_bg'])])
+                        background=[('active', ColorsConfig.active_bg)])
 
         self.style.configure('T.TLabel',
-                             background=config.COLORS['bg'],
-                             font=config.FONTS['h'],
+                             background=ColorsConfig.bg,
+                             font=FontsConfig.h,
                              anchor='center')

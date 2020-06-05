@@ -3,7 +3,9 @@ import abc
 import random
 import tkinter as tk
 
-import config
+from config import (
+    AssetsConfig,
+)
 
 from utils import (
     create_photo_image,
@@ -134,43 +136,43 @@ class VillageBackground(Background):
         # upper houses.
         for col in range(14, 18):
             for row in range(4, 7):
-                self.delete_overlapping_items(canvas, col, row)
+                # self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
 
-        self.delete_overlapping_items(canvas, 15, 7)
+        # self.delete_overlapping_items(canvas, 15, 7)
         self._draw_image(canvas, 15, 7, self.images['road'], ['road', 'bg'])
 
         for col in range(20, 24):
             for row in range(4, 7):
-                self.delete_overlapping_items(canvas, col, row)
+                # self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
 
-        self.delete_overlapping_items(canvas, 21, 7)
+        # self.delete_overlapping_items(canvas, 21, 7)
         self._draw_image(canvas, 21, 7, self.images['road'], ['road', 'bg'])
 
         for col in range(26, 30):
             for row in range(4, 7):
-                self.delete_overlapping_items(canvas, col, row)
+                # self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
 
-        self.delete_overlapping_items(canvas, 27, 7)
+        # self.delete_overlapping_items(canvas, 27, 7)
         self._draw_image(canvas, 27, 7, self.images['road'], ['road', 'bg'])
 
         # lower houses.
         for col in range(17, 21):
             for row in range(11, 14):
-                self.delete_overlapping_items(canvas, col, row)
+                # self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
 
-        self.delete_overlapping_items(canvas, 18, 10)
+        # self.delete_overlapping_items(canvas, 18, 10)
         self._draw_image(canvas, 18, 10, self.images['road'], ['road', 'bg'])
 
         for col in range(23, 27):
             for row in range(11, 14):
-                self.delete_overlapping_items(canvas, col, row)
+                # self.delete_overlapping_items(canvas, col, row)
                 self._draw_rectangle(canvas, col, row, 'magenta', ['house', 'bg'])
 
-        self.delete_overlapping_items(canvas, 24, 10)
+        # self.delete_overlapping_items(canvas, 24, 10)
         self._draw_image(canvas, 24, 10, self.images['road'], ['road', 'bg'])
 
     def draw_road(self, canvas):
@@ -247,6 +249,6 @@ class VillageBackground(Background):
     @staticmethod
     def create_images(bg_dict):
         return {
-            name: create_photo_image(os.path.join(config.ASSETS['bg'], f'{name}.png'), size)
+            name: create_photo_image(os.path.join(AssetsConfig.bg, f'{name}.png'), size)
             for name, size in bg_dict.items()
         }

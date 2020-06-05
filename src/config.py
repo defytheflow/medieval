@@ -1,49 +1,47 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
-WINDOW = {
-    'title': 'Medieval',
-    'width':  1200,
-    'height': 1200 * 3 // 4,
-}
 
-GAME_CANVAS = {
-    'width':      WINDOW['width'] * 4 // 5,
-    'height':     WINDOW['width'] * 4 // 5 * 3 // 4,
-    'block_size': WINDOW['width'] // 40,
-}
+class WindowConfig:
+    title = 'Medieval'
+    width = 1200
+    height = width // 16 * 10
 
-COLORS = {
-    'fg':           '#000',
-    'bg':           '#c9b662',
-    'active_bg':    '#7f6f28',
-    'highlight_bg': '#000',
-}
 
-FONTS = {
-    'h': ('DejaVu Serif', 32, 'bold'),
-    'p': ('DejaVu Serif', 20, 'normal'),
-}
+class GameCanvasConfig:
+    width = WindowConfig.width * 4 // 5
+    height = width * 3 // 4
+    block_size = WindowConfig.width // 50
 
-ASSETS = {
-    'bg':      os.path.join(ASSETS_DIR, 'bg'),
-    'icons':   os.path.join(ASSETS_DIR, 'icons'),
-    'sounds':  os.path.join(ASSETS_DIR, 'sounds'),
-    'sprites': os.path.join(ASSETS_DIR, 'sprites'),
-}
 
-KEY_BINDS = {
-    'show-game':            'G',
-    'show-map':             'M',
-    'show-settings':        'S',
+class ColorsConfig:
+    fg = '#000'
+    bg = '#c9b662'
+    active_bg = '#7f6f28'
+    highlight_bg = '#000'
 
-    'settings-switch-lang': 'L',
 
-    'character-move-north': 'w',
-    'character-move-west':  'a',
-    'character-move-south': 's',
-    'character-move-east':  'd',
-}
+class FontsConfig:
+    h = ('DejaVu Serif', 32, 'bold')
+    p = ('DejaVu Serif', 20, 'normal')
+
+
+class AssetsConfig:
+    bg = os.path.join(ASSETS_DIR, 'bg')
+    icons = os.path.join(ASSETS_DIR, 'icons')
+    sounds = os.path.join(ASSETS_DIR, 'sounds')
+    sprites = os.path.join(ASSETS_DIR, 'sprites')
+
+
+class KeyBindsConfig:
+    show_game = 'G',
+    show_map = 'M',
+    show_settings = 'S'
+    settings_switch_lang = 'L',
+    character_move_north = 'w',
+    character_move_west  = 'a',
+    character_move_south = 's',
+    character_move_east = 'd',
