@@ -1,7 +1,4 @@
-from utils import (
-    play_sound,
-    create_photo_image,
-)
+from utils import play_sound, create_photo_image
 
 
 def get_all_widget_children(parent, children=[]):

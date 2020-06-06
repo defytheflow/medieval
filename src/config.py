@@ -2,7 +2,6 @@ import os
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
 
 class WindowConfig:
@@ -19,7 +18,6 @@ class WorldConfig:
 class GameCanvasConfig:
     width = WindowConfig.width
     height = WindowConfig.height
-    block_size = 250
 
 
 class ColorsConfig:
@@ -35,18 +33,17 @@ class FontsConfig:
 
 
 class AssetsConfig:
-    bg = os.path.join(ASSETS_DIR, 'bg')
-    icons = os.path.join(ASSETS_DIR, 'icons')
-    sounds = os.path.join(ASSETS_DIR, 'sounds')
-    sprites = os.path.join(ASSETS_DIR, 'sprites')
+    assets = os.path.join(BASE_DIR, 'assets')
+    bg = os.path.join(assets, 'bg')
+    icons = os.path.join(assets, 'icons')
+    sounds = os.path.join(assets, 'sounds')
+    sprites = os.path.join(assets, 'sprites')
 
 
 class KeyBindsConfig:
-    show_game = 'G',
-    show_map = 'M',
-    show_settings = 'S'
-    settings_switch_lang = 'L',
-    character_move_north = 'w',
-    character_move_west  = 'a',
-    character_move_south = 's',
-    character_move_east = 'd',
+    show_game = 'G'
+    show_map = 'M'
+    character_move_north = 'w'
+    character_move_west  = 'a'
+    character_move_south = 's'
+    character_move_east = 'd'

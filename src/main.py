@@ -3,52 +3,36 @@
 import tkinter as tk
 from tkinter import ttk
 
-from config import (
-    ColorsConfig,
-    GameCanvasConfig,
-    KeyBindsConfig,
-    WindowConfig,
-)
-
-from frames import (
-    GameFrame,
-    MapFrame,
-)
-
-from widgets import (
-    KeyBoundWidget,
-    MouseBoundWidget,
-    StyledWidget,
-    get_all_widget_children,
-)
-
+from config import ColorsConfig, GameCanvasConfig, KeyBindsConfig, WindowConfig
+from frames import GameFrame, MapFrame
 from sprite import Sprite
+from widgets import KeyBoundWidget, MouseBoundWidget, StyledWidget
+from widgets import get_all_widget_children
 
 
 class MedievalApp(tk.Tk, StyledWidget):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
 
         self.title(WindowConfig.title)
-        self.geometry(f"{WindowConfig.width}x{WindowConfig.height}")
+        self.geometry(f'{WindowConfig.width}x{WindowConfig.height}')
         self.resizable(0, 0)
         self.update_idletasks()
 
         self.current_frame = None
         self.frames = {  # <- Add new frames here.
-                'game': GameFrame,
-                 'map': MapFrame,
+            'game': GameFrame,
+            'map':  MapFrame,
         }
 
-        self.init_frames()
-        self.init_level()
+        self.create_frames()
+        self.create_character()
 
         self.notify_widgets(self)
         self.show_frame('game')
 
     def init_style(self):
-        ' Overrides StyledWidget. '
         self.style = ttk.Style()
         self.style.configure('MA.TFrame', background=ColorsConfig.bg)
 
@@ -60,19 +44,15 @@ class MedievalApp(tk.Tk, StyledWidget):
         self.current_frame.pack(fill='both', expand=True)
         self.current_frame.focus_set()
 
-    def init_frames(self):
-        for frame_name, frame_cls, in self.frames.items():
-            self.frames[frame_name] = frame_cls(self,
-                                                style='MA.TFrame',
+    def create_frames(self):
+        for frame_name, frame_cls in self.frames.items():
+            self.frames[frame_name] = frame_cls(self, style='MA.TFrame',
                                                 width=WindowConfig.width,
                                                 height=WindowConfig.height)
 
-    def init_level(self):
-        character = Sprite(name='peasant',
-                           canvas=self.frames['game'].game_canvas,
-                           position=(0, 0),
-                           size=(GameCanvasConfig.block_size, GameCanvasConfig.block_size),
-                           speed=5)
+    def create_character(self):
+        character = Sprite(name='peasant', canvas=self.frames['game'].canvas,
+                           position=(100, 100), size=(50, 50), speed=5)
         character.draw_on_canvas()
 
     @staticmethod

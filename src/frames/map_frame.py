@@ -1,23 +1,17 @@
+import os
+import tkinter as tk
 from tkinter import ttk
 
-from canvases import MapCanvas
-
-from config import (
-    ColorsConfig,
-)
-
-from widgets import (
-    MouseBoundWidget,
-    StyledWidget,
-    TitleFrame,
-    get_widget_parent,
-)
+from config import AssetsConfig, ColorsConfig
+from utils import create_photo_image
+from widgets import MouseBoundWidget, StyledWidget, TitleFrame
 
 
 class MapFrame(ttk.Frame, MouseBoundWidget, StyledWidget):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
+        self.controller = master
 
         self.title_frame = TitleFrame(self, text='Map')
         self.title_frame.pack(fill='both')
@@ -30,7 +24,17 @@ class MapFrame(ttk.Frame, MouseBoundWidget, StyledWidget):
         self.canvas.pack(fill='both', expand=True)
 
     def init_mouse_binds(self):
-        self.title_frame.return_btn.bind('<1>', lambda e: get_widget_parent(self).show_frame('game'))
+        self.title_frame.return_btn.bind('<1>', lambda e: self.controller.show_frame('game'))
 
     def init_style(self):
         pass
+
+
+class MapCanvas(tk.Canvas):
+
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.map_image = create_photo_image(os.path.join(AssetsConfig.assets, 'map.png'),
+                                            (self.winfo_reqwidth(), self.winfo_reqheight()))
+        self.create_image(0, 0, image=self.map_image, anchor='nw')

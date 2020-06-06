@@ -1,11 +1,7 @@
 import os
 from tkinter import ttk
 
-from config import (
-    AssetsConfig,
-    ColorsConfig,
-    FontsConfig,
-)
+from config import AssetsConfig, ColorsConfig, FontsConfig
 
 from .interfaces import StyledWidget
 from .utils import bind_image_to_widget

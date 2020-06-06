@@ -3,10 +3,7 @@ import tkinter as tk
 
 import simpleaudio as sa
 
-from config import (
-    AssetsConfig,
-)
-
+from config import AssetsConfig
 from utils import create_photo_image
 
 
@@ -14,7 +11,7 @@ class Sprite:
 
     NO_CANVAS_ID = -1
 
-    def __init__(self, name, canvas, position, size, direction = 'south', speed = 1):
+    def __init__(self, name, canvas, position, size, direction='south', speed=1):
         self.name = name
         self.canvas = canvas
         self.canvas.cache_sprite(self)
