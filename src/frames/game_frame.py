@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from config import AssetsConfig, ColorsConfig, FontsConfig, GameCanvasConfig, KeyBindsConfig
+from geometry import Size
 from utils import create_photo_image
 from widgets import KeyBoundWidget, MouseBoundWidget, StyledWidget, Tooltip
 from widgets import bind_image_to_widget, bind_sound_to_widget
@@ -37,8 +38,19 @@ class GameCanvas(tk.Canvas, KeyBoundWidget, MouseBoundWidget):
         self.sprites = {}
         self.key_pressed = False
 
+    @property
+    def width(self):
+        return self.winfo_reqwidth()
+
+    @property
+    def height(self):
+        return self.winfo_reqheight()
+
+    @property
+    def size(self):
+        return Size(self.winfo_reqwidth(), self.winfo_reqheight())
+
     def init_key_binds(self):
-        ' Overrides KeyBoundWidget. '
         self.bind(KeyBindsConfig.character_move_north,
                   lambda e: self.move_sprite('peasant', 'north'))
         self.bind(KeyBindsConfig.character_move_west,
@@ -49,7 +61,6 @@ class GameCanvas(tk.Canvas, KeyBoundWidget, MouseBoundWidget):
                   lambda e: self.move_sprite('peasant', 'east'))
 
     def init_mouse_binds(self):
-        ' Overrides MouseBoundWidget. '
         self.bind('<Enter>', lambda e: self.focus_set())
 
     def cache_image(self, image_name, image):

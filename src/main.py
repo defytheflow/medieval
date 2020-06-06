@@ -5,6 +5,7 @@ from tkinter import ttk
 
 from config import ColorsConfig, GameCanvasConfig, KeyBindsConfig, WindowConfig
 from frames import GameFrame, MapFrame
+from geometry import Position, Size, get_center_position
 from sprite import Sprite
 from widgets import KeyBoundWidget, MouseBoundWidget, StyledWidget
 from widgets import get_all_widget_children
@@ -51,8 +52,9 @@ class MedievalApp(tk.Tk, StyledWidget):
                                                 height=WindowConfig.height)
 
     def create_character(self):
-        character = Sprite(name='peasant', canvas=self.frames['game'].canvas,
-                           position=(100, 100), size=(50, 50), speed=5)
+        game_canvas = self.frames['game'].canvas
+        character = Sprite('peasant', game_canvas, Size(50, 50), Position(0, 0), speed=5)
+        character.position = get_center_position(game_canvas.size, character.size)
         character.draw_on_canvas()
 
     @staticmethod
