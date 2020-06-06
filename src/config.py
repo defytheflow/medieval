@@ -6,18 +6,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class WindowConfig:
     title = 'Medieval'
-    width = 1600
+    width = 1200
     height = width // 16 * 10
-
-
-class WorldConfig:
-    width = WindowConfig.width * 10
-    height = WindowConfig.height * 10
 
 
 class GameCanvasConfig:
     width = WindowConfig.width
     height = WindowConfig.height
+
+
+class GameMapConfig:
+    width = WindowConfig.width * 10
+    height = WindowConfig.height * 10
+    size = (width, height)
 
 
 class ColorsConfig:
