@@ -13,7 +13,6 @@ from config import (
 from frames import (
     GameFrame,
     MapFrame,
-    SettingsFrame,
 )
 
 from widgets import (
@@ -23,7 +22,6 @@ from widgets import (
     get_all_widget_children,
 )
 
-from backgrounds import VillageBackground
 from sprite import Sprite
 
 
@@ -35,12 +33,12 @@ class MedievalApp(tk.Tk, StyledWidget):
         self.title(WindowConfig.title)
         self.geometry(f"{WindowConfig.width}x{WindowConfig.height}")
         self.resizable(0, 0)
+        self.update_idletasks()
 
         self.current_frame = None
         self.frames = {  # <- Add new frames here.
                 'game': GameFrame,
                  'map': MapFrame,
-            'settings': SettingsFrame
         }
 
         self.init_frames()
@@ -70,15 +68,11 @@ class MedievalApp(tk.Tk, StyledWidget):
                                                 height=WindowConfig.height)
 
     def init_level(self):
-        background = VillageBackground(GameCanvasConfig.block_size)
         character = Sprite(name='peasant',
                            canvas=self.frames['game'].game_canvas,
                            position=(0, 0),
-                           size=(GameCanvasConfig.block_size,
-                                 GameCanvasConfig.block_size),
-                           speed=3)
-
-        background.draw_on_canvas(self.frames['game'].game_canvas)
+                           size=(GameCanvasConfig.block_size, GameCanvasConfig.block_size),
+                           speed=5)
         character.draw_on_canvas()
 
     @staticmethod

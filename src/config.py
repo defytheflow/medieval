@@ -7,14 +7,19 @@ ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
 class WindowConfig:
     title = 'Medieval'
-    width = 1200
+    width = 1600
     height = width // 16 * 10
 
 
+class WorldConfig:
+    width = WindowConfig.width * 10
+    height = WindowConfig.height * 10
+
+
 class GameCanvasConfig:
-    width = WindowConfig.width * 4 // 5
-    height = width * 3 // 4
-    block_size = WindowConfig.width // 50
+    width = WindowConfig.width
+    height = WindowConfig.height
+    block_size = 250
 
 
 class ColorsConfig:

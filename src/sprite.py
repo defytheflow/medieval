@@ -104,40 +104,32 @@ class Sprite:
     def move(self, direction):
         self.set_direction(direction)
         if direction == 'north':
-            self.set_position((self.x, self.y - self.width))
+            self.set_position((self.x, self.y - self.speed))
         elif direction == 'west':
-            self.set_position((self.x - self.width, self.y))
+            self.set_position((self.x - self.speed, self.y))
         elif direction == 'south':
-            self.set_position((self.x, self.y + self.width))
+            self.set_position((self.x, self.y + self.speed))
         elif direction == 'east':
-            self.set_position((self.x + self.width, self.y))
+            self.set_position((self.x + self.speed, self.y))
         self._animate_move(direction)
         self.reset_costume()
         self.redraw_on_canvas()
 
     def _animate_move(self, direction):
-        overlap = self.canvas.find_overlapping(self.x,
-                                               self.y,
-                                               self.x + self.width,
-                                               self.y + self.width)
-
-        overlap = [self.canvas.gettags(item) for item in overlap]
-
-        print(overlap)
-
+        print(self.x, self.y)
         wave_obj = sa.WaveObject.from_wave_file(os.path.join(AssetsConfig.sounds, 'grass-move.wav'))
         play_obj = wave_obj.play()
 
-        for i in range(1, self.width + 1, self.speed):
+        for i in range(1, self.speed + 1, self.speed):
             self.switch_costume()
             if direction == 'north':
-                self.redraw_on_canvas_at(self.x, self.y + self.width - i)
+                self.redraw_on_canvas_at(self.x, self.y + self.speed - i)
             elif direction == 'west':
-                self.redraw_on_canvas_at(self.x + self.width - i, self.y)
+                self.redraw_on_canvas_at(self.x + self.speed - i, self.y)
             elif direction == 'south':
-                self.redraw_on_canvas_at(self.x, self.y - self.width + i)
+                self.redraw_on_canvas_at(self.x, self.y - self.speed + i)
             elif direction == 'east':
-                self.redraw_on_canvas_at(self.x - self.width + i, self.y)
+                self.redraw_on_canvas_at(self.x - self.speed + i, self.y)
             self.canvas.after(self.sleep_time)
             self.canvas.update()
 

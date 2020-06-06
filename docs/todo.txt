@@ -1,0 +1,4 @@
+TODO:
+- [  ] Canvas width == WindowConfig.width
+- [  ] Move buttons to canvas
+- [  ] Move hint lbl to canvas

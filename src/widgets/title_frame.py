@@ -7,14 +7,13 @@ from config import (
     FontsConfig,
 )
 
-from .behavior import StyledWidget
-from .bilingual import BilingualLabel
+from .interfaces import StyledWidget
 from .utils import bind_image_to_widget
 
 
 class TitleFrame(ttk.Frame, StyledWidget):
 
-    def __init__(self, master, text_dict, **kwargs):
+    def __init__(self, master, text, **kwargs):
         super().__init__(master, **kwargs)
 
         self.return_btn = ttk.Button(self, style='T.TButton')
@@ -24,7 +23,7 @@ class TitleFrame(ttk.Frame, StyledWidget):
                              os.path.join(AssetsConfig.icons, 'return.png'),
                              (40, 40))
 
-        self.title_lbl = BilingualLabel(self, style='T.TLabel', text_dict=text_dict)
+        self.title_lbl = ttk.Label(self, style='T.TLabel', text=text)
         self.title_lbl.pack(side='left', fill='both', expand=True)
 
     def init_style(self):

@@ -1,0 +1,8 @@
+1. Focus on the canvas and game.
+2. Make game only in in english.
+3. Create a startup menu.
+4. Remove unnecessary at this point settings.
+5. Make a one big open world.
+6. Integrate map into canvas.
+7. Integrate buttons into canvas.
+8. Integrate hint into canvas.

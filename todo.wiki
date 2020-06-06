@@ -1,5 +1,0 @@
-TODO:
-- [ ] Create a Dark/White mode setting.
-- [ ] Add Water gif.
-- [ ] Refactor Sprite.
-- [ ] Make frame a ttk Widget
