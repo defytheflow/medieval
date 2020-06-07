@@ -1,26 +1,44 @@
-TILE = 0
+WORLD_TILE = 0
 WORLD_WIDTH = 20
 WORLD_HEIGHT = 20
 
-CAMERA = 2
+PLAYER_TILE = 1
+PLAYER_X = WORLD_WIDTH // 2
+PLAYER_Y = WORLD_HEIGHT // 2
+
+CAMERA_TILE = 2
 CAMERA_WIDTH = 5
 CAMERA_HEIGHT = 5
 
-PLAYER = 1
-PLAYER_X = WORLD_WIDTH // 2
-PLAYER_Y = WORLD_HEIGHT // 2
+NORTH, SOUTH, WEST, EAST = range(4)
 
 
 def create_matrix(width, height, val):
     return [[val for col in range(width)] for row in range(height)]
 
 
+class Movable:
+
+    def move(self, direction):
+        self.erase()
+        if direction == NORTH:
+            self.y -= 1
+        elif direction == SOUTH:
+            self.y += 1
+        elif direction == WEST:
+            self.x -= 1
+        elif direction == EAST:
+            self.x += 1
+        self.plot()
+
+
 class World:
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, tile):
         self.width = width
         self.height = height
-        self.matrix = create_matrix(width, height, TILE)
+        self.tile = tile
+        self.matrix = create_matrix(width, height, tile)
 
     def __len__(self):
         return len(self.matrix)
@@ -42,27 +60,29 @@ class World:
         return ''.join(string)
 
 
-class Player:
+class Player(Movable):
 
-    def __init__(self, x, y, world):
+    def __init__(self, x, y, world, tile):
         self.x = x
         self.y = y
         self.world = world
+        self.tile = tile
 
-    def plot(self, num):
-        self.world[self.y][self.x] = num
+    def plot(self):
+        self.world[self.y][self.x] = self.tile
+
+    def erase(self):
+        self.world[self.y][self.x] = self.world.tile
 
 
-class Camera:
+class Camera(Movable):
 
-    def __init__(self, width, height, player, world):
+    def __init__(self, width, height, player, world, tile):
         self.width = width
         self.height = height
         self.player = player
         self.world = world
-
-        self.x = self.player.x - self.width // 2
-        self.y = self.player.y - self.height // 2
+        self.tile = tile
 
         # Can I create a matrix of width, height around player.x in world?
         if not self.fits_on_x():
@@ -70,6 +90,10 @@ class Camera:
 
         if not self.fits_on_y():
             print('Camera does not fit on y.')
+
+        # Plot around player.
+        self.x = self.player.x - self.width // 2
+        self.y = self.player.y - self.height // 2
 
     def fits_on_x(self):
         return (0 <= self.player.x - self.width // 2 and
@@ -79,19 +103,29 @@ class Camera:
         return (0 <= self.player.y - self.height // 2 and
                 self.player.y + self.height // 2 <= self.world.height)
 
-    def plot(self, num):
+    def plot(self):
         for x in range(self.x, self.x + self.width):
             for y in range(self.y, self.y + self.height):
-                self.world[y][x] = num
+                self.world[y][x] = self.tile
+        self.player.plot()
+
+    def erase(self):
+        for x in range(self.x, self.x + self.width):
+            for y in range(self.y, self.y + self.height):
+                self.world[y][x] = self.world.tile
 
 
 def main():
-    world = World(WORLD_WIDTH, WORLD_HEIGHT)
-    player = Player(PLAYER_X, PLAYER_Y, world)
-    camera = Camera(CAMERA_WIDTH, CAMERA_HEIGHT, player, world)
+    world = World(WORLD_WIDTH, WORLD_HEIGHT, WORLD_TILE)
+    player = Player(PLAYER_X, PLAYER_Y, world, PLAYER_TILE)
+    camera = Camera(CAMERA_WIDTH, CAMERA_HEIGHT, player, world, CAMERA_TILE)
 
-    camera.plot(CAMERA)
-    player.plot(PLAYER)
+    camera.plot()
+    player.plot()
+    print(world)
+
+    player.move(NORTH)
+    camera.move(NORTH)
     print(world)
 
 
