@@ -8,12 +8,16 @@ WORLD_WIDTH = 20
 WORLD_HEIGHT = 20
 
 PLAYER_TILE = 1
+PLAYER_WIDTH = 1
+PLAYER_HEIGHT = 1
 PLAYER_X = WORLD_WIDTH // 2
 PLAYER_Y = WORLD_HEIGHT // 2
 
 CAMERA_TILE = 2
 CAMERA_WIDTH = 5
 CAMERA_HEIGHT = 5
+CAMERA_X = PLAYER_X - CAMERA_WIDTH // 2
+CAMERA_Y = PLAYER_Y - CAMERA_HEIGHT // 2
 
 NORTH, SOUTH, WEST, EAST = range(4)
 
@@ -34,10 +38,11 @@ def getch():
 
 class Matrix:
 
-    def __init__(self, width, height, init=0):
-        self.rows = [[init] * width for x in range(height)]
+    def __init__(self, width, height, tile):
+        self.rows = [[tile] * width for x in range(height)]
         self.width = width
         self.height = height
+        self.tile = tile
 
     def __getitem__(self, key):
         return self.rows[key]
@@ -55,13 +60,42 @@ class Matrix:
         return '\n'.join([' '.join([str(item) for item in row]) for row in self.rows]) + '\n'
 
 
-class Movable:
+class World(Matrix):
+
+    def __init__(self, width, height, tile):
+        super().__init__(width, height, tile)
+
+    def plot(self, matrix):
+        for col in range(matrix.x, matrix.x + matrix.width):
+            for row in range(matrix.y, matrix.y + matrix.height):
+                self[row][col] = matrix.tile
+
+    def erase(self, matrix):
+        for col in range(matrix.x, matrix.x + matrix.width):
+            for row in range(matrix.y, matrix.y + matrix.height):
+                self[row][col] = self.tile
+
+
+class WorldMatrix(Matrix):
+
+    def __init__(self, x, y, world, width, height, tile):
+        super().__init__(width, height, tile)
+        self.world = world
+        self.x, self.y = x, y
 
     def __repr__(self):
-        return f'{self.__class__.__name__}(x={self.x}, y={self.y})'
+        return f'{self.__class__.__name__}(x={self.x}, y={self.y}, width={self.width}, height={self.height})'
+
+
+class Player(WorldMatrix):
+
+    def __init__(self, x, y, world, width, height, tile):
+        super().__init__(x, y, world, width, height, tile)
+        self.world.plot(self)
 
     def move(self, direction):
-        self.erase()
+        self.world.erase(self)
+
         if direction == NORTH:
             self.y -= 1
         elif direction == SOUTH:
@@ -70,45 +104,32 @@ class Movable:
             self.x -= 1
         elif direction == EAST:
             self.x += 1
-        self.plot()
+
+        self.world.plot(self)
 
 
-class World(Matrix):
+class Camera(WorldMatrix):
 
-    def __init__(self, width, height, tile):
-        super().__init__(width, height, init=tile)
-        self.tile = tile
-
-
-class Player(Movable):
-
-    def __init__(self, x, y, world, tile):
-        self.x = x
-        self.y = y
-        self.world = world
-        self.tile = tile
-        self.plot()
-
-    def plot(self):
-        self.world[self.y][self.x] = self.tile
-
-    def erase(self):
-        self.world[self.y][self.x] = self.world.tile
-
-
-class Camera(Movable):
-
-    def __init__(self, width, height, player, world, tile):
-        self.width = width
-        self.height = height
+    def __init__(self, player, x, y, world, width, height, tile):
         self.player = player
-        self.world = world
-        self.tile = tile
+        super().__init__(x, y, world, width, height, tile)
+        self.world.plot(self)
 
-        self.x = self.player.x - self.width // 2
-        self.y = self.player.y - self.height // 2
+    def move(self, direction):
+        self.player.move(direction)
+        self.world.erase(self)
 
-        self.plot()
+        if direction == NORTH:
+            self.y -= 1
+        elif direction == SOUTH:
+            self.y += 1
+        elif direction == WEST:
+            self.x -= 1
+        elif direction == EAST:
+            self.x += 1
+
+        self.world.plot(self)
+        self.world.plot(self.player)
 
     @property
     def x(self):
@@ -138,27 +159,12 @@ class Camera(Movable):
         return (0 <= self.player.y - self.height // 2 and
                 self.player.y + self.height // 2 <= self.world.height)
 
-    def plot(self):
-        for x in range(self.x, self.x + self.width):
-            for y in range(self.y, self.y + self.height):
-                self.world[y][x] = self.tile
-        self.player.plot()
 
-    def erase(self):
-        for x in range(self.x, self.x + self.width):
-            for y in range(self.y, self.y + self.height):
-                self.world[y][x] = self.world.tile
-
-    def move(self, direction):
-        self.player.move(direction)
-        super().move(direction)
-
-
-def main():
+def mainloop():
 
     world = World(WORLD_WIDTH, WORLD_HEIGHT, WORLD_TILE)
-    player = Player(PLAYER_X, PLAYER_Y, world, PLAYER_TILE)
-    camera = Camera(CAMERA_WIDTH, CAMERA_HEIGHT, player, world, CAMERA_TILE)
+    player = Player(PLAYER_X, PLAYER_Y, world, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_TILE)
+    camera = Camera(player, CAMERA_X, CAMERA_Y, world, CAMERA_WIDTH, CAMERA_HEIGHT, CAMERA_TILE)
 
     os.system('clear')
     print(world)
@@ -183,4 +189,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    mainloop()
