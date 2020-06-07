@@ -20,6 +20,10 @@ NORTH, SOUTH, WEST, EAST = range(4)
 QUIT = 'q'
 
 
+def create_matrix(width, height, val):
+    return [[val for col in range(width)] for row in range(height)]
+
+
 class _GetchUnix:
 
     def __call__(self):
@@ -36,11 +40,10 @@ class _GetchUnix:
 getch = _GetchUnix()
 
 
-def create_matrix(width, height, val):
-    return [[val for col in range(width)] for row in range(height)]
-
-
 class Movable:
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(x={self.x}, y={self.y})'
 
     def move(self, direction):
         self.erase()
@@ -107,18 +110,30 @@ class Camera(Movable):
         self.world = world
         self.tile = tile
 
-        # Can I create a matrix of width, height around player.x in world?
-        if not self.fits_on_x():
-            print('Camera does not fit on x.')
-
-        if not self.fits_on_y():
-            print('Camera does not fit on y.')
-
-        # Plot around player.
         self.x = self.player.x - self.width // 2
         self.y = self.player.y - self.height // 2
 
         self.plot()
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, val):
+        if not self.fits_on_x():
+            raise ValueError('Camera does not fit on x.')
+        self._x = val
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, val):
+        if not self.fits_on_y():
+            raise ValueError('Camera does not fit on y.')
+        self._y = val
 
     def fits_on_x(self):
         return (0 <= self.player.x - self.width // 2 and
@@ -139,6 +154,10 @@ class Camera(Movable):
             for y in range(self.y, self.y + self.height):
                 self.world[y][x] = self.world.tile
 
+    def move(self, direction):
+        self.player.move(direction)
+        super().move(direction)
+
 
 def main():
 
@@ -156,13 +175,13 @@ def main():
             break
 
         if ch == 'w':
-            player.move(NORTH)
+            camera.move(NORTH)
         elif ch == 's':
-            player.move(SOUTH)
+            camera.move(SOUTH)
         elif ch == 'a':
-            player.move(WEST)
+            camera.move(WEST)
         elif ch == 'd':
-            player.move(EAST)
+            camera.move(EAST)
 
         os.system('clear')
         print(world)
