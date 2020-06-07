@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+
+import os
+
+
 WORLD_TILE = 0
 WORLD_WIDTH = 20
 WORLD_HEIGHT = 20
@@ -11,6 +16,24 @@ CAMERA_WIDTH = 5
 CAMERA_HEIGHT = 5
 
 NORTH, SOUTH, WEST, EAST = range(4)
+
+QUIT = 'q'
+
+
+class _GetchUnix:
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+getch = _GetchUnix()
 
 
 def create_matrix(width, height, val):
@@ -56,8 +79,7 @@ class World:
         return self.matrix
 
     def __str__(self):
-        string = [f'{str(row)}\n' for row in self.matrix]
-        return ''.join(string)
+        return '|\n'.join([''.join([f'|{col}' for col in row]) for row in self.matrix]) + '|'
 
 
 class Player(Movable):
@@ -67,6 +89,7 @@ class Player(Movable):
         self.y = y
         self.world = world
         self.tile = tile
+        self.plot()
 
     def plot(self):
         self.world[self.y][self.x] = self.tile
@@ -95,6 +118,8 @@ class Camera(Movable):
         self.x = self.player.x - self.width // 2
         self.y = self.player.y - self.height // 2
 
+        self.plot()
+
     def fits_on_x(self):
         return (0 <= self.player.x - self.width // 2 and
                 self.player.x + self.width // 2 <= self.world.width)
@@ -116,17 +141,31 @@ class Camera(Movable):
 
 
 def main():
+
     world = World(WORLD_WIDTH, WORLD_HEIGHT, WORLD_TILE)
     player = Player(PLAYER_X, PLAYER_Y, world, PLAYER_TILE)
     camera = Camera(CAMERA_WIDTH, CAMERA_HEIGHT, player, world, CAMERA_TILE)
 
-    camera.plot()
-    player.plot()
+    os.system('clear')
     print(world)
 
-    player.move(NORTH)
-    camera.move(NORTH)
-    print(world)
+    while True:
+        ch = getch()
+
+        if ch == QUIT:
+            break
+
+        if ch == 'w':
+            player.move(NORTH)
+        elif ch == 's':
+            player.move(SOUTH)
+        elif ch == 'a':
+            player.move(WEST)
+        elif ch == 'd':
+            player.move(EAST)
+
+        os.system('clear')
+        print(world)
 
 
 if __name__ == '__main__':
