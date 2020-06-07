@@ -20,24 +20,39 @@ NORTH, SOUTH, WEST, EAST = range(4)
 QUIT = 'q'
 
 
-def create_matrix(width, height, val):
-    return [[val for col in range(width)] for row in range(height)]
+def getch():
+    import sys, tty, termios
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
 
 
-class _GetchUnix:
+class Matrix:
 
-    def __call__(self):
-        import sys, tty, termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+    def __init__(self, width, height, init=0):
+        self.rows = [[init] * width for x in range(height)]
+        self.width = width
+        self.height = height
 
-getch = _GetchUnix()
+    def __getitem__(self, key):
+        return self.rows[key]
+
+    def __setitem__(self, key, val):
+        self.rows[key] = val
+
+    def __len__(self):
+        return len(self.rows)
+
+    def __iter__(self):
+        return self.rows
+
+    def __str__(self):
+        return '\n'.join([' '.join([str(item) for item in row]) for row in self.rows]) + '\n'
 
 
 class Movable:
@@ -58,31 +73,11 @@ class Movable:
         self.plot()
 
 
-class World:
+class World(Matrix):
 
     def __init__(self, width, height, tile):
-        self.width = width
-        self.height = height
+        super().__init__(width, height, init=tile)
         self.tile = tile
-        self.matrix = create_matrix(width, height, tile)
-
-    def __len__(self):
-        return len(self.matrix)
-
-    def __getitem__(self, key):
-        return self.matrix[key]
-
-    def __setitem__(self, key, value):
-        self.matrix[key] = value
-
-    def __delitem__(self, key):
-        del self.matrix[key]
-
-    def __iter__(self):
-        return self.matrix
-
-    def __str__(self):
-        return '|\n'.join([''.join([f'|{col}' for col in row]) for row in self.matrix]) + '|'
 
 
 class Player(Movable):
