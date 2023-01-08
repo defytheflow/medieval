@@ -1,8 +1,7 @@
 import os
+import platform
 import tkinter as tk
-from typing import Tuple, List
-
-import simpleaudio as sa
+from typing import List, Tuple
 
 import config
 from utils import create_photo_image
@@ -134,8 +133,10 @@ class Sprite:
         self.redraw_on_canvas()
 
     def _animate_move(self, direction: str) -> None:
-        wave_obj = sa.WaveObject.from_wave_file(os.path.join(config.SOUNDS_ROOT, 'grass-move.wav'))
-        play_obj = wave_obj.play()
+        if not platform.machine().endswith('arm'):
+            import simpleaudio as sa
+            wave_obj = sa.WaveObject.from_wave_file(os.path.join(config.SOUNDS_ROOT, 'grass-move.wav'))
+            play_obj = wave_obj.play()
 
         for i in range(1, self.get_width() + 1, self.get_speed()):
             self.switch_costume()
@@ -150,4 +151,5 @@ class Sprite:
             self._canvas.after(self._sleep_time)
             self._canvas.update()
 
-        play_obj.stop()
+        if not platform.machine().endswith('arm'):
+            play_obj.stop()

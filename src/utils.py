@@ -1,5 +1,6 @@
+import platform
 import tkinter as tk
-from typing import Tuple, Callable
+from typing import Callable, Tuple
 
 
 def create_photo_image(path: str,
@@ -12,6 +13,7 @@ def create_photo_image(path: str,
 
 
 def play_sound(sound_file: str) -> None:
-    import simpleaudio as sa
-    wave_obj = sa.WaveObject.from_wave_file(sound_file)
-    wave_obj.play()
+    if not platform.machine().endswith('arm'):
+        import simpleaudio as sa
+        wave_obj = sa.WaveObject.from_wave_file(sound_file)
+        wave_obj.play()
